@@ -1,0 +1,12 @@
+{
+	"id": "Glossary",
+	"name": "Glossary",
+	"display_name": "Glossary",
+	"author": ["SleepyG11"],
+	"description": "Descriptions. Explained.",
+	"prefix": "gloss",
+	"main_file": "steamodded.lua",
+	"priority": 0,
+	"version": "0.1.0",
+	"dependencies": []
+}
