@@ -12,7 +12,7 @@ position = "before"
 payload = '''
 if Glossary.flitered_info_queue_request then
     Glossary.flitered_info_queue_request = nil
-    Glossary.prepare_info_queue(full_UI_table, info_queue)
+    Glossary.process_info_queue(full_UI_table, info_queue)
 end
 '''
 match_indent = true
