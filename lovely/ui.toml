@@ -1,18 +1,21 @@
 [manifest]
 version = "1.0.0"
 dump_lua = true
-priority = 0
+priority = 10000000
 
-# Store original info_queue
+# Process info queue from generate_card_ui
 [[patches]]
 [patches.pattern]
 target = "functions/common_events.lua"
 pattern = '''for _, v in ipairs(info_queue) do'''
 position = "before"
 payload = '''
-if Glossary.flitered_info_queue_request then
-    Glossary.flitered_info_queue_request = nil
-    Glossary.process_info_queue(full_UI_table, info_queue)
+if Glossary.flitered_info_queue_context then
+    local context = Glossary.flitered_info_queue_context
+    Glossary.flitered_info_queue_context = nil
+    context.AUT = full_UI_table
+    context.info_queue = info_queue
+    Glossary.process_info_queue(context)
 end
 '''
 match_indent = true

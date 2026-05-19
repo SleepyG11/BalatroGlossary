@@ -1,0 +1,4 @@
+- Visual
+- Stakes
+- Blinds
+- Extract mod from seal, sticker, stake, blind

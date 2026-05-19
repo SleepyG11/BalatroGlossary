@@ -5,7 +5,7 @@
 	"author": ["SleepyG11"],
 	"description": "Descriptions. Explained.",
 	"prefix": "gloss",
-	"main_file": "steamodded.lua",
+	"main_file": "index.lua",
 	"priority": 0,
 	"version": "0.1.0",
 	"dependencies": []
