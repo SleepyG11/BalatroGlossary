@@ -78,7 +78,10 @@ function Glossary.show_card_info(card)
 		collection = true,
 	})
 
+	local source_t = card.T
 	local new_card = copy_card(card, nil, 1, nil, nil)
+	new_card.T.w = source_t.w
+	new_card.T.h = source_t.h
 	main_card_area:emplace(new_card)
 
 	local context = Glossary.new_info_queue_context("card", new_card, "card", card)
@@ -175,10 +178,13 @@ function Glossary.show_back_info(back, source_type, source)
 		}
 	end
 
-	Glossary.flitered_info_queue_context = context
+	local old_desc_from_rows = desc_from_rows
+	function desc_from_rows(a, b, maxw, ...)
+		return old_desc_from_rows(a, b, 6, ...)
+	end
 	local deck_ui = G.GAME.selected_back:generate_UI(nil, 0.7, 0.5, G.GAME.challenge)
 	local deck_name = G.GAME.selected_back:get_name()
-	Glossary.flitered_info_queue_context = nil
+	desc_from_rows = old_desc_from_rows
 
 	G.GAME.selected_back, G.GAME.viewed_back = old_back, old_v_back
 
@@ -213,7 +219,7 @@ function Glossary.show_back_info(back, source_type, source)
 								config = {
 									object = DynaText({
 										string = deck_name,
-										maxw = 4,
+										maxw = 6,
 										colours = { G.C.WHITE },
 										shadow = true,
 										bump = true,

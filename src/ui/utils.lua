@@ -39,25 +39,34 @@ function Glossary.UI.init_draggable_scrollbox(scrollbox)
 	end
 end
 function Glossary.UI.draggable_scrollable_content(content, max_content_w, max_content_h, scrolls_padding)
-	local content_overflow = SMODS.UIScrollBox({
-		content = {
-			definition = {
-				n = G.UIT.ROOT,
-				config = { colour = G.C.CLEAR, align = "cm" },
-				nodes = {
-					{
-						n = G.UIT.R,
-						config = { padding = 0.1, align = "cm" },
-						nodes = content,
-					},
+	local content_uibox = UIBox({
+		definition = {
+			n = G.UIT.ROOT,
+			config = { colour = G.C.CLEAR, align = "cm" },
+			nodes = {
+				{
+					n = G.UIT.R,
+					config = { padding = 0.1, align = "cm" },
+					nodes = content,
 				},
 			},
-			config = {},
 		},
+		config = {},
+	})
+
+	local content_w = content_uibox.UIRoot.T.w
+	local content_h = content_uibox.UIRoot.T.h
+
+	local should_scroll_w = content_w > max_content_w
+	local should_scroll_h = content_h > max_content_h
+
+	local content_overflow = SMODS.UIScrollBox({
+		content = content_uibox,
 		overflow = {
 			node_config = {
 				maxw = max_content_w,
 				maxh = max_content_h,
+				no_overflow = (should_scroll_w and "h" or "") .. (should_scroll_h and "v" or ""),
 			},
 		},
 		progress = {
@@ -67,9 +76,6 @@ function Glossary.UI.draggable_scrollable_content(content, max_content_w, max_co
 	})
 
 	Glossary.UI.init_draggable_scrollbox(content_overflow)
-
-	local content_w = content_overflow.content.UIRoot.T.w
-	local content_h = content_overflow.content.UIRoot.T.h
 
 	return {
 		n = G.UIT.R,
@@ -94,8 +100,8 @@ function Glossary.UI.draggable_scrollable_content(content, max_content_w, max_co
 							},
 						},
 					},
-					content_h > max_content_h and { n = G.UIT.C, config = { minw = scrolls_padding or 0 } } or nil,
-					content_h > max_content_h and SMODS.GUI.scrollbar({
+					should_scroll_h and { n = G.UIT.C, config = { minw = scrolls_padding or 0 } } or nil,
+					should_scroll_h and SMODS.GUI.scrollbar({
 						ui_type = G.UIT.C,
 						scroll_collision_obj = content_overflow,
 						w = 0.25,
@@ -107,8 +113,8 @@ function Glossary.UI.draggable_scrollable_content(content, max_content_w, max_co
 					}) or nil,
 				},
 			},
-			content_w > max_content_w and { n = G.UIT.R, config = { minh = scrolls_padding or 0 } } or nil,
-			content_w > max_content_w and SMODS.GUI.scrollbar({
+			should_scroll_w and { n = G.UIT.R, config = { minh = scrolls_padding or 0 } } or nil,
+			should_scroll_w and SMODS.GUI.scrollbar({
 				w = max_content_w,
 				h = 0.25,
 				knob_w = 0.25,
@@ -131,16 +137,14 @@ function Glossary.UI.prepare_overlay_menu()
 		G.SETTINGS.paused = true
 	end
 end
--- Takes from Galdur by Eremel
+-- Taken from Galdur by Eremel
 function Glossary.populate_info_queue(set, key)
 	local info_queue = {}
 	local loc_target = G.localization.descriptions[set][key]
 	for _, lines in ipairs(loc_target.text_parsed) do
 		for _, part in ipairs(lines) do
 			if part.control.T then
-				info_queue[#info_queue + 1] = G.P_CENTERS[part.control.T]
-					or G.P_TAGS[part.control.T]
-					or G.P_BLINDS[part.control.T]
+				info_queue[#info_queue + 1] = G.P_CENTERS[part.control.T] or G.P_TAGS[part.control.T]
 			end
 		end
 	end

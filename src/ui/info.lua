@@ -26,8 +26,29 @@ function Glossary.display_ability_table(input)
 	if info_queue_render and #context.info_queue > 0 then
 		table.insert(rows, {
 			n = G.UIT.R,
-			config = { align = "cm", padding = 0.1 },
-			nodes = info_queue_render,
+			config = { align = "cm" },
+			nodes = {
+				{
+					n = G.UIT.R,
+					config = { align = "cm" },
+					nodes = {
+						{
+							n = G.UIT.T,
+							config = {
+								text = "Info Queue",
+								scale = 0.32,
+								colour = G.C.UI.TEXT_LIGHT,
+							},
+						},
+					},
+				},
+				{ n = G.UIT.R, config = { minh = 0.1 } },
+				{
+					n = G.UIT.R,
+					config = { align = "cm", padding = 0.1 },
+					nodes = info_queue_render,
+				},
+			},
 		})
 	end
 
@@ -42,11 +63,16 @@ function Glossary.display_ability_table(input)
 			Glossary.UI.draggable_scrollable_content(content, 7, 7, 0.1),
 		},
 	}
-	local right_content = #rows > 0 and {
-		n = G.UIT.C,
-		config = { align = "cm" },
-		nodes = rows,
-	} or nil
+	local right_content
+	if #rows > 0 then
+		right_content = {
+			n = G.UIT.C,
+			config = { align = "cm" },
+			nodes = {
+				Glossary.UI.draggable_scrollable_content(rows, 7.4, 10, 0.1),
+			},
+		}
+	end
 
 	Glossary.save_history()
 	G.FUNCS.overlay_menu({

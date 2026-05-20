@@ -1,10 +1,27 @@
 function Glossary.pre_process_info_queue(context)
+	context.extra.processed_card_modifiers = {}
+
 	if
 		context.target_type == "card"
 		and context.source.config.center_key ~= "c_base"
+		and context.source.config.card
 		and (context.source.config.card.value or context.source.config.card.suit)
 	then
-		table.insert(context.info_queue, 1, context.source.config.center)
+		if
+			not Glossary.insert("target_center", function(area)
+				local card = SMODS.create_card({ key = "c_base", front = false, area = area })
+				local success = pcall(function()
+					card:set_ability(context.source.config.center_key, false, false)
+				end)
+				if success then
+					return card
+				else
+					card:remove()
+				end
+			end)
+		then
+			table.insert(context.info_queue, 1, context.source.config.center)
+		end
 	end
 end
 function Glossary.post_process_info_queue(context) end
