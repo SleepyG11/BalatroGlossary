@@ -12,15 +12,7 @@ function Glossary.move_history(dx)
 	history.current_index = history.current_index + dx
 	local entry = history[history.current_index]
 	Glossary.keep_history = true
-	if entry.source_type == "tag" then
-		Glossary.show_tag_info(entry.source)
-	elseif entry.source_type == "card" then
-		if entry.target_type == "back" then
-			Glossary.show_back_info(entry.target, entry.source_type, entry.source)
-		else
-			Glossary.show_card_info(entry.source)
-		end
-	end
+	Glossary.show_history_entry_info(entry)
 	Glossary.keep_history = nil
 end
 function Glossary.get_history()
@@ -54,4 +46,8 @@ end
 function Glossary.load_history()
 	G.OVERLAY_MENU.glossary_history = Glossary.history_buffer
 	Glossary.history_buffer = nil
+end
+
+function Glossary.show_history_entry_info(entry)
+	Glossary.show_info(entry.target_type, entry.target, entry.source_type, entry.source)
 end

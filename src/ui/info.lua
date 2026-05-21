@@ -1,24 +1,23 @@
-function Glossary.display_ability_table(input)
+function Glossary.show_info_ui(input)
 	local content = input.description
 	local info_queue_render = input.info_queue
 	local context = input.context
-	local containers = context.containers
+	local sections = context.sections
 
 	local rows = {}
-
-	for k, container in ipairs(Glossary.RenderSectionsPool) do
-		local items = containers[container.key]
+	for k, section in ipairs(Glossary.InfoSectionsPool) do
+		local items = sections[section.key]
 		if items then
-			if not container:is_empty(items) then
+			if not section:is_empty(items) then
 				table.insert(rows, {
 					n = G.UIT.R,
 					config = { align = "cm" },
 					nodes = {
-						container:render(items),
+						section:render(items),
 					},
 				})
 			else
-				container:destroy(items)
+				section:destroy(items)
 			end
 		end
 	end
@@ -30,23 +29,29 @@ function Glossary.display_ability_table(input)
 			nodes = {
 				{
 					n = G.UIT.R,
-					config = { align = "cm" },
+					config = { align = "cm", colour = { 0, 0, 0, 0.1 }, r = 0.25, padding = 0.1 },
 					nodes = {
 						{
-							n = G.UIT.T,
-							config = {
-								text = "Info Queue",
-								scale = 0.32,
-								colour = G.C.UI.TEXT_LIGHT,
+							n = G.UIT.R,
+							config = { align = "cm", colour = { 0, 0, 0, 0.1 }, r = 0.25, minh = 0.5 },
+							nodes = {
+								{
+									n = G.UIT.T,
+									config = {
+										text = "Info Queue",
+										scale = 0.32,
+										shadow = true,
+										colour = G.C.UI.TEXT_LIGHT,
+									},
+								},
 							},
 						},
+						{
+							n = G.UIT.R,
+							config = { align = "cm", padding = 0.1 },
+							nodes = info_queue_render,
+						},
 					},
-				},
-				{ n = G.UIT.R, config = { minh = 0.1 } },
-				{
-					n = G.UIT.R,
-					config = { align = "cm", padding = 0.1 },
-					nodes = info_queue_render,
 				},
 			},
 		})
@@ -55,12 +60,23 @@ function Glossary.display_ability_table(input)
 	local left_content = {
 		n = G.UIT.C,
 		config = {
-			padding = 0.1,
 			align = "cm",
+			padding = 0.1,
 		},
 		nodes = {
-			input.main,
-			Glossary.UI.draggable_scrollable_content(content, 7, 7, 0.1),
+			{
+				n = G.UIT.C,
+				config = {
+					align = "cm",
+					padding = 0.1,
+					colour = { 0, 0, 0, 0.1 },
+					r = 0.25,
+				},
+				nodes = {
+					input.main,
+					Glossary.UI.draggable_scrollable_content(content, 7, 7, 0.1),
+				},
+			},
 		},
 	}
 	local right_content
@@ -69,7 +85,7 @@ function Glossary.display_ability_table(input)
 			n = G.UIT.C,
 			config = { align = "cm" },
 			nodes = {
-				Glossary.UI.draggable_scrollable_content(rows, 7.4, 10, 0.1),
+				Glossary.UI.draggable_scrollable_content(rows, 8, 10, 0.1),
 			},
 		}
 	end
@@ -93,5 +109,3 @@ function Glossary.display_ability_table(input)
 	Glossary.load_history()
 	Glossary.add_to_history(context)
 end
-
-function Glossary.display_deck_stake() end

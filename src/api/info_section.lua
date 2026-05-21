@@ -1,21 +1,21 @@
-Glossary.RenderSections = {}
-Glossary.RenderSectionsPool = {}
-Glossary.RenderSection = SMODS.GameObject:extend({
-	set = "GlossaryRenderSection",
-	obj_table = Glossary.RenderSections,
+Glossary.InfoSections = {}
+Glossary.InfoSectionsPool = {}
+Glossary.InfoSection = SMODS.GameObject:extend({
+	set = "GlossaryInfoSection",
+	obj_table = Glossary.InfoSections,
 	obj_buffer = {},
 	required_keys = {
 		"key",
 		"order",
 	},
 	pre_inject_class = function()
-		EMPTY(Glossary.RenderSectionsPool)
+		EMPTY(Glossary.InfoSectionsPool)
 	end,
 	inject = function(self)
-		table.insert(Glossary.RenderSectionsPool, self)
+		table.insert(Glossary.InfoSectionsPool, self)
 	end,
 	post_inject_class = function(self)
-		table.sort(Glossary.RenderSectionsPool, function(a, b)
+		table.sort(Glossary.InfoSectionsPool, function(a, b)
 			return a.order < b.order
 		end)
 	end,

@@ -1,4 +1,5 @@
 - Visual
 - Stakes
 - Blinds
-- Extract mod from seal, sticker, stake, blind
+- Extract mod from stake, blind
+- Support for Spacetarts (Wormhole), Pokermon

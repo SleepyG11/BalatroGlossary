@@ -1,33 +1,3 @@
-function Glossary.insert(key, func) end
-function Glossary.create_containers()
-	local containers = {}
-	function Glossary.insert(key, func)
-		if not containers[key] then
-			containers[key] = Glossary.RenderSections[key]:create()
-		end
-		local result = func(containers[key])
-		if result then
-			Glossary.RenderSections[key]:insert(containers[key], result)
-			return true
-		end
-		return false
-	end
-	return containers
-end
-
-function Glossary.new_info_queue_context(target_type, target, source_type, source)
-	local containers = Glossary.create_containers()
-	return {
-		target_type = target_type,
-		target = target,
-		source_type = source_type,
-		source = source,
-		containers = containers,
-		info_queue = {},
-		extra = {},
-	}
-end
-
 function Glossary.show_tag_info(tag)
 	Glossary.UI.prepare_overlay_menu()
 
@@ -43,7 +13,7 @@ function Glossary.show_tag_info(tag)
 
 	local main_render = {
 		n = G.UIT.R,
-		config = { r = 0.25, padding = 0.1, colour = { 0, 0, 0, 0.1 }, align = "cm" },
+		config = { r = 0.25, colour = { 0, 0, 0, 0.1 }, align = "cm" },
 		nodes = {
 			tag_ui,
 		},
@@ -58,7 +28,7 @@ function Glossary.show_tag_info(tag)
 		config = {},
 	}):remove()
 
-	Glossary.display_ability_table({
+	Glossary.show_info_ui({
 		context = context,
 		main = main_render,
 		description = content,
@@ -78,10 +48,10 @@ function Glossary.show_card_info(card)
 		collection = true,
 	})
 
-	local source_t = card.T
 	local new_card = copy_card(card, nil, 1, nil, nil)
-	new_card.T.w = source_t.w
-	new_card.T.h = source_t.h
+	new_card.bypass_discovery_center = card.bypass_discovery_center
+	new_card.bypass_discovery_ui = card.bypass_discovery_ui
+	new_card.bypass_lock = card.bypass_lock
 	main_card_area:emplace(new_card)
 
 	local context = Glossary.new_info_queue_context("card", new_card, "card", card)
@@ -97,7 +67,7 @@ function Glossary.show_card_info(card)
 
 	local main_render = {
 		n = G.UIT.R,
-		config = { r = 0.25, padding = 0.1, colour = { 0, 0, 0, 0.1 }, align = "cm" },
+		config = { r = 0.25, colour = { 0, 0, 0, 0.1 }, align = "cm" },
 		nodes = {
 			{
 				n = G.UIT.O,
@@ -115,7 +85,7 @@ function Glossary.show_card_info(card)
 		config = {},
 	}):remove()
 
-	Glossary.display_ability_table({
+	Glossary.show_info_ui({
 		context = context,
 		main = main_render,
 		description = content,
@@ -190,7 +160,7 @@ function Glossary.show_back_info(back, source_type, source)
 
 	local main_render = {
 		n = G.UIT.R,
-		config = { r = 0.25, padding = 0.1, colour = { 0, 0, 0, 0.1 }, align = "cm" },
+		config = { r = 0.25, colour = { 0, 0, 0, 0.1 }, align = "cm" },
 		nodes = {
 			{
 				n = G.UIT.O,
@@ -237,10 +207,22 @@ function Glossary.show_back_info(back, source_type, source)
 		},
 	}
 
-	Glossary.display_ability_table({
+	Glossary.show_info_ui({
 		context = context,
 		main = main_render,
 		description = description,
 		info_queue = info_queue_render,
 	})
+end
+
+function Glossary.show_info(target_type, target, source_type, source)
+	if source_type == "tag" then
+		Glossary.show_tag_info(source)
+	elseif source_type == "card" then
+		if target_type == "back" then
+			Glossary.show_back_info(target, source_type, source)
+		else
+			Glossary.show_card_info(source)
+		end
+	end
 end

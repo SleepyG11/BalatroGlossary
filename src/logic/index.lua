@@ -1,5 +1,5 @@
 Glossary.load_files({
-	"info_queue.lua",
+	"processing.lua",
 	"history.lua",
 	"entry_points.lua",
 }, "src/logic/")

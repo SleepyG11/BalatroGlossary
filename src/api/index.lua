@@ -1,4 +1,4 @@
 Glossary.load_files({
-	"info_queue_filter.lua",
-	"render_section.lua",
+	"info_queue_processor.lua",
+	"info_section.lua",
 }, "src/api/")

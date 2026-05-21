@@ -103,7 +103,7 @@ end
 --
 
 function Glossary.UI.header(input)
-	local mod = Glossary.get_target_mod(input.context.target_type, input.context.target)
+	local mod = input.context.mod or Glossary.get_target_mod(input.context.target_type, input.context.target)
 
 	return {
 		n = G.UIT.R,
