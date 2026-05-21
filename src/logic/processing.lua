@@ -32,6 +32,11 @@ end
 --
 
 function Glossary.before_process_info_queue(context)
+	context.info_queue = context.info_queue or {}
+	context.extra = SMODS.merge_defaults(context.extra or {}, {
+		processed_card_modifiers = {},
+	})
+
 	context.before = true
 	context.stage = "before"
 	local processors = Glossary.get_processors("before")
@@ -79,15 +84,4 @@ function Glossary.after_process_info_queue(context)
 	end
 	context.after = nil
 	context.stage = nil
-end
-
-function Glossary.process_info_queue(context)
-	context.info_queue = context.info_queue or {}
-	context.extra = SMODS.merge_defaults(context.extra or {}, {
-		processed_card_modifiers = {},
-	})
-
-	Glossary.before_process_info_queue(context)
-	Glossary.individual_process_info_queue(context)
-	Glossary.after_process_info_queue(context)
 end

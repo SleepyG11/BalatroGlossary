@@ -10,12 +10,30 @@ target = "functions/common_events.lua"
 pattern = '''for _, v in ipairs(info_queue) do'''
 position = "before"
 payload = '''
-if Glossary.flitered_info_queue_context then
-    local context = Glossary.flitered_info_queue_context
-    Glossary.flitered_info_queue_context = nil
+local glossary_should_finish = false
+if Glossary.G.processing_request and not Glossary.G.processing_request.started then
+    glossary_should_finish = true
+    Glossary.G.processing_request.started = true
+    local context = Glossary.G.processing_request.context
+
     context.AUT = full_UI_table
     context.info_queue = info_queue
-    Glossary.process_info_queue(context)
+
+    Glossary.before_process_info_queue(context)
+    Glossary.individual_process_info_queue(context)
+end
+'''
+match_indent = true
+
+# Request after processing request
+[[patches]]
+[patches.pattern]
+target = "functions/common_events.lua"
+pattern = '''return full_UI_table'''
+position = "before"
+payload = '''
+if glossary_should_finish then
+    Glossary.G.processing_request.can_finish = true
 end
 '''
 match_indent = true

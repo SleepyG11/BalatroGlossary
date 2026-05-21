@@ -4,9 +4,9 @@ function Glossary.show_tag_info(tag)
 	local new_tag = Tag(tag.key)
 	local tag_ui, tag_sprite = new_tag:generate_UI(1.2)
 	local context = Glossary.new_info_queue_context("tag", new_tag, "tag", tag)
-	Glossary.flitered_info_queue_context = context
+	Glossary.request_processing(context)
 	new_tag:get_uibox_table(tag_sprite)
-	Glossary.flitered_info_queue_context = nil
+	Glossary.clear_processing_request()
 	local popup = G.UIDEF.card_h_popup(tag_sprite)
 
 	tag_sprite.hover = Sprite.hover
@@ -57,9 +57,9 @@ function Glossary.show_card_info(card)
 	local context = Glossary.new_info_queue_context("card", new_card, "card", card)
 	local old_hover = Node.hover
 	Node.hover = function() end
-	Glossary.flitered_info_queue_context = context
+	Glossary.request_processing(context)
 	new_card:hover()
-	Glossary.flitered_info_queue_context = nil
+	Glossary.clear_processing_request()
 	Node.hover = old_hover
 
 	local popup = new_card.config.h_popup

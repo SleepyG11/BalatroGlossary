@@ -53,7 +53,7 @@ Glossary.InfoSection({
 })
 Glossary.InfoSection({
 	key = "center",
-	order = 1,
+	order = 100,
 	prefix_config = {
 		key = false,
 	},

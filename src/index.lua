@@ -1,3 +1,5 @@
+Glossary.G = {}
+
 Glossary.load_file("src/utils.lua")
 
 Glossary.load_file("src/api/index.lua")
