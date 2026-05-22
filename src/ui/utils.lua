@@ -131,6 +131,7 @@ function Glossary.UI.prepare_overlay_menu()
 		G.OVERLAY_MENU = UIBox({ definition = { n = G.UIT.ROOT }, config = {} })
 		G.OVERLAY_MENU.states.visible = false
 		G.SETTINGS.paused = true
+		G.CONTROLLER.locks.frame = true
 	end
 end
 -- Taken from Galdur by Eremel

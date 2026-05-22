@@ -6,7 +6,7 @@
 	"description": "Descriptions. Explained.",
 	"prefix": "gloss",
 	"main_file": "index.lua",
-	"priority": 0,
+	"priority": 2000000000,
 	"version": "0.1.0",
 	"dependencies": []
 }

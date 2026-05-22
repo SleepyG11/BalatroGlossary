@@ -1,3 +1,7 @@
+if not next(SMODS.find_mod("Wormhole")) then
+	return
+end
+
 Glossary.InfoSection({
 	key = "worm_spaceship_modules",
 	order = -10,
