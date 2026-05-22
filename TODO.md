@@ -2,4 +2,4 @@
 - Stakes
 - Blinds
 - Extract mod from stake, blind
-- Support for Spacetarts (Wormhole), Pokermon
+- Support for Pokermon

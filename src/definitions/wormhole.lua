@@ -142,7 +142,6 @@ Glossary.InfoQueueProcessor({
 		end
 	end,
 })
-
 Glossary.InfoQueueProcessor({
 	key = "worm_spacetarts",
 	order = 50,

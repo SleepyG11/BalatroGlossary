@@ -273,23 +273,29 @@ Glossary.InfoQueueProcessor({
 		key = false,
 	},
 	func = function(self, context)
-		if context.entry.set == "Edition" and G.P_CENTERS[context.entry.key] then
-			local is_card_modifier = context.target_type == "card"
-				and context.target.edition
-				and context.target.edition.key == context.entry.key
-				and not context.extra.processed_card_modifiers[context.entry.key]
-			if is_card_modifier then
-				context.extra.processed_card_modifiers[context.entry.key] = true
+		if context.entry.set == "Edition" then
+			local edition_key = context.entry.key
+			if edition_key:match("^e_negative_") then
+				edition_key = "e_negative"
 			end
-			return Glossary.insert(is_card_modifier and "target_center" or "center", function(area)
-				local card = SMODS.create_card({
-					key = context.entry.key,
-					front = false,
-					edition = context.entry.key,
-					area = area,
-				})
-				return card
-			end)
+			if G.P_CENTERS[edition_key] then
+				local is_card_modifier = context.target_type == "card"
+					and context.target.edition
+					and context.target.edition.key == edition_key
+					and not context.extra.processed_card_modifiers[edition_key]
+				if is_card_modifier then
+					context.extra.processed_card_modifiers[edition_key] = true
+				end
+				return Glossary.insert(is_card_modifier and "target_center" or "center", function(area)
+					local card = SMODS.create_card({
+						key = edition_key,
+						front = false,
+						edition = edition_key,
+						area = area,
+					})
+					return card
+				end)
+			end
 		end
 	end,
 })
