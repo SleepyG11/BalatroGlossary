@@ -1,4 +1,4 @@
-function Glossary.UI.basic_section(section, header_text, content)
+function Glossary.UI.basic_section(section, content)
 	return {
 		n = G.UIT.R,
 		config = { align = "cm", colour = { 0, 0, 0, 0.1 }, r = 0.25, padding = 0.1 },
@@ -10,7 +10,7 @@ function Glossary.UI.basic_section(section, header_text, content)
 					{
 						n = G.UIT.T,
 						config = {
-							text = header_text or "ERROR",
+							text = localize({ type = "name_text", key = section.key, set = section.set }),
 							scale = 0.32,
 							shadow = true,
 							colour = G.C.UI.TEXT_LIGHT,

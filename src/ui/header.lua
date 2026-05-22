@@ -57,7 +57,7 @@ function Glossary.UI.header_mod_additions_button(mod)
 		button = "glossary_open_mod_additions",
 		colour = mod.badge_colour,
 		minw = 1.5,
-		text = "Mod Additions",
+		text = mod.name .. ": " .. localize("b_additions"),
 		ref_table = {
 			mod = mod,
 		},

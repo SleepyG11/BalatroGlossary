@@ -16,11 +16,7 @@ Glossary.InfoSection({
 	end,
 	destroy = function(self, nodes) end,
 	render = function(self, nodes)
-		return Glossary.UI.basic_section(
-			self,
-			"Wormhole: Spaceship modules",
-			{ n = G.UIT.R, config = { padding = 0.1, align = "cm" }, nodes = nodes }
-		)
+		return Glossary.UI.basic_section(self, { n = G.UIT.R, config = { padding = 0.1, align = "cm" }, nodes = nodes })
 	end,
 	insert = function(self, nodes, result)
 		nodes[#nodes + 1] = result
@@ -46,7 +42,7 @@ Glossary.InfoSection({
 		area:remove()
 	end,
 	render = function(self, area)
-		return Glossary.UI.basic_section(self, "Wormhole: Spacetarts", { n = G.UIT.O, config = { object = area } })
+		return Glossary.UI.basic_section(self, { n = G.UIT.O, config = { object = area } })
 	end,
 	insert = function(self, area, result)
 		area:emplace(result)
@@ -54,7 +50,7 @@ Glossary.InfoSection({
 })
 
 Glossary.InfoQueueProcessor({
-	key = "worm_spaceship_modules",
+	key = "worm_spaceship_module",
 	order = 50,
 	prefix_config = {
 		key = false,

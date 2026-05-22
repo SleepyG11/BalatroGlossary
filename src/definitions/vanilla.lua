@@ -18,14 +18,14 @@ Glossary.InfoSection({
 		area:remove()
 	end,
 	render = function(self, area)
-		return Glossary.UI.basic_section(self, "Applied modifiers", { n = G.UIT.O, config = { object = area } })
+		return Glossary.UI.basic_section(self, { n = G.UIT.O, config = { object = area } })
 	end,
 	insert = function(self, area, result)
 		area:emplace(result)
 	end,
 })
 Glossary.InfoSection({
-	key = "center",
+	key = "centers",
 	order = 100,
 	prefix_config = {
 		key = false,
@@ -44,14 +44,14 @@ Glossary.InfoSection({
 		area:remove()
 	end,
 	render = function(self, area)
-		return Glossary.UI.basic_section(self, "Related objects", { n = G.UIT.O, config = { object = area } })
+		return Glossary.UI.basic_section(self, { n = G.UIT.O, config = { object = area } })
 	end,
 	insert = function(self, area, result)
 		area:emplace(result)
 	end,
 })
 Glossary.InfoSection({
-	key = "skip_tag",
+	key = "skip_tags",
 	order = 2,
 	prefix_config = {
 		key = false,
@@ -64,7 +64,7 @@ Glossary.InfoSection({
 	end,
 	destroy = function(self, nodes) end,
 	render = function(self, nodes)
-		return Glossary.UI.basic_section(self, "Skip tags", {
+		return Glossary.UI.basic_section(self, {
 			n = G.UIT.R,
 			config = { minw = 7, align = "cm" },
 			nodes = nodes,
@@ -125,7 +125,7 @@ Glossary.InfoQueueProcessor({
 				if is_card_modifier then
 					context.extra.processed_card_modifiers[context.entry.key] = true
 				end
-				return Glossary.insert(is_card_modifier and "target_modifiers" or "center", function(area)
+				return Glossary.insert(is_card_modifier and "target_modifiers" or "centers", function(area)
 					local card = SMODS.create_card({ key = "c_base", front = false, area = area })
 					SMODS.Stickers[context.entry.key]:apply(card, true)
 					return card
@@ -156,7 +156,7 @@ Glossary.InfoQueueProcessor({
 						if is_card_modifier then
 							context.extra.processed_card_modifiers[seal.key] = true
 						end
-						return Glossary.insert(is_card_modifier and "target_modifiers" or "center", function(area)
+						return Glossary.insert(is_card_modifier and "target_modifiers" or "centers", function(area)
 							return SMODS.create_card({ key = "c_base", front = false, seal = seal.key, area = area })
 						end)
 					end
@@ -173,7 +173,7 @@ Glossary.InfoQueueProcessor({
 				if is_card_modifier then
 					context.extra.processed_card_modifiers[context.entry.key] = true
 				end
-				return Glossary.insert(is_card_modifier and "target_modifiers" or "center", function(area)
+				return Glossary.insert(is_card_modifier and "target_modifiers" or "centers", function(area)
 					return SMODS.create_card({ key = "c_base", front = false, seal = context.entry.key, area = area })
 				end)
 			end
@@ -188,7 +188,7 @@ Glossary.InfoQueueProcessor({
 	},
 	func = function(self, context)
 		if G.P_TAGS[context.entry.key] then
-			return Glossary.insert("skip_tag", function(nodes)
+			return Glossary.insert("skip_tags", function(nodes)
 				local tag_ui = Tag(context.entry.key, true):generate_UI()
 				return tag_ui
 			end)
@@ -215,7 +215,7 @@ Glossary.InfoQueueProcessor({
 				if is_card_modifier then
 					context.extra.processed_card_modifiers[edition_key] = true
 				end
-				return Glossary.insert(is_card_modifier and "target_modifiers" or "center", function(area)
+				return Glossary.insert(is_card_modifier and "target_modifiers" or "centers", function(area)
 					return SMODS.create_card({
 						key = edition_key,
 						front = false,
@@ -235,7 +235,7 @@ Glossary.InfoQueueProcessor({
 	},
 	func = function(self, context)
 		if context.individual and G.P_CENTERS[context.entry.key] then
-			return Glossary.insert("center", function(area)
+			return Glossary.insert("centers", function(area)
 				return Glossary.safe_card_from_center(context.entry.key, area)
 			end)
 		end

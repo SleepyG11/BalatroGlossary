@@ -1,7 +1,7 @@
 Glossary.InfoSections = {}
 Glossary.InfoSectionsPool = {}
 Glossary.InfoSection = SMODS.GameObject:extend({
-	set = "GlossaryInfoSection",
+	set = "Glossary_InfoSection",
 	obj_table = Glossary.InfoSections,
 	obj_buffer = {},
 	required_keys = {
@@ -19,7 +19,9 @@ Glossary.InfoSection = SMODS.GameObject:extend({
 			return a.order < b.order
 		end)
 	end,
-	process_loc_text = function() end,
+	process_loc_text = function(self)
+		SMODS.process_loc_text(G.localization.descriptions.Glossary_InfoSection, self.key, self.loc_txt)
+	end,
 
 	is_empty = function(self, c)
 		return true

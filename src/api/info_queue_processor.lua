@@ -1,7 +1,7 @@
 Glossary.InfoQueueProcessors = {}
 Glossary.InfoQueueProcessorsPool = {}
 Glossary.InfoQueueProcessor = SMODS.GameObject:extend({
-	set = "GlossaryInfoQueueProcessor",
+	set = "Glossary_InfoQueueProcessor",
 	obj_table = Glossary.InfoQueueProcessors,
 	obj_buffer = {},
 	required_keys = {
@@ -19,7 +19,7 @@ Glossary.InfoQueueProcessor = SMODS.GameObject:extend({
 			return a.order < b.order
 		end)
 	end,
-	process_loc_text = function() end,
+	process_loc_text = function(self) end,
 
 	func = function(self, context) end,
 	conditions = { individual = true },

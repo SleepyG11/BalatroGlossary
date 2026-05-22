@@ -33,7 +33,7 @@ Glossary.InfoSection({
 		area:remove()
 	end,
 	render = function(self, area)
-		return Glossary.UI.basic_section(self, "Pokermon: Evolutions", { n = G.UIT.O, config = { object = area } })
+		return Glossary.UI.basic_section(self, { n = G.UIT.O, config = { object = area } })
 	end,
 	insert = function(self, area, result)
 		area:emplace(result)
@@ -59,11 +59,7 @@ Glossary.InfoSection({
 		area:remove()
 	end,
 	render = function(self, area)
-		return Glossary.UI.basic_section(
-			self,
-			"Pokermon: Evolution materials",
-			{ n = G.UIT.O, config = { object = area } }
-		)
+		return Glossary.UI.basic_section(self, { n = G.UIT.O, config = { object = area } })
 	end,
 	insert = function(self, area, result)
 		area:emplace(result)
