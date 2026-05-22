@@ -120,11 +120,33 @@ Glossary.InfoSection({
 	render = function(self, nodes)
 		return {
 			n = G.UIT.R,
-			config = { r = 0.25, colour = { 0, 0, 0, 0.1 }, padding = 0.1, align = "cm", minw = 7 },
+			config = { align = "cm", colour = { 0, 0, 0, 0.1 }, r = 0.25, padding = 0.1 },
 			nodes = {
 				{
 					n = G.UIT.R,
-					nodes = nodes,
+					config = { align = "cm", colour = { 0, 0, 0, 0.1 }, r = 0.25, minh = 0.5 },
+					nodes = {
+						{
+							n = G.UIT.T,
+							config = {
+								text = "Skip tags",
+								scale = 0.32,
+								shadow = true,
+								colour = G.C.UI.TEXT_LIGHT,
+							},
+						},
+					},
+				},
+				{
+					n = G.UIT.R,
+					config = { align = "cm", padding = 0.1, r = 0.25, colour = { 0, 0, 0, 0.1 } },
+					nodes = {
+						{
+							n = G.UIT.R,
+							config = { minw = 7, align = "cm" },
+							nodes = nodes,
+						},
+					},
 				},
 			},
 		}

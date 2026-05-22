@@ -39,7 +39,7 @@ Glossary.InfoSection({
 						{
 							n = G.UIT.T,
 							config = {
-								text = "Evolutions",
+								text = "Pokermon: Evolutions",
 								scale = 0.32,
 								shadow = true,
 								colour = G.C.UI.TEXT_LIGHT,
@@ -92,7 +92,7 @@ Glossary.InfoSection({
 						{
 							n = G.UIT.T,
 							config = {
-								text = "Evolution materials",
+								text = "Pokermon: Evolution materials",
 								scale = 0.32,
 								shadow = true,
 								colour = G.C.UI.TEXT_LIGHT,

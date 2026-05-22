@@ -27,7 +27,7 @@ Glossary.InfoSection({
 						{
 							n = G.UIT.T,
 							config = {
-								text = "Spaceship modules",
+								text = "Wormhole: Spaceship modules",
 								scale = 0.32,
 								shadow = true,
 								colour = G.C.UI.TEXT_LIGHT,
@@ -78,7 +78,7 @@ Glossary.InfoSection({
 						{
 							n = G.UIT.T,
 							config = {
-								text = "Spacetarts",
+								text = "Wormhole: Spacetarts",
 								scale = 0.32,
 								shadow = true,
 								colour = G.C.UI.TEXT_LIGHT,
