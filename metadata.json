@@ -8,5 +8,5 @@
 	"main_file": "index.lua",
 	"priority": 2000000000,
 	"version": "0.1.0",
-	"dependencies": []
+	"dependencies": ["Steamodded (>=1.0.0~BETA-1620a)"]
 }

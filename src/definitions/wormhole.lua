@@ -101,7 +101,12 @@ Glossary.InfoQueueProcessor({
 		key = false,
 	},
 	func = function(self, context)
-		if context.source_type == "card" and context.source.tarts and #context.source.tarts > 0 then
+		if
+			context.source_type == "card"
+			and context.source.facing ~= "back"
+			and context.source.tarts
+			and #context.source.tarts > 0
+		then
 			context.target.tarts = context.source.tarts
 			for _, v in ipairs(context.source.tarts) do
 				Glossary.insert("worm_spacetarts", function(area)

@@ -75,6 +75,7 @@ Glossary.InfoQueueProcessor({
 	func = function(self, context)
 		if
 			context.target_type == "card"
+			and context.target.facing ~= "back"
 			and not context.target.poke_change_sprite
 			and (context.target.config.center.stage or context.target.config.center.poke_multi_item)
 		then

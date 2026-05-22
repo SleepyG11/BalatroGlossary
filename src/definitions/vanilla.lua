@@ -92,6 +92,7 @@ Glossary.InfoQueueProcessor({
 	func = function(self, context)
 		if
 			context.source_type == "card"
+			and context.source.facing ~= "back"
 			and context.source.config.center_key ~= "c_base"
 			and context.source.config.card
 			and (context.source.config.card.value or context.source.config.card.suit)
