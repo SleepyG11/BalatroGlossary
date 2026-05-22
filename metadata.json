@@ -3,7 +3,7 @@
 	"name": "Glossary",
 	"display_name": "Glossary",
 	"author": ["SleepyG11"],
-	"description": "Descriptions. Explained.",
+	"description": "Info. Visualized.",
 	"prefix": "gloss",
 	"main_file": "index.lua",
 	"priority": 2000000000,

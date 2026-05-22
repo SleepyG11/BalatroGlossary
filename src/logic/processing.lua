@@ -85,3 +85,9 @@ function Glossary.after_process_info_queue(context)
 	context.after = nil
 	context.stage = nil
 end
+
+function Glossary.process_info_queue(context)
+	Glossary.before_process_info_queue(context)
+	Glossary.individual_process_info_queue(context)
+	Glossary.after_process_info_queue(context)
+end

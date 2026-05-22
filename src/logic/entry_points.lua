@@ -123,7 +123,8 @@ function Glossary.show_back_info(back, source_type, source)
 	-- Taken from Galdur by Eremel
 	context.AUT = { main = {}, info = {}, type = {}, name = "done", badges = {}, from_detailed_tooltip = true }
 	context.info_queue = Glossary.populate_info_queue("Back", back.key)
-	Glossary.process_info_queue(context)
+	Glossary.before_process_info_queue(context)
+	Glossary.individual_process_info_queue(context)
 	local info_queue_render = {}
 	for _, center in pairs(context.info_queue) do
 		local desc = generate_card_ui(center, context.AUT, nil, center.set, nil)
@@ -147,6 +148,7 @@ function Glossary.show_back_info(back, source_type, source)
 			},
 		}
 	end
+	Glossary.after_process_info_queue(context)
 
 	local old_desc_from_rows = desc_from_rows
 	function desc_from_rows(a, b, maxw, ...)

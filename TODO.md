@@ -2,4 +2,3 @@
 - Stakes
 - Blinds
 - Extract mod from stake, blind
-- Support for Pokermon
