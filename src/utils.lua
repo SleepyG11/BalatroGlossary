@@ -33,3 +33,16 @@ function Glossary.get_card_back_center(card, forced)
 	end
 	return nil
 end
+
+function Glossary.safe_card_from_center(center_key, area)
+	local card = SMODS.create_card({ key = "c_base", front = false, area = area })
+	local success = pcall(function()
+		card:set_ability(center_key, false, false)
+	end)
+	if success then
+		return card
+	else
+		card:remove()
+		return nil
+	end
+end

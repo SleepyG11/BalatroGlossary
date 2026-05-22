@@ -16,32 +16,11 @@ Glossary.InfoSection({
 	end,
 	destroy = function(self, nodes) end,
 	render = function(self, nodes)
-		return {
-			n = G.UIT.R,
-			config = { align = "cm", colour = { 0, 0, 0, 0.1 }, r = 0.25, padding = 0.1 },
-			nodes = {
-				{
-					n = G.UIT.R,
-					config = { align = "cm", colour = { 0, 0, 0, 0.1 }, r = 0.25, minh = 0.5 },
-					nodes = {
-						{
-							n = G.UIT.T,
-							config = {
-								text = "Wormhole: Spaceship modules",
-								scale = 0.32,
-								shadow = true,
-								colour = G.C.UI.TEXT_LIGHT,
-							},
-						},
-					},
-				},
-				{
-					n = G.UIT.R,
-					config = { align = "cm", padding = 0.1, r = 0.25, colour = { 0, 0, 0, 0.1 } },
-					nodes = nodes,
-				},
-			},
-		}
+		return Glossary.UI.basic_section(
+			self,
+			"Wormhole: Spaceship modules",
+			{ n = G.UIT.R, config = { padding = 0.1, align = "cm" }, nodes = nodes }
+		)
 	end,
 	insert = function(self, nodes, result)
 		nodes[#nodes + 1] = result
@@ -67,34 +46,7 @@ Glossary.InfoSection({
 		area:remove()
 	end,
 	render = function(self, area)
-		return {
-			n = G.UIT.R,
-			config = { align = "cm", colour = { 0, 0, 0, 0.1 }, r = 0.25, padding = 0.1 },
-			nodes = {
-				{
-					n = G.UIT.R,
-					config = { align = "cm", colour = { 0, 0, 0, 0.1 }, r = 0.25, minh = 0.5 },
-					nodes = {
-						{
-							n = G.UIT.T,
-							config = {
-								text = "Wormhole: Spacetarts",
-								scale = 0.32,
-								shadow = true,
-								colour = G.C.UI.TEXT_LIGHT,
-							},
-						},
-					},
-				},
-				{
-					n = G.UIT.R,
-					config = { align = "cm", padding = 0.1, r = 0.25, colour = { 0, 0, 0, 0.1 } },
-					nodes = {
-						{ n = G.UIT.O, config = { object = area } },
-					},
-				},
-			},
-		}
+		return Glossary.UI.basic_section(self, "Wormhole: Spacetarts", { n = G.UIT.O, config = { object = area } })
 	end,
 	insert = function(self, area, result)
 		area:emplace(result)
@@ -157,15 +109,7 @@ Glossary.InfoQueueProcessor({
 			context.target.tarts = context.source.tarts
 			for _, v in ipairs(context.source.tarts) do
 				Glossary.insert("worm_spacetarts", function(area)
-					local card = SMODS.create_card({ key = "c_base", front = false, area = area })
-					local success = pcall(function()
-						card:set_ability(v.center_key, false, false)
-					end)
-					if success then
-						return card
-					else
-						card:remove()
-					end
+					return Glossary.safe_card_from_center(v.center_key, area)
 				end)
 			end
 		end

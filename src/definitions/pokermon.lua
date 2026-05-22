@@ -7,6 +7,11 @@ if open_pokedex then
 		return Glossary.show_card_info(target)
 	end
 end
+if not get_family_keys then
+	get_family_keys = function(target)
+		return {}
+	end
+end
 
 Glossary.InfoSection({
 	key = "poke_evolutions",
@@ -28,34 +33,7 @@ Glossary.InfoSection({
 		area:remove()
 	end,
 	render = function(self, area)
-		return {
-			n = G.UIT.R,
-			config = { align = "cm", colour = { 0, 0, 0, 0.1 }, r = 0.25, padding = 0.1 },
-			nodes = {
-				{
-					n = G.UIT.R,
-					config = { align = "cm", colour = { 0, 0, 0, 0.1 }, r = 0.25, minh = 0.5 },
-					nodes = {
-						{
-							n = G.UIT.T,
-							config = {
-								text = "Pokermon: Evolutions",
-								scale = 0.32,
-								shadow = true,
-								colour = G.C.UI.TEXT_LIGHT,
-							},
-						},
-					},
-				},
-				{
-					n = G.UIT.R,
-					config = { align = "cm", padding = 0.1, r = 0.25, colour = { 0, 0, 0, 0.1 } },
-					nodes = {
-						{ n = G.UIT.O, config = { object = area } },
-					},
-				},
-			},
-		}
+		return Glossary.UI.basic_section(self, "Pokermon: Evolutions", { n = G.UIT.O, config = { object = area } })
 	end,
 	insert = function(self, area, result)
 		area:emplace(result)
@@ -81,34 +59,11 @@ Glossary.InfoSection({
 		area:remove()
 	end,
 	render = function(self, area)
-		return {
-			n = G.UIT.R,
-			config = { align = "cm", colour = { 0, 0, 0, 0.1 }, r = 0.25, padding = 0.1 },
-			nodes = {
-				{
-					n = G.UIT.R,
-					config = { align = "cm", colour = { 0, 0, 0, 0.1 }, r = 0.25, minh = 0.5 },
-					nodes = {
-						{
-							n = G.UIT.T,
-							config = {
-								text = "Pokermon: Evolution materials",
-								scale = 0.32,
-								shadow = true,
-								colour = G.C.UI.TEXT_LIGHT,
-							},
-						},
-					},
-				},
-				{
-					n = G.UIT.R,
-					config = { align = "cm", padding = 0.1, r = 0.25, colour = { 0, 0, 0, 0.1 } },
-					nodes = {
-						{ n = G.UIT.O, config = { object = area } },
-					},
-				},
-			},
-		}
+		return Glossary.UI.basic_section(
+			self,
+			"Pokermon: Evolution materials",
+			{ n = G.UIT.O, config = { object = area } }
+		)
 	end,
 	insert = function(self, area, result)
 		area:emplace(result)
@@ -138,11 +93,8 @@ Glossary.InfoQueueProcessor({
 				Glossary.insert(
 					center and center.set == "Joker" and "poke_evolutions" or "poke_evolution_materials",
 					function(area)
-						local card = SMODS.create_card({ key = "c_base", front = false, area = area })
-						local success = pcall(function()
-							card:set_ability(key, false, false)
-						end)
-						if success then
+						local card = Glossary.safe_card_from_center(key, area)
+						if card then
 							local subkeys = get_family_keys(card)
 							if center.megas then
 								table.insert(subkeys, "c_poke_megastone")
@@ -154,8 +106,6 @@ Glossary.InfoQueueProcessor({
 								end
 							end
 							return card
-						else
-							card:remove()
 						end
 					end
 				)
@@ -165,15 +115,7 @@ Glossary.InfoQueueProcessor({
 				Glossary.insert(
 					center and center.set == "Joker" and "poke_evolutions" or "poke_evolution_materials",
 					function(area)
-						local card = SMODS.create_card({ key = "c_base", front = false, area = area })
-						local success = pcall(function()
-							card:set_ability(key, false, false)
-						end)
-						if success then
-							return card
-						else
-							card:remove()
-						end
+						return Glossary.safe_card_from_center(key, area)
 					end
 				)
 			end

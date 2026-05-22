@@ -5,3 +5,4 @@ Glossary.load_files({
 	"header.lua",
 	"info.lua",
 }, "src/ui/")
+Glossary.load_directory("src/ui/sections")
