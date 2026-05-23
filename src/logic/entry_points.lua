@@ -1,6 +1,9 @@
 function Glossary.show_tag_info(tag, source_type, source)
 	Glossary.UI.prepare_overlay_menu()
 
+	local old_check_for_unlock = check_for_unlock
+	check_for_unlock = function() end
+
 	local new_tag = Tag(tag.key)
 	local tag_ui, tag_sprite = new_tag:generate_UI(1.2)
 	local context = Glossary.new_info_queue_context("tag", new_tag, source_type, source)
@@ -8,6 +11,8 @@ function Glossary.show_tag_info(tag, source_type, source)
 	new_tag:get_uibox_table(tag_sprite)
 	Glossary.clear_processing_request()
 	local popup = G.UIDEF.card_h_popup(tag_sprite)
+
+	check_for_unlock = old_check_for_unlock
 
 	tag_sprite.hover = Sprite.hover
 
@@ -48,6 +53,9 @@ function Glossary.show_card_info(card, source_type, source)
 		collection = true,
 	})
 
+	local old_check_for_unlock = check_for_unlock
+	check_for_unlock = function() end
+
 	local new_card = Card(card.T.x, card.T.y, G.CARD_W, G.CARD_H, G.P_CARDS.empty, G.P_CENTERS.c_base, {
 		bypass_discovery_center = card.bypass_discovery_center,
 		bypass_discovery_ui = card.bypass_discovery_ui,
@@ -63,6 +71,8 @@ function Glossary.show_card_info(card, source_type, source)
 	new_card:hover()
 	Glossary.clear_processing_request()
 	Node.hover = old_hover
+
+	check_for_unlock = old_check_for_unlock
 
 	local popup = new_card.config.h_popup
 	new_card.no_ui = true
@@ -102,6 +112,9 @@ function Glossary.show_back_info(back, source_type, source)
 		type = "deck",
 		collection = true,
 	})
+
+	local old_check_for_unlock = check_for_unlock
+	check_for_unlock = function() end
 
 	local new_back = Back(back)
 	local old_back, old_v_back = G.GAME.selected_back, G.GAME.viewed_back
@@ -161,6 +174,8 @@ function Glossary.show_back_info(back, source_type, source)
 	desc_from_rows = old_desc_from_rows
 
 	G.GAME.selected_back, G.GAME.viewed_back = old_back, old_v_back
+
+	check_for_unlock = old_check_for_unlock
 
 	local main_render = {
 		n = G.UIT.R,
