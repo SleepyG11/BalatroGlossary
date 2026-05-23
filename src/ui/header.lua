@@ -27,6 +27,9 @@ function Glossary.UI.header_button(args)
 		},
 	}
 end
+function Glossary.UI.header_separator()
+	return { n = G.UIT.C, config = { minh = 0.4, minw = 0.04, colour = { 1, 1, 1, 0.25 } } }
+end
 
 function Glossary.UI.header_move_history_button(dx)
 	return Glossary.UI.header_button({
@@ -67,9 +70,40 @@ end
 function Glossary.UI.header_vanilla_collection_button()
 	return Glossary.UI.header_button({
 		button = "glossary_open_vanilla_collection",
-		colour = G.C.MULT,
+		colour = G.C.GREEN,
 		minw = 1.5,
 		text = localize("b_collection"),
+	})
+end
+function Glossary.UI.header_close_button()
+	return Glossary.UI.header_button({
+		button = "exit_overlay_menu",
+		colour = G.C.MULT,
+		text = "X",
+		minw = 0.5,
+		font = G.FONTS[1],
+	})
+end
+function Glossary.UI.header_back_button(back)
+	return Glossary.UI.header_button({
+		button = "glossary_show_back_info",
+		colour = G.C.ORANGE,
+		minw = 1,
+		text = localize("b_deck"),
+		ref_table = {
+			back = back,
+		},
+	})
+end
+function Glossary.UI.header_stake_button(stake)
+	return Glossary.UI.header_button({
+		button = "exit_overlay_menu",
+		colour = G.C.ORANGE,
+		minw = 1,
+		text = localize("b_stake"),
+		ref_table = {
+			stake = stake,
+		},
 	})
 end
 
@@ -99,20 +133,71 @@ G.FUNCS.glossary_open_vanilla_collection = function(e)
 	G.ACTIVE_MOD_UI = nil
 	G.FUNCS.your_collection(e)
 end
+G.FUNCS.glossary_show_back_info = function(e)
+	Glossary.show_back_info(e.config.ref_table.back, "ui_button", e)
+end
+G.FUNCS.glossary_show_stake_info = function(e)
+	Glossary.show_stake_info(e.config.ref_table.stake, "ui_button", e)
+end
 
 --
 
+G.FUNCS.glossary_setup_header_right_buttons = function(e)
+	e.config.func = nil
+	e.config.ref_table.config.major = e
+	e.config.ref_table.config.parent = e
+	e.children.glossary_right_buttons = UIBox(e.config.ref_table)
+end
+
 function Glossary.UI.header(input)
 	local mod = input.context.mod or Glossary.get_target_mod(input.context.target_type, input.context.target)
+	local back = G.STAGE == G.STAGES.RUN and G.GAME.selected_back and G.GAME.selected_back.effect.center
+	local stake = G.STAGE == G.STAGES.RUN and G.GAME.stake and G.P_STAKES[SMODS.stake_from_index(G.GAME.stake)]
 
 	return {
 		n = G.UIT.R,
-		config = { colour = { 0, 0, 0, 0.1 }, r = 0.25, padding = 0.1, minw = 14 },
+		config = {
+			colour = { 0, 0, 0, 0.1 },
+			r = 0.25,
+			padding = 0.1,
+			minw = 14,
+			func = "glossary_setup_header_right_buttons",
+			ref_table = {
+				definition = {
+					n = G.UIT.ROOT,
+					config = { colour = G.C.CLEAR },
+					nodes = {
+						{
+							n = G.UIT.R,
+							config = { padding = 0.1, align = "cm" },
+							nodes = {
+								back and Glossary.UI.header_back_button(back) or nil,
+								stake and Glossary.UI.header_stake_button(stake) or nil,
+								(back or stake) and Glossary.UI.header_separator() or nil,
+								Glossary.UI.header_mod_additions_button(mod),
+								Glossary.UI.header_vanilla_collection_button(),
+								Glossary.UI.header_separator(),
+								Glossary.UI.header_close_button(),
+							},
+						},
+					},
+				},
+				config = {
+					align = "cri",
+				},
+			},
+		},
 		nodes = {
 			Glossary.UI.header_move_history_button(-1),
 			Glossary.UI.header_move_history_button(1),
-			Glossary.UI.header_mod_additions_button(mod),
-			Glossary.UI.header_vanilla_collection_button(),
 		},
 	}
+end
+
+--
+
+local old_exit_menu = G.FUNCS.exit_overlay_menu
+function G.FUNCS.exit_overlay_menu(...)
+	old_exit_menu(...)
+	G.ACTIVE_MOD_UI = nil
 end

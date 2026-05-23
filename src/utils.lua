@@ -1,6 +1,6 @@
 function Glossary.is_collection_card_junk(context)
 	return context.target_type == "card"
-		and not context.source.playing_card
+		and (context.source_type ~= "card" or not context.source.playing_card)
 		and context.target.config.center_key == "c_base"
 		and (context.target.area and context.target.area.config.collection)
 end

@@ -1,9 +1,9 @@
-function Glossary.show_tag_info(tag)
+function Glossary.show_tag_info(tag, source_type, source)
 	Glossary.UI.prepare_overlay_menu()
 
 	local new_tag = Tag(tag.key)
 	local tag_ui, tag_sprite = new_tag:generate_UI(1.2)
-	local context = Glossary.new_info_queue_context("tag", new_tag, "tag", tag)
+	local context = Glossary.new_info_queue_context("tag", new_tag, source_type, source)
 	Glossary.request_processing(context)
 	new_tag:get_uibox_table(tag_sprite)
 	Glossary.clear_processing_request()
@@ -13,7 +13,7 @@ function Glossary.show_tag_info(tag)
 
 	local main_render = {
 		n = G.UIT.R,
-		config = { r = 0.25, colour = { 0, 0, 0, 0.1 }, align = "cm" },
+		config = { r = 0.25, colour = { 0, 0, 0, 0.1 }, align = "cm", padding = 0.1 },
 		nodes = {
 			tag_ui,
 		},
@@ -35,10 +35,10 @@ function Glossary.show_tag_info(tag)
 		info_queue = info_queue_render,
 	})
 end
-function Glossary.show_card_info(card)
+function Glossary.show_card_info(card, source_type, source)
 	local back = Glossary.get_card_back_center(card)
 	if back then
-		return Glossary.show_back_info(back, "card", card)
+		return Glossary.show_back_info(back, source_type, source)
 	end
 	Glossary.UI.prepare_overlay_menu()
 
@@ -54,7 +54,7 @@ function Glossary.show_card_info(card)
 	new_card.bypass_lock = card.bypass_lock
 	main_card_area:emplace(new_card)
 
-	local context = Glossary.new_info_queue_context("card", new_card, "card", card)
+	local context = Glossary.new_info_queue_context("card", new_card, source_type, source)
 	local old_hover = Node.hover
 	Node.hover = function() end
 	Glossary.request_processing(context)
@@ -216,15 +216,16 @@ function Glossary.show_back_info(back, source_type, source)
 		info_queue = info_queue_render,
 	})
 end
+function Glossary.show_stake_info(stake, source_type, source) end
 
 function Glossary.show_info(target_type, target, source_type, source)
-	if source_type == "tag" then
-		Glossary.show_tag_info(source)
-	elseif source_type == "card" then
-		if target_type == "back" then
-			Glossary.show_back_info(target, source_type, source)
-		else
-			Glossary.show_card_info(source)
-		end
+	if target_type == "tag" then
+		Glossary.show_tag_info(target, source_type, source)
+	elseif target_type == "back" then
+		Glossary.show_back_info(target, source_type, source)
+	elseif target_type == "stake" then
+		Glossary.show_stake_info(target, source_type, source)
+	elseif target_type == "card" then
+		Glossary.show_card_info(target, source_type, source)
 	end
 end

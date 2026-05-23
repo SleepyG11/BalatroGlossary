@@ -74,7 +74,7 @@ function Glossary.show_info_ui(input)
 				},
 				nodes = {
 					input.main,
-					Glossary.UI.draggable_scrollable_content(content, 7, 7, 0.1),
+					Glossary.UI.draggable_scrollable_content(content, 7, 6, 0.1),
 				},
 			},
 		},
@@ -85,7 +85,7 @@ function Glossary.show_info_ui(input)
 			n = G.UIT.C,
 			config = { align = "cm" },
 			nodes = {
-				Glossary.UI.draggable_scrollable_content(rows, 8, 10, 0.1),
+				Glossary.UI.draggable_scrollable_content(rows, 8, 6 + G.CARD_H, 0.1),
 			},
 		}
 	end

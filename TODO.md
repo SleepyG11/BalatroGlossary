@@ -1,4 +1,4 @@
 - Visual
 - Stakes
 - Blinds
-- Extract mod from stake, blind
+- Extract mod from stake, sleeve, blind

@@ -1,7 +1,7 @@
 function Glossary.UI.init_draggable_scrollbox(scrollbox)
 	scrollbox.content.states.drag.can = true
 	function scrollbox.content:can_drag()
-		return true
+		return self
 	end
 	function scrollbox.content:drag()
 		self.ARGS.drag_cursor_trans = self.ARGS.drag_cursor_trans or {}
@@ -25,11 +25,9 @@ function Glossary.UI.init_draggable_scrollbox(scrollbox)
 		})
 
 		local offset = self.click_offset
-		offset.scroll_offset_x = offset.scroll_offset_x or scrollbox.scroll_offset.x
-		offset.scroll_offset_y = offset.scroll_offset_y or scrollbox.scroll_offset.y
 
-		scrollbox.scroll_offset.x = offset.scroll_offset_x - (_p.x - offset.x)
-		scrollbox.scroll_offset.y = offset.scroll_offset_y - (_p.y - offset.y)
+		scrollbox.scroll_offset.x = (offset.x - _p.x)
+		scrollbox.scroll_offset.y = (offset.y - _p.y)
 
 		local max_x, max_y = scrollbox:get_scroll_distance()
 		scrollbox.scroll_offset.x = math.max(0, math.min(max_x, scrollbox.scroll_offset.x))

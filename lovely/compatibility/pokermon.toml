@@ -10,6 +10,6 @@ target = '''=[SMODS Pokermon "pokeui.lua"]'''
 pattern = '''and (target.config.center.stage or target.config.center.poke_multi_item) then'''
 position = "after"
 payload = '''
-if true then return Glossary.show_card_info(target) end
+if true then return Glossary.show_card_info(target, "card", target) end
 '''
 match_indent = true
