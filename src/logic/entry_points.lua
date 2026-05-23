@@ -48,10 +48,12 @@ function Glossary.show_card_info(card, source_type, source)
 		collection = true,
 	})
 
-	local new_card = copy_card(card, nil, 1, nil, nil)
-	new_card.bypass_discovery_center = card.bypass_discovery_center
-	new_card.bypass_discovery_ui = card.bypass_discovery_ui
-	new_card.bypass_lock = card.bypass_lock
+	local new_card = Card(card.T.x, card.T.y, G.CARD_W, G.CARD_H, G.P_CARDS.empty, G.P_CENTERS.c_base, {
+		bypass_discovery_center = card.bypass_discovery_center,
+		bypass_discovery_ui = card.bypass_discovery_ui,
+		bypass_lock = card.bypass_lock,
+	})
+	copy_card(card, new_card, 1, nil, nil)
 	main_card_area:emplace(new_card)
 
 	local context = Glossary.new_info_queue_context("card", new_card, source_type, source)
