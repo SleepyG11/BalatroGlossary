@@ -150,7 +150,7 @@ G.FUNCS.glossary_setup_header_right_buttons = function(e)
 end
 
 function Glossary.UI.header(input)
-	local mod = input.context.mod or Glossary.get_target_mod(input.context.target_type, input.context.target)
+	local mod = input.context.mod
 	local back = G.STAGE == G.STAGES.RUN and G.GAME.selected_back and G.GAME.selected_back.effect.center
 	local stake = nil
 	-- local stake = G.STAGE == G.STAGES.RUN and G.GAME.stake and G.P_STAKES[SMODS.stake_from_index(G.GAME.stake)]

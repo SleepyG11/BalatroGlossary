@@ -17,21 +17,22 @@ function Glossary.get_target_mod(target_type, target)
 end
 
 function Glossary.get_card_back_center(card, forced)
+	local fallback = forced and G.P_CENTERS.b_red or nil
 	if card.config.center and card.config.center.set == "Back" then
 		return card.config.center
 	end
 	if card.glossary_back then
 		return card.glossary_back.effect.center
 	end
+	if card.area and card.area == G.deck then
+		return G.GAME.selected_back and G.GAME.selected_back.effect.center or fallback
+	end
 	if card.facing == "back" or forced then
 		if type(card.back) == "string" then
 			return G.GAME[card.back] and G.GAME[card.back].effect.center
 		end
 	end
-	if forced then
-		return G.P_CENTERS.b_red
-	end
-	return nil
+	return fallback
 end
 
 function Glossary.safe_card_from_center(center_key, area)

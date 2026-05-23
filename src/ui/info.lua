@@ -90,9 +90,16 @@ function Glossary.show_info_ui(input)
 		}
 	end
 
+	context.mod = context.mod or Glossary.get_target_mod(context.target_type, context.target)
+
 	Glossary.save_history()
 	G.FUNCS.overlay_menu({
 		definition = create_UIBox_generic_options({
+			colour = mod and ((mod.ui_config or {}).collection_colour or (mod.ui_config or {}).colour),
+			bg_colour = mod and ((mod.ui_config or {}).collection_bg_colour or (mod.ui_config or {}).bg_colour),
+			back_colour = mod and ((mod.ui_config or {}).collection_back_colour or (mod.ui_config or {}).back_colour),
+			outline_colour = mod
+				and ((mod.ui_config or {}).collection_outline_colour or (mod.ui_config or {}).outline_colour),
 			contents = {
 				Glossary.UI.header(input),
 				{
