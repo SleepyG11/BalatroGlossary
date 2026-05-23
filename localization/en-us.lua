@@ -1,5 +1,14 @@
 return {
 	descriptions = {
+		Glossary_Other = {
+			mod_card = {
+				name = "Glossary",
+				text = {
+					"Info.",
+					"Visualized.",
+				},
+			},
+		},
 		Glossary_InfoSection = {
 			target_modifiers = {
 				name = "Applied Modifiers",

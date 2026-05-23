@@ -15,7 +15,7 @@ function Glossary.UI.header_button(args)
 			minw = args.minw,
 		},
 		nodes = {
-			{
+			args.content or {
 				n = G.UIT.T,
 				config = {
 					scale = 0.3,
@@ -95,6 +95,19 @@ function Glossary.UI.header_back_button(back)
 		},
 	})
 end
+function Glossary.UI.header_glossary_config_button()
+	return Glossary.UI.header_button({
+		button = "glossary_open_glossary_mod_config",
+		colour = G.C.BLUE,
+		minw = 0.5,
+		content = {
+			n = G.UIT.O,
+			config = {
+				object = SMODS.create_sprite(0, 0, 0.3, 0.3, "mod_tags", { x = 2, y = 0 }),
+			},
+		},
+	})
+end
 function Glossary.UI.header_stake_button(stake)
 	return Glossary.UI.header_button({
 		button = "exit_overlay_menu",
@@ -140,6 +153,9 @@ G.FUNCS.glossary_show_stake_info = function(e)
 	Glossary.show_stake_info(e.config.ref_table.stake, "ui_button", e)
 end
 
+G.FUNCS.glossary_open_glossary_mod_config = function(e)
+	Glossary.show_mod_config({}, "ui_button", e)
+end
 --
 
 G.FUNCS.glossary_setup_header_right_buttons = function(e)
@@ -178,6 +194,7 @@ function Glossary.UI.header(input)
 								Glossary.UI.header_mod_additions_button(mod),
 								Glossary.UI.header_vanilla_collection_button(),
 								Glossary.UI.header_separator(),
+								Glossary.UI.header_glossary_config_button(),
 								Glossary.UI.header_close_button(),
 							},
 						},

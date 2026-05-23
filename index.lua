@@ -1,5 +1,14 @@
 Glossary = {}
 Glossary.current_mod = SMODS.current_mod
+Glossary.config = {
+	current = Glossary.current_mod.config,
+	save = function()
+		SMODS.save_mod_config(Glossary.current_mod)
+	end,
+}
+Glossary.cc = Glossary.config.current
+
+--
 
 function Glossary.load_file(path)
 	assert(SMODS.load_file(path))()
@@ -22,5 +31,20 @@ function Glossary.load_directory(path, recursive)
 		end
 	end
 end
+
+--
+
+SMODS.Atlas({
+	key = "modicon",
+	px = 32,
+	py = 32,
+	path = "icon.png",
+})
+SMODS.Atlas({
+	key = "me_joker",
+	px = 71,
+	py = 95,
+	path = "me_joker.png",
+})
 
 Glossary.load_file("src/index.lua")

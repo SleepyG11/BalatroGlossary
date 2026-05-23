@@ -1,4 +1,4 @@
-function Glossary.UI.basic_section(section, content)
+function Glossary.UI.section(name, content)
 	return {
 		n = G.UIT.R,
 		config = { align = "cm", colour = { 0, 0, 0, 0.1 }, r = 0.25, padding = 0.1 },
@@ -10,7 +10,7 @@ function Glossary.UI.basic_section(section, content)
 					{
 						n = G.UIT.T,
 						config = {
-							text = localize({ type = "name_text", key = section.key, set = section.set }),
+							text = name,
 							scale = 0.32,
 							shadow = true,
 							colour = G.C.UI.TEXT_LIGHT,
@@ -27,4 +27,8 @@ function Glossary.UI.basic_section(section, content)
 			},
 		},
 	}
+end
+
+function Glossary.UI.basic_section(section, content)
+	return Glossary.UI.section(localize({ type = "name_text", key = section.key, set = section.set }), content)
 end

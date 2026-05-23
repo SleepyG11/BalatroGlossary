@@ -5,6 +5,7 @@ function Glossary.show_tag_info(tag, source_type, source)
 	check_for_unlock = function() end
 
 	local new_tag = Tag(tag.key)
+	new_tag.hide_ability = tag.hide_ability or Glossary.cc.bypass_discovery
 	local tag_ui, tag_sprite = new_tag:generate_UI(1.2)
 	local context = Glossary.new_info_queue_context("tag", new_tag, source_type, source)
 	Glossary.request_processing(context)
@@ -57,9 +58,9 @@ function Glossary.show_card_info(card, source_type, source)
 	check_for_unlock = function() end
 
 	local new_card = Card(card.T.x, card.T.y, G.CARD_W, G.CARD_H, G.P_CARDS.empty, G.P_CENTERS.c_base, {
-		bypass_discovery_center = card.bypass_discovery_center,
-		bypass_discovery_ui = card.bypass_discovery_ui,
-		bypass_lock = card.bypass_lock,
+		bypass_discovery_center = card.bypass_discovery_center or Glossary.cc.bypass_discovery,
+		bypass_discovery_ui = card.bypass_discovery_ui or Glossary.cc.bypass_discovery,
+		bypass_lock = card.bypass_lock or Glossary.cc.bypass_lock,
 	})
 	copy_card(card, new_card, 1, nil, nil)
 	main_card_area:emplace(new_card)
@@ -233,15 +234,14 @@ function Glossary.show_back_info(back, source_type, source)
 		info_queue = info_queue_render,
 	})
 end
-function Glossary.show_stake_info(stake, source_type, source) end
 
 function Glossary.show_info(target_type, target, source_type, source)
-	if target_type == "tag" then
+	if target_type == "mod_config" then
+		Glossary.show_mod_config(target, source_type, source)
+	elseif target_type == "tag" then
 		Glossary.show_tag_info(target, source_type, source)
 	elseif target_type == "back" then
 		Glossary.show_back_info(target, source_type, source)
-	elseif target_type == "stake" then
-		Glossary.show_stake_info(target, source_type, source)
 	elseif target_type == "card" then
 		Glossary.show_card_info(target, source_type, source)
 	end

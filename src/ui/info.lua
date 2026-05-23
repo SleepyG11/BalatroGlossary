@@ -91,6 +91,7 @@ function Glossary.show_info_ui(input)
 	end
 
 	context.mod = context.mod or Glossary.get_target_mod(context.target_type, context.target)
+	local mod = Glossary.cc.use_mods_colours and context.mod or nil
 
 	Glossary.save_history()
 	G.FUNCS.overlay_menu({
