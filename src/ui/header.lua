@@ -152,7 +152,8 @@ end
 function Glossary.UI.header(input)
 	local mod = input.context.mod or Glossary.get_target_mod(input.context.target_type, input.context.target)
 	local back = G.STAGE == G.STAGES.RUN and G.GAME.selected_back and G.GAME.selected_back.effect.center
-	local stake = G.STAGE == G.STAGES.RUN and G.GAME.stake and G.P_STAKES[SMODS.stake_from_index(G.GAME.stake)]
+	local stake = nil
+	-- local stake = G.STAGE == G.STAGES.RUN and G.GAME.stake and G.P_STAKES[SMODS.stake_from_index(G.GAME.stake)]
 
 	return {
 		n = G.UIT.R,
@@ -172,7 +173,7 @@ function Glossary.UI.header(input)
 							config = { padding = 0.1, align = "cm" },
 							nodes = {
 								back and Glossary.UI.header_back_button(back) or nil,
-								stake and Glossary.UI.header_stake_button(stake) or nil,
+								-- stake and Glossary.UI.header_stake_button(stake) or nil,
 								(back or stake) and Glossary.UI.header_separator() or nil,
 								Glossary.UI.header_mod_additions_button(mod),
 								Glossary.UI.header_vanilla_collection_button(),
