@@ -35,7 +35,14 @@ function Glossary.get_card_back_center(card, forced)
 end
 
 function Glossary.safe_card_from_center(center_key, area)
-	local card = SMODS.create_card({ key = "c_base", front = false, area = area })
+	local card = SMODS.create_card({
+		key = "c_base",
+		front = false,
+		area = area,
+		bypass_discovery_center = true,
+		bypass_discovery_ui = true,
+		bypass_lock = true,
+	})
 	local success = pcall(function()
 		card:set_ability(center_key, false, false)
 	end)
