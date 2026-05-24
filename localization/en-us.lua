@@ -8,6 +8,18 @@ return {
 					"Visualized.",
 				},
 			},
+			info_queue = {
+				name = "Info Queue",
+				text = {},
+			},
+			credits = {
+				name = "Credits",
+				text = {},
+			},
+			config = {
+				name = "Config",
+				text = {},
+			},
 		},
 		Glossary_InfoSection = {
 			target_modifiers = {
@@ -20,6 +32,7 @@ return {
 			},
 			skip_tags = {
 				name = "Skip Tags",
+				text = {},
 			},
 			poke_evolutions = {
 				name = "Pokermon: Evolutions",
@@ -37,6 +50,13 @@ return {
 				name = "Wormhole: ©Spacetarts",
 				text = {},
 			},
+		},
+	},
+	misc = {
+		dictionary = {
+			gloss_toggle_bypass_lock = "Display Locked cards",
+			gloss_toggle_bypass_discovery = "Display Locked cards",
+			gloss_toggle_use_mods_colours = "Display Locked cards",
 		},
 	},
 }

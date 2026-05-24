@@ -38,7 +38,12 @@ function Glossary.show_info_ui(input)
 								{
 									n = G.UIT.T,
 									config = {
-										text = "Info Queue",
+										text = localize({
+											type = "name_text",
+											set = "Glossary_Other",
+											key = "info_queue",
+											vars = {},
+										}),
 										scale = 0.32,
 										shadow = true,
 										colour = G.C.UI.TEXT_LIGHT,

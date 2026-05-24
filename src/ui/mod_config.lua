@@ -14,7 +14,7 @@ local function create_credits_rows()
 		config = { minw = 7, align = "cm" },
 		nodes = {
 			create_toggle({
-				label = "Display Locked cards",
+				label = localize("gloss_toggle_bypass_lock"),
 				ref_table = Glossary.cc,
 				ref_value = "bypass_lock",
 				callback = function(b)
@@ -26,7 +26,7 @@ local function create_credits_rows()
 				w = 5,
 			}),
 			create_toggle({
-				label = "Display Undiscovered cards",
+				label = localize("gloss_toggle_bypass_discovery"),
 				ref_table = Glossary.cc,
 				ref_value = "bypass_discovery",
 				callback = function(b)
@@ -38,7 +38,7 @@ local function create_credits_rows()
 				w = 5,
 			}),
 			create_toggle({
-				label = "Use mod's colours for menus",
+				label = localize("gloss_toggle_use_mods_colours"),
 				ref_table = Glossary.cc,
 				ref_value = "use_mods_colours",
 				callback = function(b)
@@ -57,8 +57,24 @@ local function create_credits_rows()
 			n = G.UIT.R,
 			config = { align = "cm" },
 			nodes = {
-				Glossary.UI.section("Config", configs),
-				Glossary.UI.section("Credits", { n = G.UIT.O, config = { object = credits_area } }),
+				Glossary.UI.section(
+					localize({
+						type = "name_text",
+						set = "Glossary_Other",
+						key = "config",
+						vars = {},
+					}),
+					configs
+				),
+				Glossary.UI.section(
+					localize({
+						type = "name_text",
+						set = "Glossary_Other",
+						key = "credits",
+						vars = {},
+					}),
+					{ n = G.UIT.O, config = { object = credits_area } }
+				),
 			},
 		},
 	}
