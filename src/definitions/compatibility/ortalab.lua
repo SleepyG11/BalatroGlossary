@@ -1,4 +1,4 @@
-if not next(SMODS.find_mod("ortalab")) or not Ortalab then
+if not next(SMODS.find_mod("ortalab")) then
 	return
 end
 

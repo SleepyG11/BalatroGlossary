@@ -44,6 +44,18 @@ local function create_credits_rows()
 				w = 4.5,
 			}),
 			proper_create_toggle({
+				label = localize("gloss_toggle_slide_on_page_change"),
+				ref_table = Glossary.cc,
+				ref_value = "slide_on_page_change",
+				callback = function(b)
+					Glossary.cc.slide_on_page_change = b
+					Glossary.config.save()
+				end,
+				scale = 0.8,
+				label_scale = 0.32,
+				w = 4.5,
+			}),
+			proper_create_toggle({
 				label = localize("gloss_toggle_use_mods_colours"),
 				ref_table = Glossary.cc,
 				ref_value = "use_mods_colours",

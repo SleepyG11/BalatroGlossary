@@ -3,7 +3,7 @@ version = "1.0.0"
 dump_lua = true
 priority = 10000000
 
-# Request after processing request
+# Render custom overlay
 [[patches]]
 [patches.pattern]
 target = "game.lua"
@@ -19,6 +19,7 @@ end
 '''
 match_indent = true
 
+# Close overlay on escape
 [[patches]]
 [patches.pattern]
 target = "engine/controller.lua"

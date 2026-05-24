@@ -1,88 +1,3 @@
-Glossary.InfoSection({
-	key = "target_modifiers",
-	order = 0,
-	prefix_config = {
-		key = false,
-	},
-	create = function(self)
-		return CardArea(0, 0, 7, G.CARD_H, {
-			type = "title_2",
-			highlight_limit = 0,
-			collection = true,
-		})
-	end,
-	is_empty = function(self, area)
-		return #area.cards == 0
-	end,
-	destroy = function(self, area)
-		area:remove()
-	end,
-	render = function(self, area)
-		return Glossary.UI.basic_section(self, { n = G.UIT.O, config = { object = area } })
-	end,
-	insert = function(self, area, result)
-		area:emplace(result)
-	end,
-})
-Glossary.InfoSection({
-	key = "centers",
-	order = 100,
-	prefix_config = {
-		key = false,
-	},
-	create = function(self)
-		return CardArea(0, 0, 7, G.CARD_H, {
-			type = "title_2",
-			highlight_limit = 0,
-			collection = true,
-		})
-	end,
-	is_empty = function(self, area)
-		return #area.cards == 0
-	end,
-	destroy = function(self, area)
-		area:remove()
-	end,
-	render = function(self, area)
-		return Glossary.UI.basic_section(self, { n = G.UIT.O, config = { object = area } })
-	end,
-	insert = function(self, area, result)
-		area:emplace(result)
-	end,
-})
-Glossary.InfoSection({
-	key = "skip_tags",
-	order = 2,
-	prefix_config = {
-		key = false,
-	},
-	create = function(self)
-		return {}
-	end,
-	is_empty = function(self, nodes)
-		return #nodes == 0
-	end,
-	destroy = function(self, nodes) end,
-	render = function(self, nodes)
-		return Glossary.UI.basic_section(self, {
-			n = G.UIT.R,
-			config = { minw = 7, align = "cm" },
-			nodes = nodes,
-		})
-	end,
-	insert = function(self, nodes, result)
-		table.insert(nodes, {
-			n = G.UIT.C,
-			config = { align = "cm" },
-			nodes = {
-				result,
-			},
-		})
-	end,
-})
-
---
-
 Glossary.InfoQueueProcessor({
 	key = "playing_card_center",
 	order = -100,
@@ -127,9 +42,13 @@ Glossary.InfoQueueProcessor({
 					context.extra.processed_card_modifiers[context.entry.key] = true
 				end
 				return Glossary.insert(is_card_modifier and "target_modifiers" or "centers", function(area)
-					local card = SMODS.create_card({ key = "c_base", front = false, area = area })
-					SMODS.Stickers[context.entry.key]:apply(card, true)
-					return card
+					return SMODS.create_card({
+						key = "c_base",
+						front = false,
+						area = area,
+						stickers = { context.entry.key },
+						force_stickers = true,
+					})
 				end)
 			end
 		end
@@ -235,7 +154,7 @@ Glossary.InfoQueueProcessor({
 		key = false,
 	},
 	func = function(self, context)
-		if context.individual and G.P_CENTERS[context.entry.key] then
+		if G.P_CENTERS[context.entry.key] then
 			return Glossary.insert("centers", function(area)
 				return Glossary.safe_card_from_center(context.entry.key, area)
 			end)

@@ -7,7 +7,7 @@ function G.FUNCS.glossary_overlay_menu(args)
 	local y_offset = 10
 	if G.GLOSSARY_OVERLAY_MENU then
 		G.GLOSSARY_OVERLAY_MENU:remove()
-		y_offset = 0
+		y_offset = Glossary.cc.slide_on_page_change and 0.25 or 0
 	end
 	G.CONTROLLER.locks.frame_set = true
 	G.CONTROLLER.locks.frame = true
@@ -51,6 +51,15 @@ G.FUNCS.glossary_exit_overlay_menu = function()
 	if G.OVERLAY_MENU and G.OVERLAY_MENU.glossary_fake_menu then
 		G.OVERLAY_MENU:remove()
 		G.OVERLAY_MENU = nil
+	end
+end
+
+local old_node_remove = Node.remove
+function Node:remove(...)
+	old_node_remove(self, ...)
+	if self == G.OVERLAY_MENU and G.GLOSSARY_OVERLAY_MENU then
+		G.GLOSSARY_OVERLAY_MENU:remove()
+		G.GLOSSARY_OVERLAY_MENU = nil
 	end
 end
 

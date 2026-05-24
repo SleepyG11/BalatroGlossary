@@ -57,6 +57,7 @@ return {
 			gloss_toggle_bypass_lock = "Display Locked cards",
 			gloss_toggle_bypass_discovery = "Display Undiscovered cards",
 			gloss_toggle_use_mods_colours = "Use Mod's custom UI colors",
+			gloss_toggle_slide_on_page_change = "Slide on page change",
 		},
 	},
 }
