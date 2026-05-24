@@ -1,0 +1,38 @@
+[manifest]
+version = "1.0.0"
+dump_lua = true
+priority = 10000000
+
+# Request after processing request
+[[patches]]
+[patches.pattern]
+target = "game.lua"
+pattern = '''if self.debug_tools then'''
+position = "before"
+payload = '''
+if self.GLOSSARY_OVERLAY_MENU then
+    love.graphics.push()
+    self.GLOSSARY_OVERLAY_MENU:translate_container()
+    self.GLOSSARY_OVERLAY_MENU:draw()
+    love.graphics.pop()
+end
+'''
+match_indent = true
+
+[[patches]]
+[patches.pattern]
+target = "engine/controller.lua"
+pattern = '''
+    if key == "escape" then
+        if G.STATE == G.STATES.SPLASH then 
+'''
+position = "before"
+payload = '''
+if key == "escape" then
+    if G.GLOSSARY_OVERLAY_MENU then
+        G.FUNCS.glossary_exit_overlay_menu()
+        return
+    end
+end
+'''
+match_indent = true

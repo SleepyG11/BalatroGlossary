@@ -77,7 +77,7 @@ function Glossary.UI.header_vanilla_collection_button()
 end
 function Glossary.UI.header_close_button()
 	return Glossary.UI.header_button({
-		button = "exit_overlay_menu",
+		button = "glossary_exit_overlay_menu",
 		colour = G.C.MULT,
 		text = "X",
 		minw = 0.5,

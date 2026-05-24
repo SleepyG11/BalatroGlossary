@@ -1,3 +1,57 @@
+function G.FUNCS.glossary_overlay_menu(args)
+	if not args then
+		return
+	end
+	Glossary.history.save()
+	--Remove any existing overlays if there is one
+	if G.GLOSSARY_OVERLAY_MENU then
+		G.GLOSSARY_OVERLAY_MENU:remove()
+	end
+	G.CONTROLLER.locks.frame_set = true
+	G.CONTROLLER.locks.frame = true
+	G.CONTROLLER.cursor_down.target = nil
+	G.CONTROLLER:mod_cursor_context_layer(G.NO_MOD_CURSOR_STACK and 0 or 1)
+
+	args.config = args.config or {}
+	args.config = {
+		align = args.config.align or "cm",
+		offset = args.config.offset or { x = 0, y = 10 },
+		major = args.config.major or G.ROOM_ATTACH,
+		bond = "Weak",
+		no_esc = args.config.no_esc,
+		parent = args.config.parent or G.ROOM_ATTACH,
+	}
+	G.GLOSSARY_OVERLAY_MENU = true
+	--Generate the UIBox
+	G.GLOSSARY_OVERLAY_MENU = UIBox({
+		definition = args.definition,
+		config = args.config,
+	})
+
+	Glossary.history.load()
+
+	--Set the offset and align. The menu overlay can be initially offset in the y direction and this will ensure it slides to middle
+	G.GLOSSARY_OVERLAY_MENU.alignment.offset.y = 0
+	G.ROOM.jiggle = G.ROOM.jiggle + 1
+	G.GLOSSARY_OVERLAY_MENU:align_to_major()
+end
+
+--Removes the overlay menu if one exists, unpauses the game, and saves the settings to file
+G.FUNCS.glossary_exit_overlay_menu = function()
+	if not G.GLOSSARY_OVERLAY_MENU then
+		return
+	end
+	G.CONTROLLER.locks.frame_set = true
+	G.CONTROLLER.locks.frame = true
+	G.CONTROLLER:mod_cursor_context_layer(-1000)
+	G.GLOSSARY_OVERLAY_MENU:remove()
+	G.GLOSSARY_OVERLAY_MENU = nil
+	if G.OVERLAY_MENU and G.OVERLAY_MENU.glossary_fake_menu then
+		G.OVERLAY_MENU:remove()
+		G.OVERLAY_MENU = nil
+	end
+end
+
 function Glossary.show_info_ui(input)
 	local content = input.description
 	local info_queue_render = input.info_queue
@@ -98,14 +152,14 @@ function Glossary.show_info_ui(input)
 	context.mod = context.mod or Glossary.get_target_mod(context.target_type, context.target)
 	local mod = Glossary.cc.use_mods_colours and context.mod or nil
 
-	Glossary.history.save()
-	G.FUNCS.overlay_menu({
+	G.FUNCS.glossary_overlay_menu({
 		definition = create_UIBox_generic_options({
 			colour = mod and ((mod.ui_config or {}).collection_colour or (mod.ui_config or {}).colour),
 			bg_colour = mod and ((mod.ui_config or {}).collection_bg_colour or (mod.ui_config or {}).bg_colour),
 			back_colour = mod and ((mod.ui_config or {}).collection_back_colour or (mod.ui_config or {}).back_colour),
 			outline_colour = mod
 				and ((mod.ui_config or {}).collection_outline_colour or (mod.ui_config or {}).outline_colour),
+			back_func = "glossary_exit_overlay_menu",
 			contents = {
 				Glossary.UI.header(input),
 				{
@@ -119,6 +173,5 @@ function Glossary.show_info_ui(input)
 			},
 		}),
 	})
-	Glossary.history.load()
 	Glossary.history.add(context)
 end

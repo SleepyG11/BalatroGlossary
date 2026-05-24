@@ -55,22 +55,6 @@ local function create_credits_rows()
 				label_scale = 0.32,
 				w = 6,
 			}),
-			proper_create_toggle({
-				label = localize("gloss_toggle_return_on_close"),
-				ref_table = Glossary.cc,
-				ref_value = "return_on_close",
-				callback = function(b)
-					Glossary.cc.return_on_close = b
-					Glossary.config.save()
-					if Glossary.history.overlay_buffer then
-						Glossary.history.overlay_buffer:remove()
-						Glossary.history.overlay_buffer = nil
-					end
-				end,
-				scale = 0.8,
-				label_scale = 0.32,
-				w = 6,
-			}),
 		},
 	}
 
@@ -220,15 +204,14 @@ function Glossary.show_mod_config_ui(input)
 	context.mod = Glossary.current_mod
 	local mod = context.mod
 
-	Glossary.history.save()
-	G.FUNCS.overlay_menu({
+	G.FUNCS.glossary_overlay_menu({
 		definition = create_UIBox_generic_options({
 			colour = mod and ((mod.ui_config or {}).collection_colour or (mod.ui_config or {}).colour),
 			bg_colour = mod and ((mod.ui_config or {}).collection_bg_colour or (mod.ui_config or {}).bg_colour),
 			back_colour = mod and ((mod.ui_config or {}).collection_back_colour or (mod.ui_config or {}).back_colour),
 			outline_colour = mod
 				and ((mod.ui_config or {}).collection_outline_colour or (mod.ui_config or {}).outline_colour),
-			back_func = context.target.from_smods and "mods_button" or nil,
+			back_func = "glossary_exit_overlay_menu",
 			contents = {
 				Glossary.UI.header(input),
 				{
@@ -242,7 +225,6 @@ function Glossary.show_mod_config_ui(input)
 			},
 		}),
 	})
-	Glossary.history.load()
 	Glossary.history.add(context)
 end
 

@@ -126,13 +126,20 @@ end
 
 function Glossary.UI.prepare_overlay_menu()
 	if not G.OVERLAY_MENU then
-		G.OVERLAY_MENU = UIBox({ definition = { n = G.UIT.ROOT }, config = {} })
+		G.OVERLAY_MENU = UIBox({
+			definition = { n = G.UIT.ROOT, config = { colour = G.C.CLEAR } },
+			config = {},
+		})
 		G.OVERLAY_MENU.states.visible = false
 		G.OVERLAY_MENU.glossary_fake_menu = true
-		G.SETTINGS.paused = true
-		G.CONTROLLER.locks.frame = true
 	end
 end
+function Glossary.UI.clear_overlay_menu()
+	if G.OVERLAY_MENU and G.OVERLAY_MENU.glossary_fake_menu then
+		G.FUNCS.exit_overlay_menu()
+	end
+end
+
 -- Taken from Galdur by Eremel
 function Glossary.populate_info_queue(set, key)
 	local info_queue = {}
