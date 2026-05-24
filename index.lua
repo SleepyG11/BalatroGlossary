@@ -1,12 +1,5 @@
 Glossary = {}
 Glossary.current_mod = SMODS.current_mod
-Glossary.config = {
-	current = Glossary.current_mod.config,
-	save = function()
-		SMODS.save_mod_config(Glossary.current_mod)
-	end,
-}
-Glossary.cc = Glossary.config.current
 
 --
 

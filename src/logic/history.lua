@@ -1,11 +1,12 @@
-Glossary.history_buffer = nil
+Glossary.history = {}
+Glossary.history.buffer = nil
 
-function Glossary.can_move_history(dx)
+function Glossary.history.can_move(dx)
 	local history = type(G.OVERLAY_MENU) == "table" and G.OVERLAY_MENU.glossary_history
 	return history and history[history.current_index + dx] ~= nil
 end
-function Glossary.move_history(dx)
-	if not Glossary.can_move_history(dx) then
+function Glossary.history.move(dx)
+	if not Glossary.history.can_move(dx) then
 		return
 	end
 	local history = G.OVERLAY_MENU.glossary_history
@@ -15,7 +16,7 @@ function Glossary.move_history(dx)
 	Glossary.show_history_entry_info(entry)
 	Glossary.keep_history = nil
 end
-function Glossary.get_history()
+function Glossary.history.get()
 	if type(G.OVERLAY_MENU) ~= "table" or not G.OVERLAY_MENU.glossary_history then
 		return {
 			current_index = 0,
@@ -23,11 +24,11 @@ function Glossary.get_history()
 	end
 	return G.OVERLAY_MENU.glossary_history
 end
-function Glossary.add_to_history(context)
+function Glossary.history.add(context)
 	if Glossary.keep_history then
 		return
 	end
-	local history = Glossary.get_history()
+	local history = Glossary.history.get()
 	for i = history.current_index + 1, #history do
 		history[i] = nil
 	end
@@ -40,12 +41,12 @@ function Glossary.add_to_history(context)
 	history.current_index = #history
 end
 
-function Glossary.save_history()
-	Glossary.history_buffer = Glossary.get_history()
+function Glossary.history.save()
+	Glossary.history.buffer = Glossary.history.get()
 end
-function Glossary.load_history()
-	G.OVERLAY_MENU.glossary_history = Glossary.history_buffer
-	Glossary.history_buffer = nil
+function Glossary.history.load()
+	G.OVERLAY_MENU.glossary_history = Glossary.history.buffer
+	Glossary.history.buffer = nil
 end
 
 function Glossary.show_history_entry_info(entry)

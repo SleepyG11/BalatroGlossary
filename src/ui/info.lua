@@ -98,7 +98,7 @@ function Glossary.show_info_ui(input)
 	context.mod = context.mod or Glossary.get_target_mod(context.target_type, context.target)
 	local mod = Glossary.cc.use_mods_colours and context.mod or nil
 
-	Glossary.save_history()
+	Glossary.history.save()
 	G.FUNCS.overlay_menu({
 		definition = create_UIBox_generic_options({
 			colour = mod and ((mod.ui_config or {}).collection_colour or (mod.ui_config or {}).colour),
@@ -119,6 +119,6 @@ function Glossary.show_info_ui(input)
 			},
 		}),
 	})
-	Glossary.load_history()
-	Glossary.add_to_history(context)
+	Glossary.history.load()
+	Glossary.history.add(context)
 end

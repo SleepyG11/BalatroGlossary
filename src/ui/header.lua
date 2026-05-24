@@ -123,10 +123,10 @@ end
 --
 
 G.FUNCS.glossary_move_history = function(e)
-	Glossary.move_history(e.config.ref_table.dx)
+	Glossary.history.move(e.config.ref_table.dx)
 end
 G.FUNCS.glossary_can_move_history = function(e)
-	if Glossary.can_move_history(e.config.ref_table.dx) then
+	if Glossary.history.can_move(e.config.ref_table.dx) then
 		e.config.colour = G.C.CHIPS
 		e.config.button = "glossary_move_history"
 	else
