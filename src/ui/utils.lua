@@ -135,7 +135,7 @@ end
 -- Taken from Galdur by Eremel
 function Glossary.populate_info_queue(set, key)
 	local info_queue = {}
-	local loc_target = G.localization.descriptions[set][key]
+	local loc_target = G.localization.descriptions[set][key] or {}
 	for _, lines in ipairs(loc_target.text_parsed) do
 		for _, part in ipairs(lines) do
 			if part.control.T then
