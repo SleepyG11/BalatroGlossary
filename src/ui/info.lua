@@ -4,8 +4,10 @@ function G.FUNCS.glossary_overlay_menu(args)
 	end
 	Glossary.history.save()
 	--Remove any existing overlays if there is one
+	local y_offset = 10
 	if G.GLOSSARY_OVERLAY_MENU then
 		G.GLOSSARY_OVERLAY_MENU:remove()
+		y_offset = 0
 	end
 	G.CONTROLLER.locks.frame_set = true
 	G.CONTROLLER.locks.frame = true
@@ -15,7 +17,7 @@ function G.FUNCS.glossary_overlay_menu(args)
 	args.config = args.config or {}
 	args.config = {
 		align = args.config.align or "cm",
-		offset = args.config.offset or { x = 0, y = 10 },
+		offset = args.config.offset or { x = 0, y = y_offset },
 		major = args.config.major or G.ROOM_ATTACH,
 		bond = "Weak",
 		no_esc = args.config.no_esc,

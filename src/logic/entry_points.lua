@@ -4,7 +4,8 @@ function Glossary.show_tag_info(tag, source_type, source)
 	local old_check_for_unlock = check_for_unlock
 	check_for_unlock = function() end
 
-	local new_tag = Tag(tag.key)
+	local tagConstructor = getmetatable(tag)
+	local new_tag = tagConstructor(tag.key)
 	new_tag.hide_ability = tag.hide_ability or Glossary.cc.bypass_discovery
 	local tag_ui, tag_sprite = new_tag:generate_UI(1.2)
 	local context = Glossary.processing.new_context("tag", new_tag, source_type, source)

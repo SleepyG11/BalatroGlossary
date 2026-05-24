@@ -29,7 +29,7 @@ local function create_credits_rows()
 				end,
 				scale = 0.8,
 				label_scale = 0.32,
-				w = 6,
+				w = 4.5,
 			}),
 			proper_create_toggle({
 				label = localize("gloss_toggle_bypass_discovery"),
@@ -41,7 +41,7 @@ local function create_credits_rows()
 				end,
 				scale = 0.8,
 				label_scale = 0.32,
-				w = 6,
+				w = 4.5,
 			}),
 			proper_create_toggle({
 				label = localize("gloss_toggle_use_mods_colours"),
@@ -53,7 +53,7 @@ local function create_credits_rows()
 				end,
 				scale = 0.8,
 				label_scale = 0.32,
-				w = 6,
+				w = 4.5,
 			}),
 		},
 	}

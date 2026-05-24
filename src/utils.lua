@@ -11,7 +11,7 @@ function Glossary.get_target_mod(target_type, target)
 	elseif target_type == "card" then
 		return target.config.center.mod
 	elseif target_type == "tag" then
-		return G.P_TAGS[target.key].mod
+		return G.P_TAGS[target.key] and G.P_TAGS[target.key].mod
 	end
 	return nil
 end
