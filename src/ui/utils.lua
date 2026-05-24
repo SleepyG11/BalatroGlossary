@@ -128,6 +128,7 @@ function Glossary.UI.prepare_overlay_menu()
 	if not G.OVERLAY_MENU then
 		G.OVERLAY_MENU = UIBox({ definition = { n = G.UIT.ROOT }, config = {} })
 		G.OVERLAY_MENU.states.visible = false
+		G.OVERLAY_MENU.glossary_fake_menu = true
 		G.SETTINGS.paused = true
 		G.CONTROLLER.locks.frame = true
 	end

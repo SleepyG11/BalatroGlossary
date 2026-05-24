@@ -7,10 +7,10 @@ function Glossary.show_tag_info(tag, source_type, source)
 	local new_tag = Tag(tag.key)
 	new_tag.hide_ability = tag.hide_ability or Glossary.cc.bypass_discovery
 	local tag_ui, tag_sprite = new_tag:generate_UI(1.2)
-	local context = Glossary.new_info_queue_context("tag", new_tag, source_type, source)
-	Glossary.request_processing(context)
+	local context = Glossary.processing.new_context("tag", new_tag, source_type, source)
+	Glossary.processing.request(context)
 	new_tag:get_uibox_table(tag_sprite)
-	Glossary.clear_processing_request()
+	Glossary.processing.clear_request()
 	local popup = G.UIDEF.card_h_popup(tag_sprite)
 
 	check_for_unlock = old_check_for_unlock
@@ -65,12 +65,12 @@ function Glossary.show_card_info(card, source_type, source)
 	copy_card(card, new_card, 1, nil, nil)
 	main_card_area:emplace(new_card)
 
-	local context = Glossary.new_info_queue_context("card", new_card, source_type, source)
+	local context = Glossary.processing.new_context("card", new_card, source_type, source)
 	local old_hover = Node.hover
 	Node.hover = function() end
-	Glossary.request_processing(context)
+	Glossary.processing.request(context)
 	new_card:hover()
-	Glossary.clear_processing_request()
+	Glossary.processing.clear_request()
 	Node.hover = old_hover
 
 	check_for_unlock = old_check_for_unlock
@@ -134,13 +134,13 @@ function Glossary.show_back_info(back, source_type, source)
 		main_card_area:emplace(deck_card)
 	end
 
-	local context = Glossary.new_info_queue_context("back", new_back.effect.center, source_type, source)
+	local context = Glossary.processing.new_context("back", new_back.effect.center, source_type, source)
 
 	-- Taken from Galdur by Eremel
 	context.AUT = { main = {}, info = {}, type = {}, name = "done", badges = {}, from_detailed_tooltip = true }
 	context.info_queue = Glossary.populate_info_queue("Back", back.key)
-	Glossary.before_process_info_queue(context)
-	Glossary.individual_process_info_queue(context)
+	Glossary.processing.process_before_context(context)
+	Glossary.processing.process_individual_context(context)
 	local info_queue_render = {}
 	for _, center in pairs(context.info_queue) do
 		local desc = generate_card_ui(center, context.AUT, nil, center.set, nil)
@@ -164,7 +164,7 @@ function Glossary.show_back_info(back, source_type, source)
 			},
 		}
 	end
-	Glossary.after_process_info_queue(context)
+	Glossary.processing.process_after_context(context)
 
 	local old_desc_from_rows = desc_from_rows
 	function desc_from_rows(a, b, maxw, ...)
@@ -235,14 +235,21 @@ function Glossary.show_back_info(back, source_type, source)
 	})
 end
 
+Glossary.entry_points = {
+	mod_config = function(target, source_type, source)
+		return Glossary.show_mod_config(target, source_type, source)
+	end,
+	tag = function(target, source_type, source)
+		return Glossary.show_tag_info(target, source_type, source)
+	end,
+	back = function(target, source_type, source)
+		return Glossary.show_back_info(target, source_type, source)
+	end,
+	card = function(target, source_type, source)
+		return Glossary.show_card_info(target, source_type, source)
+	end,
+}
+
 function Glossary.show_info(target_type, target, source_type, source)
-	if target_type == "mod_config" then
-		Glossary.show_mod_config(target, source_type, source)
-	elseif target_type == "tag" then
-		Glossary.show_tag_info(target, source_type, source)
-	elseif target_type == "back" then
-		Glossary.show_back_info(target, source_type, source)
-	elseif target_type == "card" then
-		Glossary.show_card_info(target, source_type, source)
-	end
+	return Glossary.entry_points[target_type] and Glossary.entry_points[target_type](target, source_type, source)
 end

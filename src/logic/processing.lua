@@ -1,7 +1,9 @@
+Glossary.processing = {}
+
 function Glossary.insert(key, func) end
 function Glossary.specify_mod(mod) end
 
-function Glossary.new_info_queue_context(target_type, target, source_type, source)
+function Glossary.processing.new_context(target_type, target, source_type, source)
 	local sections = {}
 	function Glossary.insert(key, func)
 		if not sections[key] then
@@ -31,7 +33,7 @@ end
 
 --
 
-function Glossary.before_process_info_queue(context)
+function Glossary.processing.process_before_context(context)
 	context.info_queue = context.info_queue or {}
 	context.extra = SMODS.merge_defaults(context.extra or {}, {
 		processed_card_modifiers = {},
@@ -46,7 +48,7 @@ function Glossary.before_process_info_queue(context)
 	context.before = nil
 	context.stage = nil
 end
-function Glossary.individual_process_info_queue(context)
+function Glossary.processing.process_individual_context(context)
 	context.individual = true
 	context.stage = "individual"
 	local processors = Glossary.get_processors("individual")
@@ -75,7 +77,7 @@ function Glossary.individual_process_info_queue(context)
 	context.individual = nil
 	context.stage = nil
 end
-function Glossary.after_process_info_queue(context)
+function Glossary.processing.process_after_context(context)
 	context.after = true
 	context.stage = "after"
 	local processors = Glossary.get_processors("after")
@@ -86,8 +88,35 @@ function Glossary.after_process_info_queue(context)
 	context.stage = nil
 end
 
-function Glossary.process_info_queue(context)
-	Glossary.before_process_info_queue(context)
-	Glossary.individual_process_info_queue(context)
-	Glossary.after_process_info_queue(context)
+function Glossary.processing.process_context(context)
+	Glossary.processing.process_before_context(context)
+	Glossary.processing.process_individual_context(context)
+	Glossary.processing.process_after_context(context)
+end
+
+--
+
+function Glossary.processing.request(context)
+	Glossary.processing.current_request = {
+		context = context,
+		started = false,
+		can_finish = false,
+		finished = false,
+	}
+end
+function Glossary.processing.clear_request()
+	Glossary.processing.current_request = nil
+end
+
+--
+
+local old_generate_ui = generate_card_ui
+function generate_card_ui(...)
+	local a, b, c, d, e, f = old_generate_ui(...)
+	if Glossary.processing.current_request and Glossary.processing.current_request.can_finish then
+		Glossary.processing.current_request.can_finish = false
+		Glossary.processing.current_request.finished = true
+		Glossary.processing.process_after_context(Glossary.processing.current_request.context)
+	end
+	return a, b, c, d, e, f
 end

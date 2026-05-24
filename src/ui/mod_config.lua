@@ -1,3 +1,9 @@
+local function proper_create_toggle(i)
+	local r = create_toggle(i)
+	r.nodes[2].config.minw = nil
+	return r
+end
+
 local function create_credits_rows()
 	local credits_area = CardArea(0, 0, 7, G.CARD_H, {
 		type = "title_2",
@@ -13,7 +19,7 @@ local function create_credits_rows()
 		n = G.UIT.R,
 		config = { minw = 7, align = "cm" },
 		nodes = {
-			create_toggle({
+			proper_create_toggle({
 				label = localize("gloss_toggle_bypass_lock"),
 				ref_table = Glossary.cc,
 				ref_value = "bypass_lock",
@@ -23,9 +29,9 @@ local function create_credits_rows()
 				end,
 				scale = 0.8,
 				label_scale = 0.32,
-				w = 5,
+				w = 6,
 			}),
-			create_toggle({
+			proper_create_toggle({
 				label = localize("gloss_toggle_bypass_discovery"),
 				ref_table = Glossary.cc,
 				ref_value = "bypass_discovery",
@@ -35,9 +41,9 @@ local function create_credits_rows()
 				end,
 				scale = 0.8,
 				label_scale = 0.32,
-				w = 5,
+				w = 6,
 			}),
-			create_toggle({
+			proper_create_toggle({
 				label = localize("gloss_toggle_use_mods_colours"),
 				ref_table = Glossary.cc,
 				ref_value = "use_mods_colours",
@@ -47,7 +53,23 @@ local function create_credits_rows()
 				end,
 				scale = 0.8,
 				label_scale = 0.32,
-				w = 5,
+				w = 6,
+			}),
+			proper_create_toggle({
+				label = localize("gloss_toggle_return_on_close"),
+				ref_table = Glossary.cc,
+				ref_value = "return_on_close",
+				callback = function(b)
+					Glossary.cc.return_on_close = b
+					Glossary.config.save()
+					if Glossary.history.overlay_buffer then
+						Glossary.history.overlay_buffer:remove()
+						Glossary.history.overlay_buffer = nil
+					end
+				end,
+				scale = 0.8,
+				label_scale = 0.32,
+				w = 6,
 			}),
 		},
 	}
@@ -97,7 +119,7 @@ function Glossary.show_mod_config(menu_data, source_type, source)
 	local old_check_for_unlock = check_for_unlock
 	check_for_unlock = function() end
 
-	local context = Glossary.new_info_queue_context(
+	local context = Glossary.processing.new_context(
 		"mod_config",
 		{ sprite = tag_sprite, from_smods = menu_data.from_smods },
 		source_type,
@@ -231,9 +253,7 @@ G.E_MANAGER:add_event(Event({
 	blocking = false,
 	blockable = false,
 	func = function()
-		local old_open_UI = G.FUNCS.openModUI_Glossary or function() end
 		G.FUNCS.openModUI_Glossary = function(e, ...)
-			old_open_UI(e, ...)
 			Glossary.show_mod_config({ from_smods = true }, "ui_button", e)
 		end
 		return true

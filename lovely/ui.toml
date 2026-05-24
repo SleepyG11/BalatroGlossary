@@ -11,16 +11,16 @@ pattern = '''for _, v in ipairs(info_queue) do'''
 position = "before"
 payload = '''
 local glossary_should_finish = false
-if Glossary.G.processing_request and not Glossary.G.processing_request.started then
+if Glossary.processing.current_request and not Glossary.processing.current_request.started then
     glossary_should_finish = true
-    Glossary.G.processing_request.started = true
-    local context = Glossary.G.processing_request.context
+    Glossary.processing.current_request.started = true
+    local context = Glossary.processing.current_request.context
 
     context.AUT = full_UI_table
     context.info_queue = info_queue
 
-    Glossary.before_process_info_queue(context)
-    Glossary.individual_process_info_queue(context)
+    Glossary.processing.process_before_context(context)
+    Glossary.processing.process_individual_context(context)
 end
 '''
 match_indent = true
@@ -33,7 +33,7 @@ pattern = '''return full_UI_table'''
 position = "before"
 payload = '''
 if glossary_should_finish then
-    Glossary.G.processing_request.can_finish = true
+    Glossary.processing.current_request.can_finish = true
 end
 '''
 match_indent = true

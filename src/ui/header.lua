@@ -211,11 +211,3 @@ function Glossary.UI.header(input)
 		},
 	}
 end
-
---
-
-local old_exit_menu = G.FUNCS.exit_overlay_menu
-function G.FUNCS.exit_overlay_menu(...)
-	old_exit_menu(...)
-	G.ACTIVE_MOD_UI = nil
-end
