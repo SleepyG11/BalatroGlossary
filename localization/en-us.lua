@@ -55,8 +55,8 @@ return {
 	misc = {
 		dictionary = {
 			gloss_toggle_bypass_lock = "Display Locked cards",
-			gloss_toggle_bypass_discovery = "Display Locked cards",
-			gloss_toggle_use_mods_colours = "Display Locked cards",
+			gloss_toggle_bypass_discovery = "Display Undiscovered cards",
+			gloss_toggle_use_mods_colours = "Use Mod's custom UI color",
 		},
 	},
 }
