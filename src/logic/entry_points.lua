@@ -5,7 +5,8 @@ function Glossary.show_tag_info(tag, source_type, source)
 	check_for_unlock = function() end
 
 	local tagConstructor = getmetatable(tag)
-	local new_tag = tagConstructor(tag.key)
+	local new_tag = tagConstructor(tag.key, true)
+	new_tag.ability = SMODS.shallow_copy(tag.ability)
 	new_tag.hide_ability = tag.hide_ability or Glossary.cc.bypass_discovery
 	local tag_ui, tag_sprite = new_tag:generate_UI(1.2)
 	local context = Glossary.processing.new_context("tag", new_tag, source_type, source)
@@ -17,6 +18,8 @@ function Glossary.show_tag_info(tag, source_type, source)
 	check_for_unlock = old_check_for_unlock
 
 	tag_sprite.hover = Sprite.hover
+	tag_ui.glossary_ignore = true
+	tag_sprite.glossary_ignore = true
 
 	local main_render = {
 		n = G.UIT.R,
@@ -65,6 +68,7 @@ function Glossary.show_card_info(card, source_type, source)
 	})
 	copy_card(card, new_card, 1, nil, nil)
 	main_card_area:emplace(new_card)
+	new_card.glossary_ignore = true
 
 	local context = Glossary.processing.new_context("card", new_card, source_type, source)
 	local old_hover = Node.hover
@@ -133,6 +137,7 @@ function Glossary.show_back_info(back, source_type, source)
 		deck_card.sprite_facing = "back"
 		deck_card.no_ui = true
 		main_card_area:emplace(deck_card)
+		deck_card.glossary_ignore = true
 	end
 
 	local context = Glossary.processing.new_context("back", new_back.effect.center, source_type, source)

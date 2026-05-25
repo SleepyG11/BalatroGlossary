@@ -4,8 +4,22 @@ return {
 			mod_card = {
 				name = "Glossary",
 				text = {
-					"Info.",
-					"Visualized.",
+					"Info. Visualized.",
+					" ",
+					"{C:attention}Right Click{} on {C:inactive}almost{} any object",
+					"you see to open info about it.",
+				},
+			},
+			credits_me = {
+				name = "SleepyG11",
+				text = {
+					"Idea & Execution",
+				},
+			},
+			credits_comykel = {
+				name = "comykel",
+				text = {
+					'"I did the mod icon. That\'s it."',
 				},
 			},
 			info_queue = {

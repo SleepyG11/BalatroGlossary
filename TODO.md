@@ -1,16 +1,16 @@
 - Mod UI
-    - Config page (available via header)
-        - Mod colours
-        - Bypasses
+    - Config page
         - Keybind?
     - Credits
         - Eremel
 - Stakes
+    - Display together with back info
     - Stakes tower
     - Extract mod
+- Sleeve
+    - Display together with back info
+    - Extract mod
 - Blinds
+    - Support, somehow
     - Blinds expanded support
     - Extract mod
-- Sleeve
-    - support, show with deck
-    - extract mod

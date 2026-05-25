@@ -12,13 +12,13 @@ position = "after"
 payload = '''
 if button == 2 then
     local hovered_target = G.CONTROLLER.hovering.target
-	if hovered_target then
+	if hovered_target and not hovered_target.glossary_ignore then
         if hovered_target == G.deck then
             hovered_target:stop_hover()
             Glossary.show_back_info(G.GAME.selected_back.effect.center, "area", G.deck)
 		elseif hovered_target.is and hovered_target:is(Card) then
-			hovered_target:stop_hover()
-			Glossary.show_card_info(hovered_target, "card", hovered_target)
+            hovered_target:stop_hover()
+            Glossary.show_card_info(hovered_target, "card", hovered_target)
 		elseif hovered_target.config and hovered_target.config.tag then
 			hovered_target:stop_hover()
 			Glossary.show_tag_info(hovered_target.config.tag, "tag", hovered_target.config.tag)

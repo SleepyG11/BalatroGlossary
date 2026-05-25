@@ -4,16 +4,56 @@ local function proper_create_toggle(i)
 	return r
 end
 
+local function credits_card(area, atlas, pos, key)
+	local card = SMODS.create_card({ key = "c_base", front = false, area = area })
+	card.children.center.atlas = SMODS.get_atlas(atlas)
+	card.children.center:set_sprite_pos(pos)
+	card.glossary_ignore = true
+
+	function card:hover()
+		self:juice_up(0.05, 0.03)
+		play_sound("paper1", math.random() * 0.2 + 0.9, 0.35)
+
+		if
+			self.facing == "front"
+			and (not self.states.drag.is or G.CONTROLLER.HID.touch)
+			and not self.no_ui
+			and not G.debug_tooltip_toggle
+		then
+			self.ability_UIBox_table =
+				{ main = {}, info = {}, type = {}, name = {}, badges = {}, card_type = "gloss_credits" }
+			self.ability_UIBox_table.name = localize({
+				type = "name",
+				set = "Glossary_Other",
+				key = key,
+				vars = {},
+				nodes = self.ability_UIBox_table.name,
+			})
+			localize({
+				type = "descriptions",
+				set = "Glossary_Other",
+				key = key,
+				vars = {},
+				nodes = self.ability_UIBox_table.main,
+			})
+			self.config.h_popup = G.UIDEF.card_h_popup(self)
+			self.config.h_popup_config = self:align_h_popup()
+
+			Node.hover(self)
+		end
+	end
+
+	area:emplace(card)
+end
+
 local function create_credits_rows()
 	local credits_area = CardArea(0, 0, 7, G.CARD_H, {
 		type = "title_2",
 		highlight_limit = 0,
 		collection = true,
 	})
-	local me_card = SMODS.create_card({ key = "c_base", front = false, area = credits_area })
-	me_card.children.center.atlas = G.ASSET_ATLAS["gloss_me_joker"]
-	me_card.children.center:set_sprite_pos({ x = 0, y = 0 })
-	credits_area:emplace(me_card)
+	credits_card(credits_area, "gloss_me_joker", { x = 0, y = 0 }, "credits_me")
+	credits_card(credits_area, "gloss_comykel_joker", { x = 0, y = 0 }, "credits_comykel")
 
 	local configs = {
 		n = G.UIT.R,
@@ -111,6 +151,7 @@ function Glossary.show_mod_config(menu_data, source_type, source)
 	tag_sprite.states.hover.can = true
 	tag_sprite.states.drag.can = false
 	tag_sprite.states.collide.can = true
+	tag_sprite.glossary_ignore = true
 
 	local old_check_for_unlock = check_for_unlock
 	check_for_unlock = function() end
@@ -121,11 +162,10 @@ function Glossary.show_mod_config(menu_data, source_type, source)
 		source_type,
 		source
 	)
-	context.AUT = { main = {}, info = {}, type = {}, name = {}, badges = {} }
+	context.AUT = { main = {}, info = {}, type = {}, name = {}, badges = {}, card_type = "gloss_modicon" }
 
 	context.AUT.badges = {
 		create_badge("v" .. Glossary.current_mod.version, mix_colours(G.C.CHIPS, G.C.GREEN, 0.5)),
-		create_badge("By SleepyG11", G.C.CHIPS),
 	}
 	context.AUT.name =
 		localize({ type = "name", set = "Glossary_Other", key = "mod_card", vars = {}, nodes = context.AUT.name })

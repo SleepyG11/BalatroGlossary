@@ -39,5 +39,11 @@ SMODS.Atlas({
 	py = 95,
 	path = "me_joker.png",
 })
+SMODS.Atlas({
+	key = "comykel_joker",
+	px = 71,
+	py = 95,
+	path = "comykel_joker.png",
+})
 
 Glossary.load_file("src/index.lua")
