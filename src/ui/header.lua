@@ -95,10 +95,10 @@ function Glossary.UI.header_back_button(back)
 		},
 	})
 end
-function Glossary.UI.header_glossary_config_button()
+function Glossary.UI.header_glossary_config_button(disabled)
 	return Glossary.UI.header_button({
-		button = "glossary_open_glossary_mod_config",
-		colour = G.C.BLUE,
+		button = not disabled and "glossary_open_glossary_mod_config" or nil,
+		colour = disabled and G.C.UI.BACKGROUND_INACTIVE or G.C.BLUE,
 		minw = 0.5,
 		content = {
 			n = G.UIT.O,
@@ -156,14 +156,8 @@ end
 G.FUNCS.glossary_open_glossary_mod_config = function(e)
 	Glossary.show_mod_config({}, "ui_button", e)
 end
---
 
-G.FUNCS.glossary_setup_header_right_buttons = function(e)
-	e.config.func = nil
-	e.config.ref_table.config.major = e
-	e.config.ref_table.config.parent = e
-	e.children.glossary_right_buttons = UIBox(e.config.ref_table)
-end
+--
 
 function Glossary.UI.header(input)
 	local mod = input.context.mod
@@ -178,7 +172,7 @@ function Glossary.UI.header(input)
 			r = 0.25,
 			padding = 0.1,
 			minw = 14,
-			func = "glossary_setup_header_right_buttons",
+			func = "glossary_attach_uibox",
 			ref_table = {
 				definition = {
 					n = G.UIT.ROOT,
@@ -194,7 +188,7 @@ function Glossary.UI.header(input)
 								Glossary.UI.header_mod_additions_button(mod),
 								Glossary.UI.header_vanilla_collection_button(),
 								Glossary.UI.header_separator(),
-								Glossary.UI.header_glossary_config_button(),
+								Glossary.UI.header_glossary_config_button(input.context.target_type == "mod_config"),
 								Glossary.UI.header_close_button(),
 							},
 						},

@@ -12,9 +12,9 @@ function Glossary.history.move(dx)
 	local history = G.GLOSSARY_OVERLAY_MENU.glossary_history
 	history.current_index = history.current_index + dx
 	local entry = history[history.current_index]
-	Glossary.keep_history = true
+	Glossary.history.keep = true
 	Glossary.show_history_entry_info(entry)
-	Glossary.keep_history = nil
+	Glossary.history.keep = nil
 end
 function Glossary.history.get()
 	if type(G.GLOSSARY_OVERLAY_MENU) ~= "table" or not G.GLOSSARY_OVERLAY_MENU.glossary_history then
@@ -24,8 +24,12 @@ function Glossary.history.get()
 	end
 	return G.GLOSSARY_OVERLAY_MENU.glossary_history
 end
+function Glossary.history.get_current()
+	local history = Glossary.history.get()
+	return history[history.current_index]
+end
 function Glossary.history.add(context)
-	if Glossary.keep_history then
+	if Glossary.history.keep then
 		return
 	end
 	local history = Glossary.history.get()

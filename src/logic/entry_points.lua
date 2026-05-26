@@ -69,6 +69,9 @@ function Glossary.show_card_info(card, source_type, source)
 	copy_card(card, new_card, 1, nil, nil)
 	main_card_area:emplace(new_card)
 	new_card.glossary_ignore = true
+	if new_card.ability.set == "Joker" then
+		new_card.sticker = get_joker_win_sticker(new_card.config.center)
+	end
 
 	local context = Glossary.processing.new_context("card", new_card, source_type, source)
 	local old_hover = Node.hover

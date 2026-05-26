@@ -20,7 +20,7 @@ if button == 2 then
             hovered_target:stop_hover()
             Glossary.show_card_info(hovered_target, "card", hovered_target)
 		elseif hovered_target.config and hovered_target.config.tag then
-			hovered_target:stop_hover()
+            hovered_target:stop_hover()
 			Glossary.show_tag_info(hovered_target.config.tag, "tag", hovered_target.config.tag)
 		elseif
 			hovered_target.config
@@ -28,7 +28,7 @@ if button == 2 then
 			and hovered_target.config.ref_table.config
 			and hovered_target.config.ref_table.config.tag
 		then
-			hovered_target:stop_hover()
+            hovered_target:stop_hover()
 			Glossary.show_tag_info(hovered_target.config.ref_table.config.tag, "tag", hovered_target.config.ref_table.config.tag)
 		end
 	end
