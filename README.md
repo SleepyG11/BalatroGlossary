@@ -5,7 +5,7 @@ This mod adds UI for displaying all info related to any given card, consumable, 
 [Right Click] on _almost_ any object you see to open info about it.
 
 <img width="1033" height="797" alt="Balatro_HVjsQegyPZ" src="https://github.com/user-attachments/assets/f0f1a27c-b0e7-48b4-aadd-83befbc04358" />
-<img width="1034" height="734" alt="Balatro_ax4DgFf1XK" src="https://github.com/user-attachments/assets/211a352e-c544-4f8a-b8fe-84f2dd7e08fd" />
+<img width="1031" height="794" alt="image" src="https://github.com/user-attachments/assets/b710ac0c-b638-4376-b34e-8930d1586a0b" />
 <img width="1039" height="817" alt="Balatro_Gs19dltQpg" src="https://github.com/user-attachments/assets/cd5267e3-c862-4c62-ae23-45e9d6e64e03" />
 <img width="1028" height="697" alt="Balatro_1MRv2W4q5F" src="https://github.com/user-attachments/assets/bb36c3b4-9775-45e3-9982-b2735a00d27b" />
 <img width="1037" height="625" alt="Balatro_xjr8Ed2zuS" src="https://github.com/user-attachments/assets/f4b55834-ec4d-495d-ae21-2c3c10d91746" />
