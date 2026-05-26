@@ -48,6 +48,10 @@ return {
 				name = "Skip Tags",
 				text = {},
 			},
+			poke_energy = {
+				name = "Pokermon: Energy",
+				text = {},
+			},
 			poke_evolutions = {
 				name = "Pokermon: Evolutions",
 				text = {},

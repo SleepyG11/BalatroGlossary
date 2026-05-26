@@ -153,3 +153,12 @@ function Glossary.populate_info_queue(set, key)
 	end
 	return info_queue
 end
+
+G.FUNCS.glossary_attach_uibox = function(e)
+	e.config.func = nil
+	local def = e.config.ref_table
+	def.config.parent = e
+	def.config.major = e
+
+	e.children.glossary_center = UIBox(def)
+end
