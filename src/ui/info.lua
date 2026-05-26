@@ -144,7 +144,7 @@ function Glossary.show_info_ui(input)
 				},
 				nodes = {
 					input.main,
-					Glossary.UI.draggable_scrollable_content(content, 7, 6, 0.1),
+					Glossary.UI.draggable_scrollable_content(content, 9, 6, 0.1),
 				},
 			},
 		},

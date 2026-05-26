@@ -67,6 +67,10 @@ function Glossary.UI.draggable_scrollable_content(content, max_content_w, max_co
 				no_overflow = (should_scroll_w and "h" or "") .. (should_scroll_h and "v" or ""),
 			},
 		},
+		progress = {
+			x = 0.5,
+			y = 0,
+		},
 	})
 
 	Glossary.UI.init_draggable_scrollbox(content_overflow)
