@@ -7,7 +7,7 @@ function Glossary.show_tag_info(tag, source_type, source)
 	local tagConstructor = getmetatable(tag)
 	local new_tag = tagConstructor(tag.key, true)
 	new_tag.ability = SMODS.shallow_copy(tag.ability)
-	new_tag.hide_ability = tag.hide_ability or Glossary.cc.bypass_discovery
+	new_tag.hide_ability = not Glossary.cc.bypass_discovery and tag.hide_ability or false
 	local tag_ui, tag_sprite = new_tag:generate_UI(1.2)
 	local context = Glossary.processing.new_context("tag", new_tag, source_type, source)
 	Glossary.processing.request(context)
@@ -125,9 +125,15 @@ function Glossary.show_back_info(back, source_type, source)
 	local old_check_for_unlock = check_for_unlock
 	check_for_unlock = function() end
 
+	local old_unlocked = back.unlocked
+	if Glossary.cc.bypass_lock then
+		back.unlocked = true
+	end
+
 	local new_back = Back(back)
 	local old_back, old_v_back = G.GAME.selected_back, G.GAME.viewed_back
 	G.GAME.selected_back, G.GAME.viewed_back = new_back, new_back
+	local back_center = new_back.effect.center
 
 	for i = 1, 20 do
 		local deck_card = SMODS.create_card({
@@ -143,11 +149,12 @@ function Glossary.show_back_info(back, source_type, source)
 		deck_card.glossary_ignore = true
 	end
 
-	local context = Glossary.processing.new_context("back", new_back.effect.center, source_type, source)
+	local context = Glossary.processing.new_context("back", back_center, source_type, source)
 
 	-- Taken from Galdur by Eremel
 	context.AUT = { main = {}, info = {}, type = {}, name = "done", badges = {}, from_detailed_tooltip = true }
-	context.info_queue = Glossary.populate_info_queue("Back", back.key)
+	context.info_queue = Glossary.populate_info_queue("back", back_center)
+	Glossary.processing.request(context, true)
 	Glossary.processing.process_before_context(context)
 	Glossary.processing.process_individual_context(context)
 	local info_queue_render = {}
@@ -174,6 +181,7 @@ function Glossary.show_back_info(back, source_type, source)
 		}
 	end
 	Glossary.processing.process_after_context(context)
+	Glossary.processing.clear_request()
 
 	local old_desc_from_rows = desc_from_rows
 	function desc_from_rows(a, b, maxw, ...)
@@ -182,6 +190,8 @@ function Glossary.show_back_info(back, source_type, source)
 	local deck_ui = G.GAME.selected_back:generate_UI(nil, 0.7, 0.5, G.GAME.challenge)
 	local deck_name = G.GAME.selected_back:get_name()
 	desc_from_rows = old_desc_from_rows
+
+	back.unlocked = old_unlocked
 
 	G.GAME.selected_back, G.GAME.viewed_back = old_back, old_v_back
 

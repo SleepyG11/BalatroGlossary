@@ -96,13 +96,23 @@ end
 
 --
 
-function Glossary.processing.request(context)
-	Glossary.processing.current_request = {
-		context = context,
-		started = false,
-		can_finish = false,
-		finished = false,
-	}
+function Glossary.processing.request(context, fake)
+	if fake then
+		Glossary.processing.current_request = {
+			context = context,
+			started = true,
+			can_finish = false,
+			finished = true,
+			fake = true,
+		}
+	else
+		Glossary.processing.current_request = {
+			context = context,
+			started = false,
+			can_finish = false,
+			finished = false,
+		}
+	end
 end
 function Glossary.processing.clear_request()
 	Glossary.processing.current_request = nil
@@ -119,4 +129,12 @@ function generate_card_ui(...)
 		Glossary.processing.process_after_context(Glossary.processing.current_request.context)
 	end
 	return a, b, c, d, e, f
+end
+
+local old_create_card = create_card
+function create_card(...)
+	if Glossary.processing.current_request then
+		SMODS.bypass_create_card_discovery_center = true
+	end
+	return old_create_card(...)
 end

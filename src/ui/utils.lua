@@ -144,11 +144,9 @@ function Glossary.UI.clear_overlay_menu()
 	end
 end
 
--- Taken from Galdur by Eremel
-function Glossary.populate_info_queue(set, key)
+function Glossary.info_queue_from_loc(parsed)
 	local info_queue = {}
-	local loc_target = G.localization.descriptions[set][key] or {}
-	for _, lines in ipairs(loc_target.text_parsed) do
+	for _, lines in ipairs(parsed or {}) do
 		for _, part in ipairs(lines) do
 			if part.control.T then
 				info_queue[#info_queue + 1] = G.P_CENTERS[part.control.T] or G.P_TAGS[part.control.T]
@@ -156,6 +154,30 @@ function Glossary.populate_info_queue(set, key)
 		end
 	end
 	return info_queue
+end
+
+-- Taken from Galdur by Eremel
+function Glossary.populate_info_queue(target_type, target)
+	if target_type == "back" then
+		local loc_args, loc_table, key_override
+		if not target.unlocked and not Glossary.cc.bypass_lock then
+			if target.locked_loc_vars and type(target.locked_loc_vars) == "function" then
+				local res = target:locked_loc_vars() or {}
+				loc_args = res.vars or {}
+				key_override = res.key
+			end
+			loc_table = G.localization.descriptions.Back[key_override or target.key].unlock_parsed
+		else
+			if target.loc_vars and type(target.loc_vars) == "function" then
+				local res = target:loc_vars() or {}
+				loc_args = res.vars or {}
+				key_override = res.key
+			end
+			loc_table = G.localization.descriptions.Back[key_override or target.key].text_parsed
+		end
+		-- TODO: destroy all nodes inside loc_vars
+		return Glossary.info_queue_from_loc(loc_table)
+	end
 end
 
 G.FUNCS.glossary_attach_uibox = function(e)
