@@ -87,44 +87,63 @@ function Glossary.show_info_ui(input)
 		end
 	end
 
-	if info_queue_render and #context.info_queue > 0 then
-		table.insert(rows, {
-			n = G.UIT.R,
-			config = { align = "cm" },
-			nodes = {
-				{
-					n = G.UIT.R,
-					config = { align = "cm", colour = { 0, 0, 0, 0.1 }, r = 0.25, padding = 0.1 },
-					nodes = {
-						{
-							n = G.UIT.R,
-							config = { align = "cm", colour = { 0, 0, 0, 0.1 }, r = 0.25, minh = 0.5 },
-							nodes = {
-								{
-									n = G.UIT.T,
-									config = {
-										text = localize({
-											type = "name_text",
-											set = "Glossary_Other",
-											key = "info_queue",
-											vars = {},
-										}),
-										scale = 0.32,
-										shadow = true,
-										colour = G.C.UI.TEXT_LIGHT,
+	if info_queue_render then
+		local render = UIBox({
+			definition = {
+				n = G.UIT.ROOT,
+				config = { colour = G.C.CLEAR },
+				nodes = info_queue_render,
+			},
+			config = {},
+		})
+		if render.T.w <= 0.1 or render.T.h <= 0.1 then
+			render:remove()
+		else
+			table.insert(rows, {
+				n = G.UIT.R,
+				config = { align = "cm" },
+				nodes = {
+					{
+						n = G.UIT.R,
+						config = { align = "cm", colour = { 0, 0, 0, 0.1 }, r = 0.25, padding = 0.1 },
+						nodes = {
+							{
+								n = G.UIT.R,
+								config = { align = "cm", colour = { 0, 0, 0, 0.1 }, r = 0.25, minh = 0.5 },
+								nodes = {
+									{
+										n = G.UIT.T,
+										config = {
+											text = localize({
+												type = "name_text",
+												set = "Glossary_Other",
+												key = "info_queue",
+												vars = {},
+											}),
+											scale = 0.32,
+											shadow = true,
+											colour = G.C.UI.TEXT_LIGHT,
+										},
+									},
+								},
+							},
+							{
+								n = G.UIT.R,
+								config = { align = "cm", padding = 0.1 },
+								nodes = {
+									{
+										n = G.UIT.O,
+										config = {
+											object = render,
+										},
 									},
 								},
 							},
 						},
-						{
-							n = G.UIT.R,
-							config = { align = "cm", padding = 0.1 },
-							nodes = info_queue_render,
-						},
 					},
 				},
-			},
-		})
+			})
+		end
 	end
 
 	local left_content = {
