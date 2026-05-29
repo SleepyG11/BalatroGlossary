@@ -10,10 +10,17 @@ return {
 					"you see to open info about it.",
 				},
 			},
+			credits_drspectred = {
+				name = "DrSpectred",
+				text = {
+					"Idea",
+				},
+			},
 			credits_me = {
 				name = "SleepyG11",
 				text = {
-					"Idea & Execution",
+					"Execution",
+					"{s:0.75,C:inactive}Art by {s:0.75,C:mult}@lord.ruby{}",
 				},
 			},
 			credits_comykel = {

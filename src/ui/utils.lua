@@ -77,6 +77,7 @@ function Glossary.UI.draggable_scrollable_content(content, max_content_w, max_co
 
 	return {
 		n = G.UIT.R,
+		config = { align = "cm" },
 		nodes = {
 			{
 				n = G.UIT.R,

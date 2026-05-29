@@ -4,11 +4,31 @@ local function proper_create_toggle(i)
 	return r
 end
 
-local function credits_card(area, atlas, pos, key)
-	local card = SMODS.create_card({ key = "c_base", front = false, area = area })
+local function create_separator()
+	return {
+		n = G.UIT.R,
+		config = { align = "cm", padding = 0.1 },
+		nodes = {
+			{
+				n = G.UIT.R,
+				config = { minh = 0.075, colour = { 0, 0, 0, 0.05 }, minw = 6.75 },
+			},
+		},
+	}
+end
+
+local function credits_card(area, atlas, pos, key, modifiers)
+	modifiers = modifiers or {}
+	local card = Card(0, 0, G.CARD_W * 0.75, G.CARD_H * 0.75, nil, G.P_CENTERS.c_base, {
+		bypass_lock = true,
+		bypass_discovery_ui = true,
+	})
 	card.children.center.atlas = SMODS.get_atlas(atlas)
 	card.children.center:set_sprite_pos(pos)
 	card.glossary_ignore = true
+	if modifiers.edition then
+		card:set_edition(modifiers.edition, true, true)
+	end
 
 	function card:hover()
 		self:juice_up(0.05, 0.03)
@@ -46,15 +66,7 @@ local function credits_card(area, atlas, pos, key)
 	area:emplace(card)
 end
 
-local function create_credits_rows()
-	local credits_area = CardArea(0, 0, 7, G.CARD_H, {
-		type = "title_2",
-		highlight_limit = 0,
-		collection = true,
-	})
-	credits_card(credits_area, "gloss_me_joker", { x = 0, y = 0 }, "credits_me")
-	credits_card(credits_area, "gloss_comykel_joker", { x = 0, y = 0 }, "credits_comykel")
-
+local function create_config_rows()
 	local configs = {
 		n = G.UIT.R,
 		config = { minw = 7, align = "cm" },
@@ -83,6 +95,7 @@ local function create_credits_rows()
 				label_scale = 0.32,
 				w = 4.5,
 			}),
+			create_separator(),
 			proper_create_toggle({
 				label = localize("gloss_toggle_allow_trigger_in_hand"),
 				ref_table = Glossary.cc,
@@ -95,6 +108,7 @@ local function create_credits_rows()
 				label_scale = 0.32,
 				w = 4.5,
 			}),
+			create_separator(),
 			proper_create_toggle({
 				label = localize("gloss_toggle_slide_on_page_change"),
 				ref_table = Glossary.cc,
@@ -121,33 +135,42 @@ local function create_credits_rows()
 			}),
 		},
 	}
+	return Glossary.UI.section(
+		localize({
+			type = "name_text",
+			set = "Glossary_Other",
+			key = "config",
+			vars = {},
+		}),
+		configs
+	)
+end
 
-	return {
-		{
-			n = G.UIT.R,
-			config = { align = "cm" },
-			nodes = {
-				Glossary.UI.section(
-					localize({
-						type = "name_text",
-						set = "Glossary_Other",
-						key = "config",
-						vars = {},
-					}),
-					configs
-				),
-				Glossary.UI.section(
-					localize({
-						type = "name_text",
-						set = "Glossary_Other",
-						key = "credits",
-						vars = {},
-					}),
-					{ n = G.UIT.O, config = { object = credits_area } }
-				),
-			},
-		},
-	}
+local function create_credits_rows()
+	local credits_area = CardArea(0, 0, 4.5, G.CARD_H * 0.75, {
+		type = "title_2",
+		highlight_limit = 0,
+		collection = true,
+	})
+	credits_card(
+		credits_area,
+		"gloss_drspectred_joker",
+		{ x = 0, y = 0 },
+		"credits_drspectred",
+		{ edition = "e_negative" }
+	)
+	credits_card(credits_area, "gloss_me_joker", { x = 0, y = 0 }, "credits_me")
+	credits_card(credits_area, "gloss_comykel_joker", { x = 0, y = 0 }, "credits_comykel")
+
+	return Glossary.UI.section(
+		localize({
+			type = "name_text",
+			set = "Glossary_Other",
+			key = "credits",
+			vars = {},
+		}),
+		{ n = G.UIT.O, config = { object = credits_area } }
+	)
 end
 
 function Glossary.show_mod_config(menu_data, source_type, source)
@@ -183,7 +206,15 @@ function Glossary.show_mod_config(menu_data, source_type, source)
 		localize({ type = "name", set = "Glossary_Other", key = "mod_card", vars = {}, nodes = context.AUT.name })
 	localize({ type = "descriptions", set = "Glossary_Other", key = "mod_card", vars = {}, nodes = context.AUT.main })
 
-	local rows = create_credits_rows()
+	local rows = {
+		{
+			n = G.UIT.R,
+			config = { align = "cm", padding = 0.1 },
+			nodes = {
+				create_config_rows(),
+			},
+		},
+	}
 
 	check_for_unlock = old_check_for_unlock
 
@@ -223,7 +254,11 @@ function Glossary.show_mod_config(menu_data, source_type, source)
 		description = {
 			description,
 		},
+		extra_description = {
+			create_credits_rows(),
+		},
 		rows = rows,
+		description_max_h = 3.5,
 	})
 end
 
@@ -249,7 +284,12 @@ function Glossary.show_mod_config_ui(input)
 				},
 				nodes = {
 					input.main,
-					Glossary.UI.draggable_scrollable_content(content, 7, 6, 0.1),
+					Glossary.UI.draggable_scrollable_content(content, 7, input.description_max_h or 6, 0.1),
+					input.extra_description and {
+						n = G.UIT.R,
+						config = { align = "cm" },
+						nodes = input.extra_description,
+					} or nil,
 				},
 			},
 		},

@@ -14,3 +14,5 @@
     - Support, somehow
     - Blinds expanded support
     - Extract mod
+- Bugs
+    - Somehow hide hover UI for skiptags after glossary is opened
