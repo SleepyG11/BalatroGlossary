@@ -131,10 +131,13 @@ function generate_card_ui(...)
 	return a, b, c, d, e, f
 end
 
-local old_create_card = create_card
-function create_card(...)
+local old_card_init = Card.init
+function Card:init(a, b, c, d, e, f, params, ...)
 	if Glossary.processing.current_request then
-		SMODS.bypass_create_card_discovery_center = true
+		params = params or {}
+		params.bypass_discovery_center = true
+		params.bypass_discovery_ui = true
+		params.bypass_lock = true
 	end
-	return old_create_card(...)
+	return old_card_init(self, a, b, c, d, e, f, params, ...)
 end
