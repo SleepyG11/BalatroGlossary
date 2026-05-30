@@ -17,3 +17,23 @@ if blind_choice then
 end
 '''
 match_indent = true
+
+# Return from the first vanilla collection screen to the Glossary info screen
+# when the collection was opened from Glossary's header.
+[[patches]]
+[patches.pattern]
+target = "functions/UI_definitions.lua"
+pattern = '''local t = create_UIBox_generic_options({ back_func = G.STAGE == G.STAGES.RUN and 'options' or 'exit_overlay_menu', contents = {'''
+position = "at"
+payload = '''local t = create_UIBox_generic_options({ back_func = Glossary and Glossary.has_saved_external_return and Glossary.has_saved_external_return() and 'glossary_return_to_saved_info' or G.STAGE == G.STAGES.RUN and 'options' or 'exit_overlay_menu', contents = {'''
+match_indent = true
+
+# Return from the first Steamodded mod UI screen to the Glossary info screen
+# when a mod's additions tab was opened from Glossary's header.
+[[patches]]
+[patches.pattern]
+target = '=[SMODS _ "src/ui.lua"]'
+pattern = '''back_func = "mods_button",'''
+position = "at"
+payload = '''back_func = Glossary and Glossary.has_saved_external_return and Glossary.has_saved_external_return() and "glossary_return_to_saved_info" or "mods_button",'''
+match_indent = true
