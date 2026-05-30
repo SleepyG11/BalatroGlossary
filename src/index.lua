@@ -19,15 +19,6 @@ function Glossary.open(target)
 		target:stop_hover()
 		Glossary.show_back_info(G.GAME.selected_back.effect.center, "area", G.deck)
 		return true
-	-- Any card
-	elseif target.is and target:is(Card) then
-		-- Special case for card in hand
-		if target.area and target.area == G.hand and not Glossary.cc.allow_trigger_in_hand then
-			return
-		end
-		target:stop_hover()
-		Glossary.show_card_info(target, "card", target)
-		return true
 	-- Skip tag sprite
 	elseif target.config and target.config.tag then
 		target:stop_hover()
@@ -42,6 +33,18 @@ function Glossary.open(target)
 	then
 		target:stop_hover()
 		Glossary.show_tag_info(target.config.ref_table.config.tag, "tag", target.config.ref_table.config.tag)
+		return true
+	elseif target.config and target.config.blind then
+		target:stop_hover()
+		Glossary.show_blind_info(target.config.blind, "blind", target.config.blind)
+	-- Any card
+	elseif target.is and target:is(Card) then
+		-- Special case for card in hand
+		if target.area and target.area == G.hand and not Glossary.cc.allow_trigger_in_hand then
+			return
+		end
+		target:stop_hover()
+		Glossary.show_card_info(target, "card", target)
 		return true
 	end
 	return false

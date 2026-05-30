@@ -253,6 +253,55 @@ function Glossary.show_back_info(back, source_type, source)
 		info_queue = info_queue_render,
 	})
 end
+function Glossary.show_blind_info(blind, source_type, source)
+	Glossary.UI.prepare_overlay_menu()
+
+	local old_check_for_unlock = check_for_unlock
+	check_for_unlock = function() end
+
+	local blind_sprite =
+		SMODS.create_sprite(0, 0, 1.25, 1.25, blind.atlas or "blind_chips", blind.pos or G.P_BLINDS.bl_small.pos)
+	blind_sprite:define_draw_steps({
+		{ shader = "dissolve", shadow_height = 0.05 },
+		{ shader = "dissolve" },
+	})
+	blind_sprite.float = true
+	blind_sprite.states.hover.can = true
+	blind_sprite.states.drag.can = false
+	blind_sprite.states.collide.can = true
+	blind_sprite.config = { blind = blind }
+	blind_sprite.glossary_ignore = true
+
+	local main_render = {
+		n = G.UIT.R,
+		config = { r = 0.25, colour = { 0, 0, 0, 0.1 }, align = "cm", padding = 0.1 },
+		nodes = {
+			{
+				n = G.UIT.O,
+				config = {
+					object = blind_sprite,
+				},
+			},
+		},
+	}
+
+	local context = Glossary.processing.new_context("blind", blind, source_type, source)
+	Glossary.processing.request(context)
+
+	local content = create_UIBox_blind_popup(blind, blind.discovered or Glossary.cc.bypass_discovery)
+	content.n = G.UIT.R
+
+	Glossary.processing.clear_request()
+	check_for_unlock = old_check_for_unlock
+
+	Glossary.show_info_ui({
+		context = context,
+		main = main_render,
+		description = {
+			content,
+		},
+	})
+end
 
 Glossary.entry_points = {
 	mod_config = function(target, source_type, source)
@@ -266,6 +315,9 @@ Glossary.entry_points = {
 	end,
 	card = function(target, source_type, source)
 		return Glossary.show_card_info(target, source_type, source)
+	end,
+	blind = function(target, source_type, source)
+		return Glossary.show_blind_info(target, source_type, source)
 	end,
 }
 

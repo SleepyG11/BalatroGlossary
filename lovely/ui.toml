@@ -1,0 +1,19 @@
+[manifest]
+version = "1.0.0"
+dump_lua = true
+priority = 10000000
+
+# Allow blind chip be clickable
+[[patches]]
+[patches.pattern]
+target = "functions/UI_definitions.lua"
+pattern = '''local _reward = true'''
+position = "after"
+payload = '''
+if blind_choice then
+    blind_choice.animation.config = blind_choice.animation.config or {}
+    blind_choice.animation.config.blind = blind_choice.config
+    blind_choice.animation.states.collide.can = true
+end
+'''
+match_indent = true

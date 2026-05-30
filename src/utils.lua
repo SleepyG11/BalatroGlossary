@@ -6,7 +6,7 @@ function Glossary.is_collection_card_junk(context)
 end
 
 function Glossary.get_target_mod(target_type, target)
-	if target_type == "back" then
+	if target_type == "back" or target_type == "blind" then
 		return target.mod
 	elseif target_type == "card" then
 		return target.config.center.mod
