@@ -138,13 +138,13 @@ end
 --
 
 G.FUNCS.glossary_open_mod_additions = function(e)
-	Glossary.save_external_return_info()
+	Glossary.history.save_external()
 	G.ACTIVE_MOD_UI = e.config.ref_table.mod
 	SMODS.LAST_SELECTED_MOD_TAB = "additions"
 	G.FUNCS["openModUI_" .. G.ACTIVE_MOD_UI.id](e)
 end
 G.FUNCS.glossary_open_vanilla_collection = function(e)
-	Glossary.save_external_return_info()
+	Glossary.history.save_external()
 	G.ACTIVE_MOD_UI = nil
 	G.FUNCS.your_collection(e)
 end
@@ -157,38 +157,6 @@ end
 
 G.FUNCS.glossary_open_glossary_mod_config = function(e)
 	Glossary.show_mod_config({}, "ui_button", e)
-end
-
-function Glossary.save_external_return_info()
-	local history = Glossary.history.get()
-	local entry = history and history[history.current_index]
-	if not entry then
-		Glossary.external_return_info = nil
-		return
-	end
-	Glossary.external_return_info = {
-		history = history,
-		entry = entry,
-	}
-end
-
-function Glossary.has_saved_external_return()
-	return Glossary.external_return_info and Glossary.external_return_info.entry
-end
-
-G.FUNCS.glossary_return_to_saved_info = function()
-	local saved = Glossary.external_return_info
-	Glossary.external_return_info = nil
-	if not (saved and saved.entry) then
-		return G.FUNCS.exit_overlay_menu()
-	end
-	G.FUNCS.exit_overlay_menu()
-	Glossary.history.keep = true
-	Glossary.show_history_entry_info(saved.entry)
-	Glossary.history.keep = nil
-	if saved.history and G.GLOSSARY_OVERLAY_MENU then
-		G.GLOSSARY_OVERLAY_MENU.glossary_history = saved.history
-	end
 end
 
 --

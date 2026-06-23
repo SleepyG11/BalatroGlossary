@@ -25,7 +25,7 @@ match_indent = true
 target = "functions/UI_definitions.lua"
 pattern = '''local t = create_UIBox_generic_options({ back_func = G.STAGE == G.STAGES.RUN and 'options' or 'exit_overlay_menu', contents = {'''
 position = "at"
-payload = '''local t = create_UIBox_generic_options({ back_func = Glossary and Glossary.has_saved_external_return and Glossary.has_saved_external_return() and 'glossary_return_to_saved_info' or G.STAGE == G.STAGES.RUN and 'options' or 'exit_overlay_menu', contents = {'''
+payload = '''local t = create_UIBox_generic_options({ back_func = Glossary.history.has_external() and 'glossary_load_external_history' or G.STAGE == G.STAGES.RUN and 'options' or 'exit_overlay_menu', contents = {'''
 match_indent = true
 
 # Return from the first Steamodded mod UI screen to the Glossary info screen
@@ -35,5 +35,5 @@ match_indent = true
 target = '=[SMODS _ "src/ui.lua"]'
 pattern = '''back_func = "mods_button",'''
 position = "at"
-payload = '''back_func = Glossary and Glossary.has_saved_external_return and Glossary.has_saved_external_return() and "glossary_return_to_saved_info" or "mods_button",'''
+payload = '''back_func = Glossary.history.has_external() and "glossary_load_external_history" or "mods_button",'''
 match_indent = true
