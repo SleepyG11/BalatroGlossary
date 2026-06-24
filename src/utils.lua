@@ -54,3 +54,36 @@ function Glossary.safe_card_from_center(center_key, area)
 		return nil
 	end
 end
+
+--- @generic T
+--- @generic S
+--- @param target T
+--- @param source S
+--- @param ... any
+--- @return T | S
+function Glossary.table_merge_with_arrays(target, source, ...)
+	assert(type(target) == "table", "Target is not a table")
+	local tables_to_merge = { source, ... }
+	if #tables_to_merge == 0 then
+		return target
+	end
+
+	for k, t in ipairs(tables_to_merge) do
+		assert(type(t) == "table", string.format("Expected a table as parameter %d", k))
+	end
+
+	for i = 1, #tables_to_merge do
+		local from = tables_to_merge[i]
+		for k, v in pairs(from) do
+			if type(k) == "number" then
+				table.insert(target, v)
+			elseif type(v) == "table" then
+				target[k] = Glossary.table_merge_with_arrays(target[k] or {}, v)
+			else
+				target[k] = v
+			end
+		end
+	end
+
+	return target
+end

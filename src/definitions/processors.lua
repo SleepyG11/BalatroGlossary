@@ -1,4 +1,38 @@
 Glossary.InfoQueueProcessor({
+	key = "pre_meta",
+	order = -100,
+	prefix_config = {
+		key = false,
+	},
+	func = function(self, context)
+		if
+			context.target_type == "card"
+			and context.source_type == "card"
+			and context.source.config.center_key ~= "c_base"
+			and not (
+				context.source.playing_card
+				or (
+					context.source.config.card
+					and (context.source.config.card.value or context.source.config.card.suit)
+				)
+			)
+		then
+			Glossary.process_meta("centers", context.target.config.center)
+		end
+		if context.target_type == "back" then
+			Glossary.process_meta("centers", context.target)
+		end
+		if context.target_type == "blind" then
+			Glossary.process_meta("blinds", context.target)
+		end
+		if context.target_type == "tag" then
+			Glossary.process_meta("tags", context.target)
+		end
+	end,
+	conditions = { before = true },
+})
+
+Glossary.InfoQueueProcessor({
 	key = "playing_card_center",
 	order = -100,
 	prefix_config = {
@@ -7,10 +41,14 @@ Glossary.InfoQueueProcessor({
 	func = function(self, context)
 		if
 			context.source_type == "card"
-			and context.source.facing ~= "back"
 			and context.source.config.center_key ~= "c_base"
-			and context.source.config.card
-			and (context.source.config.card.value or context.source.config.card.suit)
+			and (
+				context.source.playing_card
+				or (
+					context.source.config.card
+					and (context.source.config.card.value or context.source.config.card.suit)
+				)
+			)
 		then
 			local insert_result = Glossary.insert("target_modifiers", function(area)
 				return Glossary.safe_card_from_center(context.source.config.center_key, area)
@@ -34,6 +72,7 @@ Glossary.InfoQueueProcessor({
 		if context.entry.set == "Other" and SMODS.Stickers[context.entry.key] then
 			if is_collection_card and context.target.ability[context.entry.key] then
 				Glossary.specify_mod(SMODS.Stickers[context.entry.key].mod)
+				Glossary.process_meta("stickers", SMODS.Stickers[context.entry.key])
 			else
 				local is_card_modifier = context.target_type == "card"
 					and context.target.ability[context.entry.key]
@@ -69,6 +108,7 @@ Glossary.InfoQueueProcessor({
 				if seal then
 					if is_collection_card and context.target.seal == seal.key then
 						Glossary.specify_mod(seal.mod)
+						Glossary.process_meta("seals", seal)
 					else
 						local is_card_modifier = context.target_type == "card"
 							and context.target.seal == seal.key
@@ -86,6 +126,7 @@ Glossary.InfoQueueProcessor({
 		if context.entry.set == "Seal" and G.P_SEALS[context.entry.key] then
 			if is_collection_card and context.target.seal == context.entry.key then
 				Glossary.specify_mod(G.P_SEALS[context.entry.key].mod)
+				Glossary.process_meta("seals", G.P_SEALS[context.entry.key])
 			else
 				local is_card_modifier = context.target_type == "card"
 					and context.target.seal == context.entry.key

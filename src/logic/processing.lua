@@ -116,6 +116,10 @@ function Glossary.processing.request(context, fake)
 end
 function Glossary.processing.clear_request()
 	Glossary.processing.current_request = nil
+	function Glossary.insert(key, func)
+		return false
+	end
+	function Glossary.specify_mod(mod) end
 end
 
 --

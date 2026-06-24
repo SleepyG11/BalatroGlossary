@@ -1,4 +1,6 @@
-Glossary = {}
+Glossary = {
+	ARGS = {},
+}
 Glossary.current_mod = SMODS.current_mod
 
 --

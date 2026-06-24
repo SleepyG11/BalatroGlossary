@@ -51,6 +51,14 @@ return {
 				name = "Related Objects",
 				text = {},
 			},
+			collection_parts = {
+				name = "Collection",
+				text = {},
+			},
+			poker_hands = {
+				name = "Poker Hands",
+				text = {},
+			},
 			skip_tags = {
 				name = "Skip Tags",
 				text = {},

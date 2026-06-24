@@ -113,6 +113,7 @@ function Glossary.show_card_info(card, source_type, source)
 		info_queue = info_queue_render,
 	})
 end
+-- TODO: use new run select API
 function Glossary.show_back_info(back, source_type, source)
 	Glossary.UI.prepare_overlay_menu()
 
@@ -286,10 +287,14 @@ function Glossary.show_blind_info(blind, source_type, source)
 	}
 
 	local context = Glossary.processing.new_context("blind", blind, source_type, source)
-	Glossary.processing.request(context)
+	Glossary.processing.request(context, true)
+	Glossary.processing.process_before_context(context)
+	Glossary.processing.process_individual_context(context)
 
 	local content = create_UIBox_blind_popup(blind, blind.discovered or Glossary.cc.bypass_discovery)
 	content.n = G.UIT.R
+
+	Glossary.processing.process_after_context(context)
 
 	Glossary.processing.clear_request()
 	check_for_unlock = old_check_for_unlock
