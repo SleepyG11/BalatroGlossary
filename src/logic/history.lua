@@ -56,7 +56,7 @@ end
 
 --
 
-function Glossary.history.save_external()
+function Glossary.history.save_external(target_back_funcs)
 	local history = Glossary.history.get()
 	local entry = history and history[history.current_index]
 	if not entry then
@@ -66,6 +66,7 @@ function Glossary.history.save_external()
 	Glossary.history.external_data = {
 		history = history,
 		entry = entry,
+		target_back_funcs = target_back_funcs or {},
 	}
 end
 function Glossary.history.has_external()
@@ -113,4 +114,15 @@ function G.FUNCS.overlay_menu(...)
 		G.FUNCS.glossary_exit_overlay_menu()
 	end
 	return old_overlay_menu(...)
+end
+
+local old_gen_opts = create_UIBox_generic_options
+function create_UIBox_generic_options(args, ...)
+	if args and args.back_func then
+		local external = Glossary.history.external_data
+		if external and external.target_back_funcs[args.back_func] then
+			args.back_func = "glossary_load_external_history"
+		end
+	end
+	return old_gen_opts(args, ...)
 end

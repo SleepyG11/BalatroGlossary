@@ -138,13 +138,17 @@ end
 --
 
 G.FUNCS.glossary_open_mod_additions = function(e)
-	Glossary.history.save_external()
+	Glossary.history.save_external({
+		["mods_button"] = true,
+	})
 	G.ACTIVE_MOD_UI = e.config.ref_table.mod
 	SMODS.LAST_SELECTED_MOD_TAB = "additions"
 	G.FUNCS["openModUI_" .. G.ACTIVE_MOD_UI.id](e)
 end
 G.FUNCS.glossary_open_vanilla_collection = function(e)
-	Glossary.history.save_external()
+	Glossary.history.save_external({
+		[G.STAGE == G.STAGES.RUN and "options" or "exit_overlay_menu"] = true,
+	})
 	G.ACTIVE_MOD_UI = nil
 	G.FUNCS.your_collection(e)
 end

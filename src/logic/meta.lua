@@ -11,40 +11,44 @@ function Glossary.add_meta(type_or_data, ...)
 	end
 end
 
----
-
-function Glossary.process_meta_collection_parts(from_type, from)
-	local definition = from.glossary_meta and from.glossary_meta.collection_parts
-	if not definition then
-		definition = ((Glossary.meta[from_type] or {})[from.key] or {}).collection_parts
-	end
-	if definition then
-		for _, item in ipairs(definition) do
-			Glossary.insert("collection_parts", function(nodes)
-				return item
-			end)
-		end
-	end
+function Glossary.get_meta(item_type, item)
+	local item_meta = item.glossary_meta
+	local global_meta = (Glossary.meta[item_type] or {})[item.key] or {}
+	return item_meta or global_meta, item_meta, global_meta
 end
-function Glossary.process_meta_poker_hands(from_type, from)
-	local definition = from.glossary_meta and from.glossary_meta.poker_hands
-	if not definition then
-		definition = ((Glossary.meta[from_type] or {})[from.key] or {}).poker_hands
-	end
-	if definition then
-		for _, item in ipairs(definition) do
-			Glossary.insert("poker_hands", function(nodes)
-				return item
-			end)
-		end
-	end
+function Glossary.get_meta_field(item_type, item, field)
+	local _, item_meta, global_meta = Glossary.get_meta(item_type, item)
+	return item_meta and item_meta[field] or global_meta[field]
 end
 
 ---
 
-function Glossary.process_meta(from_type, from)
-	Glossary.process_meta_collection_parts(from_type, from)
-	Glossary.process_meta_poker_hands(from_type, from)
+function Glossary.process_meta_collection_parts(item_type, item)
+	local definition = Glossary.get_meta_field(item_type, item, "collection_parts")
+	if definition then
+		for _, _item in ipairs(definition) do
+			Glossary.insert("collection_parts", function()
+				return _item
+			end)
+		end
+	end
+end
+function Glossary.process_meta_poker_hands(item_type, item)
+	local definition = Glossary.get_meta_field(item_type, item, "poker_hands")
+	if definition then
+		for _, _item in ipairs(definition) do
+			Glossary.insert("poker_hands", function()
+				return _item
+			end)
+		end
+	end
+end
+
+---
+
+function Glossary.process_meta(item_type, item)
+	Glossary.process_meta_collection_parts(item_type, item)
+	Glossary.process_meta_poker_hands(item_type, item)
 end
 
 ---

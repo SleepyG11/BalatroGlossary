@@ -55,13 +55,14 @@ function Glossary.UI.simple_collection_part_button(args)
 		count = G.DISCOVER_TALLIES[args.tallies]
 	end
 	local result = UIBox_button({
-		button = id,
+		button = "glossary_open_collection_part",
 		label = { label },
 		count = count,
 		minw = 6,
 		maxw = 6,
 		id = id,
 		colour = args.colour,
+		target_back_funcs = args.target_back_funcs,
 	})
 	G.ACTIVE_MOD_UI = old_active_ui
 	if args.tallies then
@@ -99,5 +100,13 @@ function Glossary.UI.collection_part_button(item)
 		colour = definition.colour,
 		mod = item.mod,
 		item = item,
+		target_back_funcs = definition.target_back_funcs,
 	})
+end
+
+function G.FUNCS.glossary_open_collection_part(e)
+	Glossary.history.save_external(e.config.target_back_funcs or {
+		[G.STAGE == G.STAGES.RUN and "options" or "exit_overlay_menu"] = true,
+	})
+	return G.FUNCS[e.config.id](e)
 end
