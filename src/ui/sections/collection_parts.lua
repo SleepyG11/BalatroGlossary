@@ -14,34 +14,14 @@ Glossary.collection_part_buttons = {
 		})
 	end,
 	enhancements = {
-		tallies = false,
 		label = function(item)
 			return localize("b_enhanced_cards")
 		end,
 	},
-	editions = {
-		tallies = true,
-	},
-	seals = {
-		tallies = false,
-	},
-	vouchers = {
-		tallies = true,
-	},
 	boosters = {
-		tallies = true,
 		label = function(item)
 			return localize("b_booster_packs")
 		end,
-	},
-	tags = {
-		tallies = true,
-	},
-	blinds = {
-		tallies = true,
-	},
-	jokers = {
-		tallies = true,
 	},
 	stickers = {
 		count = function(item)
@@ -92,7 +72,13 @@ end
 function Glossary.UI.collection_part_button(item)
 	local definition = item.definition or Glossary.collection_part_buttons[item.type]
 	if not definition then
-		return
+		return Glossary.UI.simple_collection_part_button({
+			id = "your_collection_" .. item.type,
+			label = localize("b_" .. item.type),
+			tallies = item.type,
+			mod = item.mod,
+			item = item,
+		})
 	end
 	if type(definition) == "function" then
 		return definition(item)

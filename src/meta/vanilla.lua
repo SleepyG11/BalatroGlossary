@@ -2,10 +2,7 @@
 Glossary.add_meta("centers", {
 	b_ghost = {
 		collection_parts = {
-			{
-				type = "consumeables",
-				set = "Spectral",
-			},
+			"consumeables_Spectral",
 		},
 	},
 })
@@ -14,42 +11,30 @@ Glossary.add_meta("centers", {
 Glossary.add_meta("centers", {
 	j_8_ball = {
 		collection_parts = {
-			{
-				type = "consumeables",
-				set = "Tarot",
-			},
+			"consumeables_Tarot",
 		},
 	},
 	j_sixth_sense = {
 		collection_parts = {
-			{
-				type = "consumeables",
-				set = "Spectral",
-			},
+			"consumeables_Spectral",
 		},
 	},
 	j_constellation = {
 		collection_parts = {
-			{
-				type = "consumeables",
-				set = "Planet",
-			},
+			"consumeables_Planet",
 		},
 	},
 	j_superposition = {
 		collection_parts = {
-			{
-				type = "consumeables",
-				set = "Tarot",
-			},
+			"consumeables_Tarot",
 		},
 	},
 	j_seance = {
 		collection_parts = {
-			{
-				type = "consumeables",
-				set = "Spectral",
-			},
+			"consumeables_Spectral",
+		},
+		poker_hands = {
+			"Straight Flush",
 		},
 	},
 	j_vampite = {
@@ -59,26 +44,17 @@ Glossary.add_meta("centers", {
 	},
 	j_vagabond = {
 		collection_parts = {
-			{
-				type = "consumeables",
-				set = "Tarot",
-			},
+			"consumeables_Tarot",
 		},
 	},
 	j_hallucination = {
 		collection_parts = {
-			{
-				type = "consumeables",
-				set = "Tarot",
-			},
+			"consumeables_Tarot",
 		},
 	},
 	j_fortune_teller = {
 		collection_parts = {
-			{
-				type = "consumeables",
-				set = "Tarot",
-			},
+			"consumeables_Tarot",
 		},
 	},
 	j_certificate = {
@@ -88,10 +64,7 @@ Glossary.add_meta("centers", {
 	},
 	j_satellite = {
 		collection_parts = {
-			{
-				type = "consumeables",
-				set = "Planet",
-			},
+			"consumeables_Planet",
 		},
 	},
 	j_drivers_license = {
@@ -101,18 +74,12 @@ Glossary.add_meta("centers", {
 	},
 	j_cartomancer = {
 		collection_parts = {
-			{
-				type = "consumeables",
-				set = "Tarot",
-			},
+			"consumeables_Tarot",
 		},
 	},
 	j_astronomer = {
 		collection_parts = {
-			{
-				type = "consumeables",
-				set = "Planet",
-			},
+			"consumeables_Planet",
 		},
 	},
 })
@@ -121,30 +88,18 @@ Glossary.add_meta("centers", {
 Glossary.add_meta("centers", {
 	c_fool = {
 		collection_parts = {
-			{
-				type = "consumeables",
-				set = "Tarot",
-			},
-			{
-				type = "consumeables",
-				set = "Planet",
-			},
+			"consumeables_Tarot",
+			"consumeables_Planet",
 		},
 	},
 	c_emperor = {
 		collection_parts = {
-			{
-				type = "consumeables",
-				set = "Tarot",
-			},
+			"consumeables_Tarot",
 		},
 	},
 	c_high_priestess = {
 		collection_parts = {
-			{
-				type = "consumeables",
-				set = "Planet",
-			},
+			"consumeables_Planet",
 		},
 	},
 })
@@ -172,18 +127,12 @@ Glossary.add_meta("centers", {
 Glossary.add_meta("seals", {
 	Blue = {
 		collection_parts = {
-			{
-				type = "consumeables",
-				set = "Planet",
-			},
+			"consumeables_Planet",
 		},
 	},
 	Purple = {
 		collection_parts = {
-			{
-				type = "consumeables",
-				set = "Tarot",
-			},
+			"consumeables_Tarot",
 		},
 	},
 })

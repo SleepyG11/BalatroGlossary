@@ -113,6 +113,11 @@ Glossary.InfoSection({
 				type = result,
 			}
 		end
+		local cons_match = result.type:match("^consumeables_(.*)")
+		if cons_match then
+			result.type = "consumeables"
+			result.set = cons_match
+		end
 		for _, item in ipairs(items) do
 			if item.type == result.type and item.set == result.set then
 				return
