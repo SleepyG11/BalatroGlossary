@@ -10,7 +10,7 @@ target = "main.lua"
 pattern = '''function love.mousepressed(x, y, button, touch)'''
 position = "after"
 payload = '''
-if button == 2 then
+if button == 2 and not (Handy and Handy.API) then
 	Glossary.open(G.CONTROLLER.hovering.target)
 end
 '''

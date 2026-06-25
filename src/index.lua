@@ -6,6 +6,7 @@ Glossary.load_file("src/ui/index.lua")
 Glossary.load_directory("src/definitions")
 Glossary.load_directory("src/definitions/compatibility", true)
 Glossary.load_directory("src/meta", true)
+Glossary.load_directory("src/compat", true)
 
 --
 

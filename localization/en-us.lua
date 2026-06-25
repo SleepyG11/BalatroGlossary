@@ -1,5 +1,12 @@
 return {
 	descriptions = {
+		Handy_ConfigDictionary = {
+			glossary_open = {
+				name = "Glossary",
+				text = {},
+			},
+		},
+
 		Glossary_Other = {
 			mod_card = {
 				name = "Glossary",
@@ -39,6 +46,10 @@ return {
 			},
 			config = {
 				name = "Config",
+				text = {},
+			},
+			keybinds = {
+				name = "Keybinds",
 				text = {},
 			},
 		},

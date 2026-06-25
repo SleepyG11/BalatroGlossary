@@ -66,6 +66,32 @@ local function credits_card(area, atlas, pos, key, modifiers)
 	area:emplace(card)
 end
 
+local function create_keybind()
+	if Handy and Handy.API then
+		return {
+			n = G.UIT.R,
+			nodes = {
+				{
+					n = G.UIT.C,
+					nodes = {
+						Handy.UI.CP.dictionary_item_checkbox(Handy.D.dictionary.glossary_open),
+					},
+				},
+				{
+					n = G.UIT.C,
+					config = { minw = 0.2 },
+				},
+				{
+					n = G.UIT.C,
+					nodes = {
+						Handy.UI.CP.dictionary_item_keybind(Handy.D.dictionary.glossary_open),
+					},
+				},
+			},
+		}
+	end
+end
+
 local function create_config_rows()
 	local configs = {
 		n = G.UIT.R,
@@ -135,15 +161,48 @@ local function create_config_rows()
 			}),
 		},
 	}
-	return Glossary.UI.section(
-		localize({
-			type = "name_text",
-			set = "Glossary_Other",
-			key = "config",
-			vars = {},
-		}),
-		configs
-	)
+	return {
+		n = G.UIT.R,
+		config = { align = "cm" },
+		nodes = {
+			Glossary.UI.section(
+				localize({
+					type = "name_text",
+					set = "Glossary_Other",
+					key = "config",
+					vars = {},
+				}),
+				configs
+			),
+		},
+	}
+end
+
+local function create_keybind_rows()
+	if Handy and Handy.API then
+		local configs = {
+			n = G.UIT.R,
+			config = { minw = 7, align = "cm" },
+			nodes = {
+				create_keybind(),
+			},
+		}
+		return {
+			n = G.UIT.R,
+			config = { align = "cm" },
+			nodes = {
+				Glossary.UI.section(
+					localize({
+						type = "name_text",
+						set = "Glossary_Other",
+						key = "keybinds",
+						vars = {},
+					}),
+					configs
+				),
+			},
+		}
+	end
 end
 
 local function create_credits_rows()
@@ -212,6 +271,7 @@ function Glossary.show_mod_config(menu_data, source_type, source)
 			config = { align = "cm", padding = 0.1 },
 			nodes = {
 				create_config_rows(),
+				create_keybind_rows(),
 			},
 		},
 	}
