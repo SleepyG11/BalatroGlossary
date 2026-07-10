@@ -7,6 +7,8 @@ Handy.API.DefaultConfig({
 		enabled = true,
 		keys_1 = { "Right Mouse" },
 		keys_2 = {},
+		keys_1_gamepad = {},
+		keys_2_gamepad = {},
 	},
 })
 Handy.API.Dictionary({
@@ -37,8 +39,7 @@ Handy.API.Control({
 	end,
 })
 Handy.API.Stack({
-	key = "glossary_open",
-	stack_path = "input.regular_keybinds.menus",
+	control = "glossary_open",
+	parent = "input.regular_keybinds.menus",
 	order = 10,
-	control = true,
 })
