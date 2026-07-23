@@ -94,6 +94,22 @@ return {
 				name = "Wormhole: ©Spacetarts",
 				text = {},
 			},
+			ppu_credits = {
+				name = "Potato Patch: Credits",
+				text = {},
+			},
+			ppu_credits_area_coder = {
+				name = "Coders",
+				text = {},
+			},
+			ppu_credits_area_artist = {
+				name = "Artists",
+				text = {},
+			},
+			ppu_credits_area_team = {
+				name = "Artists",
+				text = {},
+			},
 		},
 	},
 	misc = {
