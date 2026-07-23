@@ -2,6 +2,29 @@ if not PotatoPatchUtils then
 	return
 end
 
+-- Custom type of glossary display
+Glossary.entry_points.ppu_team_credits = function(target, source_type, source)
+	local context = Glossary.processing.new_context("ppu_team_credits", target, source_type, source)
+	Glossary.specify_mod(target.mod_id)
+	local content = {
+		n = G.UIT.R,
+		config = { align = "m", r = 0.1, padding = 0.05, colour = G.C.BLACK, minw = 8, minh = 9 },
+		nodes = {
+			{
+				n = G.UIT.C,
+				config = { align = "cm" },
+				nodes = {
+					PotatoPatchUtils.CREDITS.create_team_credit_page(target),
+				},
+			},
+		},
+	}
+	Glossary.show_ui({
+		context = context,
+		content = content,
+	})
+end
+
 local function create_member_card(member, team)
 	local card = Card(G.ROOM.T.x, G.ROOM.T.y, G.CARD_W / 1.25, G.CARD_H / 1.25, nil, G.P_CENTERS.c_base)
 	card.children.center:remove()
@@ -30,6 +53,12 @@ local function create_member_card(member, team)
 
 	card.ppu_member = member
 	card.ppu_team = team
+	card.glossary_func = function()
+		if team then
+			Glossary.entry_points.ppu_team_credits(team, "card", card)
+			return true
+		end
+	end
 
 	-- Create tooltip
 	card.hover = function(self)
@@ -80,6 +109,8 @@ local function create_member_card(member, team)
 			},
 		}
 
+		local is_info_nodes_empty = true
+
 		local text = member.loc and G.localization.descriptions.PotatoPatch[member.loc].text_parsed or nil
 		if text then
 			if not text[1][1][1] then
@@ -98,6 +129,7 @@ local function create_member_card(member, team)
 						nodes = SMODS.localize_box(v, { text_colour = G.C.UI.TEXT_LIGHT }),
 					})
 				end
+				is_info_nodes_empty = false
 				info_nodes.nodes[1].nodes[#info_nodes.nodes[1].nodes + 1] = {
 					n = G.UIT.R,
 					config = { align = "cm" },
@@ -114,6 +146,10 @@ local function create_member_card(member, team)
 
 		local team_name
 		if team then
+			local temp_team_name = localize({ type = "name_text", set = "PotatoPatch", key = team.loc })
+			if temp_team_name == "ERROR" then
+				temp_team_name = team.name
+			end
 			team_name = {
 				n = G.UIT.R,
 				config = { align = "cm" },
@@ -121,7 +157,7 @@ local function create_member_card(member, team)
 					{
 						n = G.UIT.T,
 						config = {
-							text = localize({ type = "name_text", set = "PotatoPatch", key = team.loc }),
+							text = temp_team_name,
 							scale = 0.32,
 							colour = team.colour,
 						},
@@ -151,7 +187,7 @@ local function create_member_card(member, team)
 					} or nil,
 				},
 			},
-			#info_nodes.nodes > 0 and {
+			not is_info_nodes_empty and {
 				n = G.UIT.R,
 				config = { align = "cm" },
 				nodes = info_nodes.nodes,
@@ -210,7 +246,8 @@ local function create_team_name(team)
 			padding = 0.1,
 			r = 0.25,
 			hover = true,
-			button = "exit_overlay_menu",
+			button = "glossary_open_ppu_team_credits",
+			ref_table = team,
 			emboss = 0.075,
 			colour = team.colour,
 			align = "cm",
@@ -260,7 +297,6 @@ Glossary.InfoSection({
 					local mod = SMODS.Mods[member.mod_id]
 					local team = PotatoPatchUtils.Teams[mod.prefix .. "_" .. member.team]
 					local card = create_member_card(member, team)
-					card.glossary_ignore = true
 					cards[node.type]:emplace(card)
 				end
 			end
@@ -338,7 +374,6 @@ Glossary.InfoSection({
 		nodes[#nodes + 1] = result
 	end,
 })
-
 Glossary.InfoQueueProcessor({
 	key = "ppu_credits",
 	order = 100,
@@ -346,12 +381,7 @@ Glossary.InfoQueueProcessor({
 		key = false,
 	},
 	func = function(self, context)
-		local center
-		if context.target_type == "card" and context.target.facing ~= "back" then
-			center = context.target.config.center
-		else
-			center = context.target
-		end
+		local center = context.target_center
 		if center then
 			local credits_data = {
 				coder = center.ppu_coder,
@@ -373,3 +403,16 @@ Glossary.InfoQueueProcessor({
 
 	conditions = { before = true },
 })
+
+function G.FUNCS.glossary_open_ppu_team_credits(e)
+	Glossary.entry_points.ppu_team_credits(e.config.ref_table, "ui_button", e)
+end
+
+-- Prevent opening on credits cards
+local old_g_open = Glossary.open
+function Glossary.open(target, ...)
+	if target and target.ppu_member and not target.glossary_func then
+		return false
+	end
+	return old_g_open(target, ...)
+end
