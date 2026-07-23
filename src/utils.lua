@@ -15,6 +15,15 @@ function Glossary.get_target_mod(target_type, target)
 	end
 	return nil
 end
+function Glossary.get_target_center(target_type, target)
+	if target_type == "card" then
+		return target.config.center
+	elseif target_type == "tag" then
+		return G.P_TAGS[target.key]
+	else
+		return target
+	end
+end
 
 function Glossary.get_card_back_center(card, forced)
 	local fallback = forced and G.P_CENTERS.b_red or nil

@@ -5,6 +5,17 @@ function Glossary.specify_mod(mod) end
 
 function Glossary.processing.new_context(target_type, target, source_type, source)
 	local sections = {}
+	local context = {
+		target_type = target_type,
+		target = target,
+		target_center = Glossary.get_target_center(target_type, target),
+		source_type = source_type,
+		source = source,
+		sections = sections,
+		info_queue = {},
+		extra = {},
+	}
+
 	function Glossary.insert(key, func)
 		if not sections[key] then
 			sections[key] = Glossary.InfoSections[key]:create()
@@ -16,18 +27,13 @@ function Glossary.processing.new_context(target_type, target, source_type, sourc
 		end
 		return false
 	end
-	local context = {
-		target_type = target_type,
-		target = target,
-		source_type = source_type,
-		source = source,
-		sections = sections,
-		info_queue = {},
-		extra = {},
-	}
 	function Glossary.specify_mod(mod)
 		context.mod = mod
+		if type(context.mod) == "string" then
+			context.mod = SMODS.Mods[context.mod]
+		end
 	end
+
 	return context
 end
 

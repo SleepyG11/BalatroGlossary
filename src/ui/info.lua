@@ -179,6 +179,23 @@ function Glossary.show_info_ui(input)
 		}
 	end
 
+	Glossary.show_ui({
+		context = context,
+		content = {
+			n = G.UIT.R,
+			config = { align = "cm" },
+			nodes = {
+				left_content,
+				right_content,
+			},
+		},
+	})
+end
+
+function Glossary.show_ui(input)
+	local context = input.context
+	local content = input.content
+
 	context.mod = context.mod or Glossary.get_target_mod(context.target_type, context.target)
 	local mod = Glossary.cc.use_mods_colours and context.mod or nil
 
@@ -189,17 +206,10 @@ function Glossary.show_info_ui(input)
 			back_colour = mod and ((mod.ui_config or {}).collection_back_colour or (mod.ui_config or {}).back_colour),
 			outline_colour = mod
 				and ((mod.ui_config or {}).collection_outline_colour or (mod.ui_config or {}).outline_colour),
-			back_func = "glossary_exit_overlay_menu",
+			back_func = input.back_func or "glossary_exit_overlay_menu",
 			contents = {
 				Glossary.UI.header(input),
-				{
-					n = G.UIT.R,
-					config = { align = "cm" },
-					nodes = {
-						left_content,
-						right_content,
-					},
-				},
+				content,
 			},
 		}),
 	})
