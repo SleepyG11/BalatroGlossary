@@ -3,16 +3,12 @@ Glossary.load_file("src/logic/index.lua")
 Glossary.load_file("src/api/index.lua")
 Glossary.load_file("src/ui/index.lua")
 
-Glossary.load_directory("src/definitions")
-Glossary.load_directory("src/definitions/compatibility", true)
-Glossary.load_directory("src/meta", true)
-Glossary.load_directory("src/compat", true)
-
---
-
 function Glossary.open(target)
 	if not target or target.glossary_ignore then
 		return false
+	end
+	if target.glossary_func then
+		return target:glossary_func()
 	end
 	-- Deck when there's no cards
 	if target == G.deck then
@@ -49,3 +45,8 @@ function Glossary.open(target)
 	end
 	return false
 end
+
+Glossary.load_directory("src/definitions")
+Glossary.load_directory("src/definitions/compatibility", true)
+Glossary.load_directory("src/meta", true)
+Glossary.load_directory("src/compat", true)
