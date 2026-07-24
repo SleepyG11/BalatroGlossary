@@ -267,7 +267,7 @@ end
 
 Glossary.InfoSection({
 	key = "ppu_credits",
-	order = 1000,
+	order = 10000,
 	prefix_config = {
 		key = false,
 	},
@@ -383,7 +383,7 @@ Glossary.InfoSection({
 })
 Glossary.InfoQueueProcessor({
 	key = "ppu_credits",
-	order = 100,
+	order = 1000,
 	prefix_config = {
 		key = false,
 	},
