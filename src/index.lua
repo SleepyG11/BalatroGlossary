@@ -47,5 +47,4 @@ function Glossary.open(target)
 end
 
 Glossary.load_directory("src/definitions", true)
-Glossary.load_directory("src/meta", true)
 Glossary.load_directory("src/compat", true)
