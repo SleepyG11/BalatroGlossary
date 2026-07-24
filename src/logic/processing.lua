@@ -143,6 +143,9 @@ end
 
 local old_card_init = Card.init
 function Card:init(a, b, c, d, e, f, params, ...)
+	if Glossary.ARGS.force_ignore_on_cards then
+		self.glossary_ignore = true
+	end
 	if Glossary.processing.current_request then
 		params = params or {}
 		params.bypass_discovery_center = true

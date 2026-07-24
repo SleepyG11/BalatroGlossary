@@ -176,7 +176,20 @@ function Glossary.populate_info_queue(target_type, target)
 			end
 			loc_table = G.localization.descriptions.Back[key_override or target.key].text_parsed
 		end
-		-- TODO: destroy all nodes inside loc_vars
+
+		if loc_args and loc_args.elements then
+			for _, elem in pairs(loc_args.elements) do
+				if elem and elem.is and elem:is(Node) then
+					elem:remove()
+				else
+					UIBox({
+						definition = elem,
+						config = {},
+					}):remove()
+				end
+			end
+		end
+
 		return Glossary.info_queue_from_loc(loc_table)
 	end
 end

@@ -4,8 +4,12 @@ end
 
 -- Custom type of glossary display
 Glossary.entry_points.ppu_team_credits = function(target, source_type, source)
+	Glossary.UI.prepare_overlay_menu()
+
 	local context = Glossary.processing.new_context("ppu_team_credits", target, source_type, source)
 	Glossary.specify_mod(target.mod_id)
+
+	Glossary.ARGS.force_ignore_on_cards = true
 	local content = {
 		n = G.UIT.R,
 		config = { align = "m", r = 0.1, padding = 0.05, colour = G.C.BLACK, minw = 8, minh = 9 },
@@ -19,6 +23,8 @@ Glossary.entry_points.ppu_team_credits = function(target, source_type, source)
 			},
 		},
 	}
+	Glossary.ARGS.force_ignore_on_cards = nil
+
 	Glossary.show_ui({
 		context = context,
 		content = content,
@@ -55,7 +61,7 @@ local function create_member_card(member, team)
 	card.ppu_team = team
 	card.glossary_func = function()
 		if team then
-			Glossary.entry_points.ppu_team_credits(team, "card", card)
+			Glossary.show_info("ppu_team_credits", team, "card", card)
 			return true
 		end
 	end
@@ -200,6 +206,7 @@ local function create_member_card(member, team)
 		card.config.h_popup_config = self:align_h_popup()
 		Moveable.hover(self)
 	end
+
 	local old_align = card.align_h_popup
 	function card:align_h_popup(...)
 		local r = old_align(self, ...)
@@ -405,14 +412,5 @@ Glossary.InfoQueueProcessor({
 })
 
 function G.FUNCS.glossary_open_ppu_team_credits(e)
-	Glossary.entry_points.ppu_team_credits(e.config.ref_table, "ui_button", e)
-end
-
--- Prevent opening on credits cards
-local old_g_open = Glossary.open
-function Glossary.open(target, ...)
-	if target and target.ppu_member and not target.glossary_func then
-		return false
-	end
-	return old_g_open(target, ...)
+	Glossary.show_info("ppu_team_credits", e.config.ref_table, "ui_button", e)
 end

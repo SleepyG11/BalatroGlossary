@@ -20,8 +20,10 @@ function Glossary.get_target_center(target_type, target)
 		return target.config.center
 	elseif target_type == "tag" then
 		return G.P_TAGS[target.key]
-	else
+	elseif target_type == "back" or target_type == "blind" then
 		return target
+	else
+		return nil
 	end
 end
 
@@ -44,17 +46,28 @@ function Glossary.get_card_back_center(card, forced)
 	return fallback
 end
 
-function Glossary.safe_card_from_center(center_key, area)
+function Glossary.safe_card_from_center(center_key, area, args)
 	if not center_key then
 		return nil
 	end
+
+	args = args or {}
+	local bypass_discovery = args.bypass_discovery
+	local bypass_lock = args.bypass_lock
+	if bypass_discovery == nil then
+		bypass_discovery = true
+	end
+	if bypass_lock == nil then
+		bypass_lock = true
+	end
+
 	local card = SMODS.create_card({
 		key = "c_base",
 		front = false,
 		area = area,
-		bypass_discovery_center = true,
-		bypass_discovery_ui = true,
-		bypass_lock = true,
+		bypass_discovery_center = bypass_discovery,
+		bypass_discovery_ui = bypass_discovery,
+		bypass_lock = bypass_lock,
 	})
 	local success = pcall(function()
 		card:set_ability(center_key, false, false)

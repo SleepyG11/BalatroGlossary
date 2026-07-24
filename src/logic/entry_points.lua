@@ -6,9 +6,11 @@ function Glossary.show_tag_info(tag, source_type, source)
 
 	local tagConstructor = getmetatable(tag)
 	local new_tag = tagConstructor(tag.key, true)
+
 	new_tag.ability = SMODS.shallow_copy(tag.ability)
 	new_tag.hide_ability = not Glossary.cc.bypass_discovery and tag.hide_ability or false
 	local tag_ui, tag_sprite = new_tag:generate_UI(1.2)
+
 	local context = Glossary.processing.new_context("tag", new_tag, source_type, source)
 	Glossary.processing.request(context)
 	new_tag:get_uibox_table(tag_sprite)
@@ -68,6 +70,7 @@ function Glossary.show_card_info(card, source_type, source)
 	})
 	copy_card(card, new_card, 1, nil, nil)
 	main_card_area:emplace(new_card)
+
 	new_card.glossary_ignore = true
 	if new_card.ability.set == "Joker" then
 		new_card.sticker = get_joker_win_sticker(new_card.config.center)
@@ -155,9 +158,11 @@ function Glossary.show_back_info(back, source_type, source)
 	-- Taken from Galdur by Eremel
 	context.AUT = { main = {}, info = {}, type = {}, name = "done", badges = {}, from_detailed_tooltip = true }
 	context.info_queue = Glossary.populate_info_queue("back", back_center)
+
 	Glossary.processing.request(context, true)
 	Glossary.processing.process_before_context(context)
 	Glossary.processing.process_individual_context(context)
+
 	local info_queue_render = {}
 	for _, center in pairs(context.info_queue) do
 		local desc = generate_card_ui(center, context.AUT, nil, center.set, nil)
@@ -181,6 +186,7 @@ function Glossary.show_back_info(back, source_type, source)
 			},
 		}
 	end
+
 	Glossary.processing.process_after_context(context)
 	Glossary.processing.clear_request()
 
@@ -295,8 +301,8 @@ function Glossary.show_blind_info(blind, source_type, source)
 	content.n = G.UIT.R
 
 	Glossary.processing.process_after_context(context)
-
 	Glossary.processing.clear_request()
+
 	check_for_unlock = old_check_for_unlock
 
 	Glossary.show_info_ui({
