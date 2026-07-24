@@ -45,6 +45,9 @@ function Glossary.get_card_back_center(card, forced)
 end
 
 function Glossary.safe_card_from_center(center_key, area)
+	if not center_key then
+		return nil
+	end
 	local card = SMODS.create_card({
 		key = "c_base",
 		front = false,

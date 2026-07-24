@@ -2,15 +2,35 @@ if not next(SMODS.find_mod("Pokermon")) then
 	return
 end
 
-if open_pokedex then
-	function open_pokedex(target)
-		return Glossary.show_card_info(target)
-	end
+local pokermon_api = pokermon
+if not pokermon_api then
+	pokermon_api = {
+		open_pokedex = open_pokedex,
+		get_family_keys = get_family_keys,
+		get_type = get_type,
+		set_type_badge = poke_set_type_badge,
+		energy = {
+			is_energizable = is_energizable,
+			get_total_energy = get_total_energy,
+			max = energy_max,
+		},
+	}
 end
-if not get_family_keys then
-	get_family_keys = function(target)
-		return {}
+
+pokermon_api.open_pokedex = function(target)
+	return Glossary.show_card_info(target)
+end
+
+local poke_process_family_keys = function(keys)
+	local r = {}
+	for _, key in ipairs(keys) do
+		if type(key) == "string" then
+			table.insert(r, { key = key })
+		else
+			table.insert(r, key)
+		end
 	end
+	return r
 end
 
 local function poke_energy_render(info)
@@ -33,7 +53,7 @@ local function poke_energy_render(info)
 	end
 
 	local energy_badges = {}
-	poke_set_type_badge(nil, info.card, energy_badges)
+	pokermon_api.set_type_badge(nil, info.card, energy_badges)
 
 	local progress = info.max_energy == 0 and 0 or info.current_energy / info.max_energy
 	progress = math.max(0, math.min(1, progress))
@@ -168,15 +188,18 @@ Glossary.InfoSection({
 	end,
 	insert = function(self, info, card)
 		info.card = card
-		info.etype = get_type(card)
+		info.etype = pokermon_api.get_type(card)
 		info.sticker = SMODS.Stickers[string.lower(info.etype) .. "_sticker"]
 
-		info.current_energy = get_total_energy(card) or 0
-		info.max_energy = (energy_max + (G.GAME and G.GAME.energy_plus or 0) + (card.ability.extra.e_limit_up or 0))
-			or 0
+		info.current_energy = pokermon_api.energy.get_total_energy(card) or 0
+		info.max_energy = (
+			pokermon_api.energy.max
+			+ (G.GAME and G.GAME.energy_plus or 0)
+			+ (card.ability.extra.e_limit_up or 0)
+		) or 0
 		info.unlimited_energy = card.config.center.no_energy_limit or info.etype == "Bird" or false
 		info.unlimited_energy_config = pokermon_config.unlimited_energy
-		info.can_get_energy = is_energizable(card)
+		info.can_get_energy = pokermon_api.energy.is_energizable(card)
 	end,
 })
 Glossary.InfoSection({
@@ -239,7 +262,11 @@ Glossary.InfoQueueProcessor({
 		key = false,
 	},
 	func = function(self, context)
-		if context.target_type == "card" and context.target.facing ~= "back" and get_type(context.target) then
+		if
+			context.target_type == "card"
+			and context.target.facing ~= "back"
+			and pokermon_api.get_type(context.target)
+		then
 			Glossary.insert("poke_energy", function()
 				return context.target
 			end)
@@ -261,26 +288,37 @@ Glossary.InfoQueueProcessor({
 			and not context.target.poke_change_sprite
 			and (context.target.config.center.stage or context.target.config.center.poke_multi_item)
 		then
-			local keys = get_family_keys(context.target)
+			local family_keys = poke_process_family_keys(pokermon_api.get_family_keys(context.target))
+			local get_family_table_key = function(item)
+				return item.key .. "_" .. (item.form or "nil")
+			end
 			local full_keys = {}
-			for _, key in ipairs(keys) do
-				keys[key] = true
+			for _, family_key in ipairs(family_keys) do
+				family_keys[get_family_table_key(family_key)] = true
 			end
 
-			for _, key in ipairs(keys) do
-				local center = G.P_CENTERS[key]
+			for _, family_item in ipairs(family_keys) do
+				local center = G.P_CENTERS[family_item.key]
 				Glossary.insert(
 					center and center.set == "Joker" and "poke_evolutions" or "poke_evolution_materials",
 					function(area)
-						local card = Glossary.safe_card_from_center(key, area)
+						local card = Glossary.safe_card_from_center(center and center.key, area)
 						if card then
-							local subkeys = get_family_keys(card)
-							if center.megas then
-								table.insert(subkeys, "c_poke_megastone")
+							if family_item.form then
+								card.ability.extra.form = family_item.form
+								center:set_sprites(card)
+								if center.set_ability then
+									center:set_ability(card)
+								end
 							end
-							for _, subkey in ipairs(subkeys) do
-								if not keys[subkey] then
-									keys[subkey] = true
+							local subfamily = poke_process_family_keys(pokermon_api.get_family_keys(card))
+							if center.megas then
+								table.insert(subfamily, { key = "c_poke_megastone" })
+							end
+							for _, subkey in ipairs(subfamily) do
+								local full_subkey = get_family_table_key(subkey)
+								if not family_keys[full_subkey] then
+									family_keys[full_subkey] = true
 									table.insert(full_keys, subkey)
 								end
 							end
@@ -290,11 +328,21 @@ Glossary.InfoQueueProcessor({
 				)
 			end
 			for _, key in ipairs(full_keys) do
-				local center = G.P_CENTERS[key]
+				local center = G.P_CENTERS[key.key]
 				Glossary.insert(
 					center and center.set == "Joker" and "poke_evolutions" or "poke_evolution_materials",
 					function(area)
-						return Glossary.safe_card_from_center(key, area)
+						local card = Glossary.safe_card_from_center(center and center.key, area)
+						if card then
+							if key.form then
+								card.ability.extra.form = key.form
+								center:set_sprites(card)
+								if center.set_ability then
+									center:set_ability(card)
+								end
+							end
+							return card
+						end
 					end
 				)
 			end
@@ -314,7 +362,7 @@ Glossary.InfoQueueProcessor({
 			context.entry.set == "Other"
 			and context.entry.key == "energy"
 			and context.target_type == "card"
-			and get_type(context.target)
+			and pokermon_api.get_type(context.target)
 		then
 			return true
 		end
