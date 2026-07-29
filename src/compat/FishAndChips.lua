@@ -2,11 +2,21 @@ if not next(SMODS.find_mod("FishAndChips")) then
 	return
 end
 
-local function create_environment_image(environment)
+local function create_environment_image(environment, scale, collideable)
+	scale = scale or 1
 	local environment_key = environment.key
 	return {
 		n = G.UIT.C,
-		config = { align = "tm", colour = G.C.WHITE },
+		config = {
+			align = "tm",
+			colour = G.C.WHITE,
+			func = collideable and "glossary_setup_pac_environment" or nil,
+			button = collideable and "glossary_open_pac_environment" or nil,
+			glossary_pac_environment = environment,
+			can_collide = not not collideable,
+			hover = not not collideable,
+			button_dist = 0,
+		},
 		nodes = {
 			{
 				n = G.UIT.R,
@@ -15,8 +25,8 @@ local function create_environment_image(environment)
 					atlas = "fac_comp_locations",
 					pos = environment.background_pos,
 					colour = G.C.WHITE,
-					minw = 293 / 73.25 / 3.85 * 3.25,
-					minh = 174 / 73.25 / 3.85 * 3.25,
+					minw = 293 / 73.25 * scale,
+					minh = 174 / 73.25 * scale,
 					align = "tl",
 				},
 				nodes = {},
@@ -61,6 +71,16 @@ local function create_environment_image(environment)
 	}
 end
 
+function G.FUNCS.glossary_open_pac_environment(e)
+	Glossary.show_info("pac_environment", e.config.glossary_pac_environment, "ui_button", e)
+end
+function G.FUNCS.glossary_setup_pac_environment(e)
+	e.config.func = nil
+	e.glossary_func = function()
+		Glossary.show_info("pac_environment", e.config.glossary_pac_environment, "ui_button", e)
+	end
+end
+
 Glossary.InfoSection({
 	key = "fac_enviroments",
 	order = 0,
@@ -87,7 +107,7 @@ Glossary.InfoSection({
 					table.insert(images, current_row)
 				end
 				next_index = next_index + 1
-				table.insert(current_row.nodes, create_environment_image(environment))
+				table.insert(current_row.nodes, create_environment_image(environment, 3.25 / 3.85, true))
 			end
 		end
 
@@ -126,18 +146,72 @@ Glossary.InfoQueueProcessor({
 
 -- --
 
--- Glossary.entry_points.pac_environment = function(target, source_type, source)
--- 	Glossary.UI.prepare_overlay_menu()
+Glossary.entry_points.pac_environment = function(target, source_type, source)
+	Glossary.UI.prepare_overlay_menu()
 
--- 	local context = Glossary.processing.new_context("pac_environment", target, source_type, source)
--- 	Glossary.specify_mod(target.mod_id)
+	local context = Glossary.processing.new_context("pac_environment", target, source_type, source)
+	Glossary.specify_mod(target.mod)
+	Glossary.processing.process_context(context)
 
--- 	Glossary.show_info_ui({
--- 		context = context,
--- 		main = create_environment_image(target),
--- 		description = {},
--- 	})
--- end
+	local main_render = {
+		n = G.UIT.R,
+		config = {
+			padding = 0.1,
+			colour = { 0, 0, 0, 0.1 },
+		},
+		nodes = {
+			create_environment_image(target, 1, false),
+		},
+	}
+
+	local fish_pool = {}
+	for _, k in ipairs(SMODS.get_attribute_pool(target.key)) do
+		if not SMODS.hide_from_collection(G.P_CENTERS[k]) then
+			table.insert(fish_pool, G.P_CENTERS[k])
+		end
+	end
+
+	local cardareas = {}
+	local current_area
+	local next_index = 1
+	for _, center in ipairs(fish_pool) do
+		if next_index % 8 == 1 or not current_area then
+			current_area = CardArea(0, 0, 7, G.CARD_H / 3, {
+				collection = true,
+				type = "title_2",
+			})
+			table.insert(cardareas, {
+				n = G.UIT.R,
+				nodes = {
+					{
+						n = G.UIT.O,
+						config = {
+							object = current_area,
+						},
+					},
+				},
+			})
+		end
+		local card = Glossary.safe_card_from_center(center, current_area)
+		if card then
+			current_area:emplace(card)
+			card:hard_set_T(nil, nil, card.T.w / 2, card.T.h / 2)
+		end
+		next_index = next_index + 1
+	end
+
+	Glossary.show_info_ui({
+		context = context,
+		main = main_render,
+		rows = {
+			Glossary.UI.section("Fish and Chips: Fish in Environment", {
+				n = G.UIT.R,
+				config = { colour = { 0, 0, 0, 0.1 }, r = 0.25, padding = 0.1 },
+				nodes = cardareas,
+			}),
+		},
+	})
+end
 
 --
 
@@ -167,4 +241,31 @@ function Glossary.history.save_external(target_back_funcs, ...)
 	target_back_funcs.fac_return_to_mods = true
 	target_back_funcs.exit_overlay_menu_mxms = true
 	return old_save_external(target_back_funcs, ...)
+end
+
+local old_get_center = Glossary.get_target_center
+function Glossary.get_target_center(target_type, target, ...)
+	if target_type == "pac_environment" then
+		return target
+	end
+	return old_get_center(target_type, target, ...)
+end
+
+local old_comped = FishAndChips.Compendium.environment_page
+function FishAndChips.Compendium.environment_page(page_number, ...)
+	local r = old_comped(page_number, ...)
+	pcall(function()
+		local target = r.nodes[2].nodes[1]
+		if target.nodes[1].config.atlas == "fac_comp_locations" then
+			local environment_key = FishAndChips.Environment.obj_buffer[page_number]
+			local environment = FishAndChips.Environments[environment_key]
+			target.config.glossary_pac_environment = environment
+			target.config.func = "glossary_setup_pac_environment"
+			target.config.button = "glossary_open_pac_environment"
+			target.config.hover = true
+			target.config.can_collide = true
+			target.config.button_dist = 0
+		end
+	end)
+	return r
 end

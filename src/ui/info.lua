@@ -67,9 +67,9 @@ function Glossary.show_info_ui(input)
 	local content = input.description
 	local info_queue_render = input.info_queue
 	local context = input.context
+	local rows = input.rows or {}
 	local sections = context.sections
 
-	local rows = {}
 	for k, section in ipairs(Glossary.InfoSectionsPool) do
 		local items = sections[section.key]
 		if items then
@@ -163,7 +163,7 @@ function Glossary.show_info_ui(input)
 				},
 				nodes = {
 					input.main,
-					Glossary.UI.draggable_scrollable_content(content, 9, 6, 0.1),
+					content and Glossary.UI.draggable_scrollable_content(content, 9, 6, 0.1),
 				},
 			},
 		},

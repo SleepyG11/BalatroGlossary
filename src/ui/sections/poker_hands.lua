@@ -80,7 +80,7 @@ function Glossary.UI.simple_poker_hand(handname, simple, in_collection)
 		return vanilla_ui
 	end
 
-	card:hard_set_T(0, 0, G.CARD_W / 2.25, G.CARD_H / 2.25)
+	card:hard_set_T(0, 0, card.T.w / 2.25, card.T.h / 2.25)
 	planet_area:emplace(card)
 	return {
 		n = G.UIT.R,

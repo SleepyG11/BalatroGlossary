@@ -45,7 +45,7 @@ local function poke_energy_render(info)
 	local energy_key = exceptions[info.etype] or string.lower(info.etype)
 	local energy_card = Glossary.safe_card_from_center("c_poke_" .. energy_key .. "_energy", energy_card_area)
 	if energy_card then
-		energy_card:hard_set_T(0, 0, G.CARD_W / 2, G.CARD_H / 2)
+		energy_card:hard_set_T(0, 0, energy_card.T.w / 2, energy_card.T.h / 2)
 		energy_card_area:emplace(energy_card)
 	else
 		energy_card_area:remove()
