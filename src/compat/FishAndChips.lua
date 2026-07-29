@@ -82,7 +82,7 @@ Glossary.InfoSection({
 		for _, env in ipairs(nodes) do
 			local environment = FishAndChips.Environments[env]
 			if environment then
-				if next_index % 1 == 1 or not current_row then
+				if next_index % 2 == 1 or not current_row then
 					current_row = { n = G.UIT.R, config = { padding = 0.1 }, nodes = {} }
 					table.insert(images, current_row)
 				end
@@ -123,6 +123,21 @@ Glossary.InfoQueueProcessor({
 
 	conditions = { before = true },
 })
+
+-- --
+
+-- Glossary.entry_points.pac_environment = function(target, source_type, source)
+-- 	Glossary.UI.prepare_overlay_menu()
+
+-- 	local context = Glossary.processing.new_context("pac_environment", target, source_type, source)
+-- 	Glossary.specify_mod(target.mod_id)
+
+-- 	Glossary.show_info_ui({
+-- 		context = context,
+-- 		main = create_environment_image(target),
+-- 		description = {},
+-- 	})
+-- end
 
 --
 
