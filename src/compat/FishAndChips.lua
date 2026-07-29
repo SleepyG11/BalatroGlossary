@@ -124,6 +124,8 @@ Glossary.InfoQueueProcessor({
 	conditions = { before = true },
 })
 
+--
+
 local old_info_ui = Glossary.show_info_ui
 function Glossary.show_info_ui(input, ...)
 	if input then
@@ -142,4 +144,12 @@ function Glossary.show_info_ui(input, ...)
 		end
 	end
 	return old_info_ui(input, ...)
+end
+
+local old_save_external = Glossary.history.save_external
+function Glossary.history.save_external(target_back_funcs, ...)
+	target_back_funcs = target_back_funcs or {}
+	target_back_funcs.fac_return_to_mods = true
+	target_back_funcs.exit_overlay_menu_mxms = true
+	return old_save_external(target_back_funcs, ...)
 end
