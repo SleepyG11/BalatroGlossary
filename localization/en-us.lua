@@ -110,6 +110,10 @@ return {
 				name = "Artists",
 				text = {},
 			},
+			fac_enviroments = {
+				name = "Fish and Chips: Environments",
+				text = {},
+			},
 		},
 	},
 	misc = {
