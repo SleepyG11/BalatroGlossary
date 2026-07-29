@@ -217,6 +217,58 @@ local function create_member_card(member, team)
 	end
 	return card
 end
+local function create_not_loaded_member_card(member_key)
+	local card = Card(G.ROOM.T.x, G.ROOM.T.y, G.CARD_W / 1.25, G.CARD_H / 1.25, nil, G.P_CENTERS.j_invisible)
+
+	card.glossary_func = function()
+		return false
+	end
+
+	-- Create tooltip
+	card.hover = function(self)
+		local name = { n = G.UIT.T, config = { scale = 0.47, colour = G.C.UI.TEXT_LIGHT, text = member_key } }
+
+		local info_nodes = {
+			n = G.UIT.R,
+			config = { align = "cm", colour = mix_colours(G.C.L_BLACK, { 0, 0, 0, 1 }, 0.6), r = 0.25, padding = 0.1 },
+			nodes = {
+				{ n = G.UIT.C, config = { align = "cm", padding = 0.1 }, nodes = {} },
+			},
+		}
+
+		info_nodes.nodes = {
+			{
+				n = G.UIT.R,
+				config = { colour = G.C.L_BLACK, r = 0.1, align = "cm", emboss = 0.05, padding = 0.1 },
+				nodes = {
+					{
+						n = G.UIT.R,
+						config = { align = "cm" },
+						nodes = {
+							name,
+						},
+					},
+				},
+			},
+		}
+
+		self:juice_up(0.05, 0.03)
+		play_sound("paper1", math.random() * 0.2 + 0.9, 0.35)
+		card.config.h_popup = info_nodes
+		card.config.h_popup_config = self:align_h_popup()
+		Moveable.hover(self)
+	end
+
+	local old_align = card.align_h_popup
+	function card:align_h_popup(...)
+		local r = old_align(self, ...)
+		r.type = "cl"
+		r.x = -0.05
+		r.y = 0
+		return r
+	end
+	return card
+end
 local function create_team_name(team)
 	local team_name = {}
 	localize({
@@ -302,8 +354,11 @@ Glossary.InfoSection({
 				local member = PotatoPatchUtils.Developers[node.key]
 				if member then
 					local mod = SMODS.Mods[member.mod_id]
-					local team = PotatoPatchUtils.Teams[mod.prefix .. "_" .. member.team]
+					local team = member.team and PotatoPatchUtils.Teams[mod.prefix .. "_" .. member.team]
 					local card = create_member_card(member, team)
+					cards[node.type]:emplace(card)
+				else
+					local card = create_not_loaded_member_card(node.raw_key)
 					cards[node.type]:emplace(card)
 				end
 			end
@@ -401,6 +456,7 @@ Glossary.InfoQueueProcessor({
 						return {
 							type = credit_type,
 							key = center.mod.prefix .. "_" .. item,
+							raw_key = item,
 						}
 					end)
 				end
