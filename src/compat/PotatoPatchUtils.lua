@@ -118,6 +118,9 @@ local function create_member_card(member, team)
 		local is_info_nodes_empty = true
 
 		local text = member.loc and G.localization.descriptions.PotatoPatch[member.loc].text_parsed or nil
+		local loc_vars = member.loc_vars and member:loc_vars() or {}
+		loc_vars.text_colour = loc_vars.text_colour or G.C.UI.TEXT_LIGHT
+
 		if text then
 			if not text[1][1][1] then
 				text = { text }
@@ -132,7 +135,7 @@ local function create_member_card(member, team)
 					table.insert(node.nodes, {
 						n = G.UIT.R,
 						config = { align = "cm" },
-						nodes = SMODS.localize_box(v, { text_colour = G.C.UI.TEXT_LIGHT }),
+						nodes = SMODS.localize_box(v, loc_vars),
 					})
 				end
 				is_info_nodes_empty = false

@@ -269,3 +269,11 @@ function FishAndChips.Compendium.environment_page(page_number, ...)
 	end)
 	return r
 end
+
+local old_create_dev_card = FishAndChips.Compendium.dev_card
+function FishAndChips.Compendium.dev_card(...)
+	Glossary.ARGS.force_ignore_on_cards = true
+	local r = old_create_dev_card(...)
+	Glossary.ARGS.force_ignore_on_cards = nil
+	return r
+end
