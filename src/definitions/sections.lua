@@ -18,7 +18,7 @@ Glossary.InfoSection({
 		area:remove()
 	end,
 	render = function(self, area)
-		return Glossary.UI.basic_section(self, { n = G.UIT.O, config = { object = area } })
+		return Glossary.UI.basic_section(self, area, { n = G.UIT.O, config = { object = area } })
 	end,
 	insert = function(self, area, result)
 		area:emplace(result)
@@ -44,7 +44,7 @@ Glossary.InfoSection({
 		area:remove()
 	end,
 	render = function(self, area)
-		return Glossary.UI.basic_section(self, { n = G.UIT.O, config = { object = area } })
+		return Glossary.UI.basic_section(self, area, { n = G.UIT.O, config = { object = area } })
 	end,
 	insert = function(self, area, result)
 		area:emplace(result)
@@ -64,7 +64,7 @@ Glossary.InfoSection({
 	end,
 	destroy = function(self, nodes) end,
 	render = function(self, nodes)
-		return Glossary.UI.basic_section(self, {
+		return Glossary.UI.basic_section(self, nodes, {
 			n = G.UIT.R,
 			config = { minw = 7, align = "cm" },
 			nodes = nodes,
@@ -101,7 +101,7 @@ Glossary.InfoSection({
 				table.insert(nodes, button)
 			end
 		end
-		return Glossary.UI.basic_section(self, {
+		return Glossary.UI.basic_section(self, items, {
 			n = G.UIT.R,
 			config = { align = "cm", padding = 0.05 },
 			nodes = nodes,
@@ -144,7 +144,7 @@ Glossary.InfoSection({
 		for _, item in ipairs(items) do
 			table.insert(nodes, Glossary.UI.simple_poker_hand(item.type, item.simple, G.STAGE ~= G.STAGES.RUN))
 		end
-		return Glossary.UI.basic_section(self, {
+		return Glossary.UI.basic_section(self, items, {
 			n = G.UIT.R,
 			config = { align = "cm", padding = 0.05 },
 			nodes = nodes,

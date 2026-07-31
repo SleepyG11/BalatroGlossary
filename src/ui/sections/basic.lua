@@ -29,8 +29,16 @@ function Glossary.UI.section(name, content)
 	}
 end
 
-function Glossary.UI.basic_section(section, content)
-	return Glossary.UI.section(localize({ type = "name_text", key = section.key, set = section.set }), content)
+function Glossary.UI.basic_section(section, data, content)
+	local key, set, vars = section.key, section.set, {}
+	if section.loc_vars and type(section.loc_vars) == "function" then
+		local r = section:loc_vars(data)
+		key = r.key or key
+		set = r.set or set
+		vars = r.vars or vars
+	end
+	local section_name = localize({ type = "name_text", key = key, set = set, vars = vars })
+	return Glossary.UI.section(section_name, content)
 end
 function Glossary.UI.extendable_section(section, content, extra)
 	extra = extra or {}

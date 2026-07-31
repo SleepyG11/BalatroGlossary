@@ -114,6 +114,22 @@ return {
 				name = "Fish and Chips: Environments",
 				text = {},
 			},
+			fac_fishing_stats_fish = {
+				name = "Fish and Chips: Fish Stats",
+				text = {},
+			},
+			fac_fishing_stats_rod = {
+				name = "Fish and Chips: Rod Stats",
+				text = {},
+			},
+			fac_fishing_stats_bait = {
+				name = "Fish and Chips: Bait Stats",
+				text = {},
+			},
+			fac_related_fish_centers = {
+				name = "Fish and Chips: Related Fish",
+				text = {},
+			},
 		},
 	},
 	misc = {
@@ -123,6 +139,13 @@ return {
 			gloss_toggle_use_mods_colours = "Use Mod's custom UI colors",
 			gloss_toggle_slide_on_page_change = "Slide on page change",
 			gloss_toggle_allow_trigger_in_hand = "Open for cards in hand",
+
+			gloss_fac_first_catch = "First catch",
+			gloss_fac_times_caught = "Times caught",
+			gloss_fac_biggest_fish = "Biggest fish",
+			gloss_fac_longest_fish = "Longest fish",
+			gloss_fac_not_caught_yet = "Not caught yet",
+			gloss_fac_not_used_yet = "Not used yet",
 		},
 	},
 }

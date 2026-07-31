@@ -425,7 +425,7 @@ Glossary.InfoSection({
 				and { n = G.UIT.R, config = { align = "cm" }, nodes = card_areas_render }
 			or nil
 
-		return Glossary.UI.basic_section(self, {
+		return Glossary.UI.basic_section(self, nodes, {
 			n = G.UIT.R,
 			config = { align = "cm" },
 			nodes = {
