@@ -424,7 +424,7 @@ local function create_fish_stats_section(section, data, stats, profile_stats)
 			-- TODO: wait for new API
 			row(localize("gloss_fac_times_caught"), times_caught),
 			row(localize("gloss_fac_biggest_fish"), (stats.record_weight or "??") .. " kg"),
-			row(localize("gloss_fac_longest_fish"), (stats.record_length or "??") .. " cm"),
+			row(localize("gloss_fac_longest_fish"), (stats.record_length or "??") .. " m"),
 		},
 	}
 
