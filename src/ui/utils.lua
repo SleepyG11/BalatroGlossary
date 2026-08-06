@@ -67,11 +67,9 @@ function Glossary.UI.draggable_scrollable_content(content, max_content_w, max_co
 				no_overflow = (should_scroll_w and "h" or "") .. (should_scroll_h and "v" or ""),
 			},
 		},
-		progress = {
-			x = 0.5,
-			y = 0,
-		},
+		sync_mode = "offset",
 	})
+	content_overflow:set_scroll_progress({ x = 0.5, y = 0 })
 
 	Glossary.UI.init_draggable_scrollbox(content_overflow)
 
@@ -107,21 +105,18 @@ function Glossary.UI.draggable_scrollable_content(content, max_content_w, max_co
 						h = max_content_h,
 						bg_colour = { 0, 0, 0, 0.15 },
 						knob_h = 0.25,
-						ref_table = content_overflow.scroll_progress,
-						ref_value = "y",
 					}) or nil,
 				},
 			},
 			should_scroll_w and { n = G.UIT.R, config = { minh = scrolls_padding or 0 } } or nil,
 			should_scroll_w and SMODS.GUI.scrollbar({
+				ui_type = G.UIT.R,
+				scroll_collision_obj = content_overflow,
 				w = max_content_w,
 				h = 0.25,
-				knob_w = 0.25,
-				ui_type = G.UIT.R,
-				ref_table = content_overflow.scroll_progress,
-				ref_value = "x",
-				horizontal = true,
 				bg_colour = { 0, 0, 0, 0.15 },
+				knob_w = 0.25,
+				horizontal = true,
 			}) or nil,
 		},
 	}
