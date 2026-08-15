@@ -31,194 +31,234 @@ Glossary.entry_points.ppu_team_credits = function(target, source_type, source)
 	})
 end
 
-local function create_member_card(member, team)
-	local card = Card(G.ROOM.T.x, G.ROOM.T.y, G.CARD_W / 1.25, G.CARD_H / 1.25, nil, G.P_CENTERS.c_base)
-	card.children.center:remove()
-	card.children.center = SMODS.create_sprite(
-		card.T.x,
-		card.T.y,
-		card.T.w,
-		card.T.h,
-		member.atlas or "Joker",
-		member.pos or { x = 0, y = 0 }
-	)
-	card.children.center.states.hover = card.states.hover
-	card.children.center.states.click = card.states.click
-	card.children.center.states.drag = card.states.drag
-	card.children.center.states.collide.can = true
-	card.children.center:set_role({ major = card, role_type = "Glued", draw_major = card })
-
-	-- Check for card soul
-	if member.soul_pos then
-		card.children.ppu_floating_sprite =
-			SMODS.create_sprite(card.T.x, card.T.y, card.T.w, card.T.h, member.atlas or "Joker", member.soul_pos)
-		card.children.ppu_floating_sprite.role.draw_major = card
-		card.children.ppu_floating_sprite.states.hover.can = false
-		card.children.ppu_floating_sprite.states.click.can = false
+local function create_member_info_popup_tooltip(dev, team)
+	local info_nodes = {
+		n = G.UIT.R,
+		config = { align = "cm", colour = mix_colours(G.C.L_BLACK, { 0, 0, 0, 1 }, 0.6), r = 0.25, padding = 0.1 },
+		nodes = {
+			{ n = G.UIT.C, config = { align = "cm", padding = 0.1 }, nodes = {} },
+		},
+	}
+	local is_info_nodes_empty = true
+	local text = dev.loc and G.localization.descriptions.PotatoPatch[dev.loc].text_parsed or nil
+	local loc_vars = dev.loc_vars and dev:loc_vars() or {}
+	loc_vars.text_colour = loc_vars.text_colour or G.C.UI.TEXT_LIGHT
+	loc_vars.font = loc_vars.font or SMODS.Fonts.fac_collection
+	if text then
+		if not text[1][1][1] then
+			text = { text }
+		end
+		for _, box in ipairs(text) do
+			is_info_nodes_empty = false
+			local node = {
+				n = G.UIT.R,
+				config = { colour = G.C.L_BLACK, r = 0.1, padding = 0.15, align = "cm", shadow = true },
+				nodes = {},
+			}
+			for _, v in ipairs(box) do
+				table.insert(
+					node.nodes,
+					{ n = G.UIT.R, config = { align = "cm" }, nodes = SMODS.localize_box(v, loc_vars) }
+				)
+			end
+			info_nodes.nodes[1].nodes[#info_nodes.nodes[1].nodes + 1] = {
+				n = G.UIT.R,
+				config = { align = "cm" },
+				nodes = {
+					{
+						n = G.UIT.C,
+						config = { align = "cm", colour = G.C.WHITE, r = 0.1, padding = 0.025 },
+						nodes = {
+							node,
+						},
+					},
+				},
+			}
+		end
+	end
+	return info_nodes, is_info_nodes_empty
+end
+local function create_member_info_popup(dev, team)
+	local name = {}
+	if dev.always_use_dynatext or dev.text_effect or dev.shaders or dev.colours then
+		name = {
+			n = G.UIT.O,
+			config = {
+				object = DynaText({
+					string = dev.loc and localize({ type = "name_text", key = dev.loc, set = "PotatoPatch" })
+						or dev.name
+						or "ERROR",
+					colours = dev.colours or { dev.colour or G.C.UI.BACKGROUND_WHITE },
+					scale = 0.47,
+					text_effect = dev.text_effect or nil,
+					shaders = dev.shaders or nil,
+					silent = true,
+					shadow = false,
+					y_offset = -0.6,
+				}),
+			},
+		}
+	else
+		localize({
+			type = "name",
+			set = "PotatoPatch",
+			key = dev.loc,
+			nodes = name,
+			scale = 0.8,
+			maxw = 2,
+			text_colour = dev.colour,
+			stylize = true,
+			no_shadow = true,
+			no_pop_in = true,
+			no_bump = true,
+			no_silent = true,
+			no_spacing = true,
+		})
+		name = name[1] and name[1][1]
+			or { n = G.UIT.T, config = { scale = 0.47, colour = dev.colour, text = dev.name } }
 	end
 
-	card.ppu_member = member
-	card.ppu_team = team
-	card.glossary_func = function()
+	local info_nodes, is_info_nodes_empty = create_member_info_popup_tooltip(dev, team)
+
+	local team_name
+	if team then
+		local temp_team_name = localize({ type = "name_text", set = "PotatoPatch", key = team.loc })
+		if temp_team_name == "ERROR" then
+			temp_team_name = team.name
+		end
+		team_name = {
+			n = G.UIT.R,
+			config = { align = "cm" },
+			nodes = {
+				{
+					n = G.UIT.T,
+					config = {
+						text = temp_team_name,
+						scale = 0.32,
+						colour = team.colour,
+					},
+				},
+			},
+		}
+	end
+
+	info_nodes.nodes = {
+		{
+			n = G.UIT.R,
+			config = { colour = G.C.L_BLACK, r = 0.1, align = "cm", emboss = 0.05, padding = 0.1 },
+			nodes = {
+				{
+					n = G.UIT.R,
+					config = { align = "cm" },
+					nodes = {
+						name,
+					},
+				},
+				team_name and {
+					n = G.UIT.R,
+					config = { align = "cm" },
+					nodes = {
+						team_name,
+					},
+				} or nil,
+			},
+		},
+		not is_info_nodes_empty and {
+			n = G.UIT.R,
+			config = { align = "cm" },
+			nodes = info_nodes.nodes,
+		} or nil,
+	}
+
+	return info_nodes
+end
+
+local function create_member_card(dev, team)
+	local partner = dev.joint_credits and dev.fac_partner and PotatoPatchUtils.Developers[dev.fac_partner]
+
+	local dev_card =
+		Card(0, 0, (dev.joint_credits and 2 or 1) * G.CARD_W / 1.25, G.CARD_H / 1.25, nil, G.P_CENTERS.c_base)
+	dev_card.children.center:remove()
+	dev_card.children.center = SMODS.create_sprite(
+		dev_card.T.x,
+		dev_card.T.y,
+		dev_card.T.w,
+		dev_card.T.h,
+		dev.atlas or "Joker",
+		dev.pos or { x = 0, y = 0 }
+	)
+	dev_card.children.center.states.hover = dev_card.states.hover
+	dev_card.children.center.states.click = dev_card.states.click
+	dev_card.children.center.states.drag = dev_card.states.drag
+	dev_card.children.center.states.collide.can = true
+	dev_card.children.center:set_role({ major = dev_card, role_type = "Glued", draw_major = dev_card })
+
+	-- Check for dev_card soul
+	if dev.soul_pos then
+		dev_card.children.ppu_floating_sprite = SMODS.create_sprite(
+			dev_card.T.x,
+			dev_card.T.y,
+			dev_card.T.w,
+			dev_card.T.h,
+			dev.atlas or "Joker",
+			dev.soul_pos
+		)
+		dev_card.children.ppu_floating_sprite.role.draw_major = dev_card
+		dev_card.children.ppu_floating_sprite.states.hover.can = false
+		dev_card.children.ppu_floating_sprite.states.click.can = false
+	end
+
+	dev_card.ppu_member = dev
+	dev_card.ppu_team = team
+	dev_card.glossary_func = function()
 		if team then
-			Glossary.show_info("ppu_team_credits", team, "card", card)
+			Glossary.show_info("ppu_team_credits", team, "card", dev_card)
 			return true
 		end
 	end
 
+	dev_card.click = function(self)
+		if not dev.click and not (partner and partner.click) then
+			return Card.click(dev_card)
+		end
+		if dev.click then
+			dev.click(dev_card)
+		end
+		if partner and partner.click then
+			partner.click(dev_card)
+		end
+	end
+
 	-- Create tooltip
-	card.hover = function(self)
-		local name = {}
-		if member.always_use_dynatext or member.text_effect or member.shaders or member.colours then
-			name = {
-				n = G.UIT.O,
-				config = {
-					object = DynaText({
-						string = member.loc and localize({ type = "name_text", key = member.loc, set = "PotatoPatch" })
-							or dev.name
-							or "ERROR",
-						colours = member.colours or { member.colour or G.C.UI.BACKGROUND_WHITE },
-						scale = 0.47,
-						text_effect = member.text_effect or nil,
-						shaders = member.shaders or nil,
-						silent = true,
-						shadow = false,
-						y_offset = -0.6,
-					}),
-				},
-			}
-		else
-			localize({
-				type = "name",
-				set = "PotatoPatch",
-				key = member.loc,
-				nodes = name,
-				scale = 0.8,
-				maxw = 2,
-				text_colour = member.colour,
-				stylize = true,
-				no_shadow = true,
-				no_pop_in = true,
-				no_bump = true,
-				no_silent = true,
-				no_spacing = true,
-			})
-			name = name[1] and name[1][1]
-				or { n = G.UIT.T, config = { scale = 0.47, colour = member.colour, text = member.name } }
-		end
-
-		local info_nodes = {
-			n = G.UIT.R,
-			config = { align = "cm", colour = mix_colours(G.C.L_BLACK, { 0, 0, 0, 1 }, 0.6), r = 0.25, padding = 0.1 },
-			nodes = {
-				{ n = G.UIT.C, config = { align = "cm", padding = 0.1 }, nodes = {} },
-			},
-		}
-
-		local is_info_nodes_empty = true
-
-		local text = member.loc and G.localization.descriptions.PotatoPatch[member.loc].text_parsed or nil
-		local loc_vars = member.loc_vars and member:loc_vars() or {}
-		loc_vars.text_colour = loc_vars.text_colour or G.C.UI.TEXT_LIGHT
-
-		if text then
-			if not text[1][1][1] then
-				text = { text }
-			end
-			for _, box in ipairs(text) do
-				local node = {
-					n = G.UIT.R,
-					config = { colour = G.C.L_BLACK, r = 0.1, padding = 0.15, align = "cm", shadow = true },
-					nodes = {},
-				}
-				for _, v in ipairs(box) do
-					table.insert(node.nodes, {
-						n = G.UIT.R,
-						config = { align = "cm" },
-						nodes = SMODS.localize_box(v, loc_vars),
-					})
-				end
-				is_info_nodes_empty = false
-				info_nodes.nodes[1].nodes[#info_nodes.nodes[1].nodes + 1] = {
-					n = G.UIT.R,
-					config = { align = "cm" },
-					nodes = {
-						{
-							n = G.UIT.C,
-							config = { align = "cm", colour = G.C.WHITE, r = 0.1, padding = 0.025 },
-							nodes = { node },
-						},
-					},
-				}
-			end
-		end
-
-		local team_name
-		if team then
-			local temp_team_name = localize({ type = "name_text", set = "PotatoPatch", key = team.loc })
-			if temp_team_name == "ERROR" then
-				temp_team_name = team.name
-			end
-			team_name = {
-				n = G.UIT.R,
-				config = { align = "cm" },
-				nodes = {
-					{
-						n = G.UIT.T,
-						config = {
-							text = temp_team_name,
-							scale = 0.32,
-							colour = team.colour,
-						},
-					},
-				},
-			}
-		end
-
-		info_nodes.nodes = {
-			{
-				n = G.UIT.R,
-				config = { colour = G.C.L_BLACK, r = 0.1, align = "cm", emboss = 0.05, padding = 0.1 },
-				nodes = {
-					{
-						n = G.UIT.R,
-						config = { align = "cm" },
-						nodes = {
-							name,
-						},
-					},
-					team_name and {
-						n = G.UIT.R,
-						config = { align = "cm" },
-						nodes = {
-							team_name,
-						},
-					} or nil,
-				},
-			},
-			not is_info_nodes_empty and {
-				n = G.UIT.R,
-				config = { align = "cm" },
-				nodes = info_nodes.nodes,
-			} or nil,
-		}
-
+	dev_card.hover = function(self)
 		self:juice_up(0.05, 0.03)
 		play_sound("paper1", math.random() * 0.2 + 0.9, 0.35)
-		card.config.h_popup = info_nodes
-		card.config.h_popup_config = self:align_h_popup()
+		dev_card.config.h_popup = create_member_info_popup(dev, team)
+		dev_card.config.h_popup_dir = "cl"
+		dev_card.config.h_popup_config = dev_card:align_h_popup("cl")
+		if partner then
+			dev_card.config.h_popup_2 = create_member_info_popup(partner, team)
+			dev_card.config.h_popup_2_dir = "cr"
+			dev_card.config.h_popup_2_config = dev_card:align_h_popup("cr")
+		end
 		Moveable.hover(self)
 	end
 
-	local old_align = card.align_h_popup
-	function card:align_h_popup(...)
+	local old_align = dev_card.align_h_popup
+	function dev_card:align_h_popup(dir, ...)
 		local r = old_align(self, ...)
-		r.type = "cl"
-		r.x = -0.05
-		r.y = 0
+		if not dir or dir == "cl" then
+			r.type = "cl"
+			r.x = -0.05
+			r.y = 0
+		elseif dir == "cr" then
+			r.type = "cr"
+			r.x = 0.05
+			r.y = 0
+		end
 		return r
 	end
-	return card
+	return dev_card
 end
 local function create_not_loaded_member_card(member_key)
 	local card = Card(G.ROOM.T.x, G.ROOM.T.y, G.CARD_W / 1.25, G.CARD_H / 1.25, nil, G.P_CENTERS.j_invisible)

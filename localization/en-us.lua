@@ -99,15 +99,11 @@ return {
 				text = {},
 			},
 			ppu_credits_area_coder = {
-				name = "Coders",
+				name = "Code",
 				text = {},
 			},
 			ppu_credits_area_artist = {
-				name = "Artists",
-				text = {},
-			},
-			ppu_credits_area_team = {
-				name = "Artists",
+				name = "Art",
 				text = {},
 			},
 			fac_enviroments = {
