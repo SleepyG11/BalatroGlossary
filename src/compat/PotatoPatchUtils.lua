@@ -52,7 +52,7 @@ local function create_member_info_popup_tooltip(dev, team)
 			is_info_nodes_empty = false
 			local node = {
 				n = G.UIT.R,
-				config = { colour = G.C.L_BLACK, r = 0.1, padding = 0.15, align = "cm", shadow = true },
+				config = { colour = G.C.L_BLACK, r = 0.1, padding = 0.1, align = "cm", shadow = true },
 				nodes = {},
 			}
 			for _, v in ipairs(box) do
