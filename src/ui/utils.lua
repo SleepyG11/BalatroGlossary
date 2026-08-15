@@ -199,3 +199,7 @@ G.FUNCS.glossary_attach_uibox = function(e)
 
 	e.children.glossary_center = UIBox(def)
 end
+
+--
+
+function G.FUNCS.glossary_noop() end
