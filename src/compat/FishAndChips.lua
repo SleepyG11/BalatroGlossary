@@ -273,32 +273,36 @@ end
 
 -- Fishing stats
 
-local function create_fish_stats_section(section, data, stats, profile_stats)
-	local is_catched = stats and stats.first_catch
-	if not is_catched then
-		return Glossary.UI.basic_section(section, data, {
-			n = G.UIT.R,
-			config = { align = "cm", minw = 7 },
-			nodes = {
-				{
-					n = G.UIT.R,
-					config = {
-						align = "cm",
-						padding = 0.1,
-					},
-					nodes = {
-						{
-							n = G.UIT.T,
-							config = {
-								text = localize("gloss_fac_not_caught_yet"),
-								scale = 0.32,
-								colour = adjust_alpha(G.C.UI.TEXT_LIGHT, 0.6),
-							},
+local function create_empty_stats_section(section, data, text)
+	return Glossary.UI.basic_section(section, data, {
+		n = G.UIT.R,
+		config = { align = "cm", minw = 7 },
+		nodes = {
+			{
+				n = G.UIT.R,
+				config = {
+					align = "cm",
+					padding = 0.1,
+				},
+				nodes = {
+					{
+						n = G.UIT.T,
+						config = {
+							text = text,
+							scale = 0.32,
+							colour = adjust_alpha(G.C.UI.TEXT_LIGHT, 0.6),
 						},
 					},
 				},
 			},
-		})
+		},
+	})
+end
+
+local function create_fish_stats_section(section, data, stats, profile_stats)
+	local is_catched = stats and stats.first_catch
+	if not is_catched then
+		return create_empty_stats_section(section, data, localize("gloss_fac_not_caught_yet"))
 	end
 
 	local first_catch = stats.first_catch
@@ -369,7 +373,7 @@ local function create_fish_stats_section(section, data, stats, profile_stats)
 	}
 
 	-- Right part
-	local row = function(left, right)
+	local row = function(left, right, colour)
 		return {
 			n = G.UIT.R,
 			nodes = {
@@ -403,7 +407,7 @@ local function create_fish_stats_section(section, data, stats, profile_stats)
 							config = {
 								text = right,
 								scale = 0.32,
-								colour = G.C.ORANGE,
+								colour = colour or G.C.ORANGE,
 							},
 						},
 					},
@@ -411,6 +415,41 @@ local function create_fish_stats_section(section, data, stats, profile_stats)
 			},
 		}
 	end
+
+	local colours = { -- TODO: are these colours okay?
+		darken(G.C.RED, 0.1),
+		G.C.RED,
+		G.C.ORANGE,
+		G.C.YELLOW,
+		G.C.GREEN,
+		G.ARGS.LOC_COLOURS.edition,
+	}
+
+	local fish_center = G.P_CENTERS[data.center.key]
+	local stat_proto = fish_center.stats
+
+	local weight_perc = (stats.record_weight - stat_proto.weight.min)
+		/ (stat_proto.weight.max - stat_proto.weight.min)
+		* 100
+	local length_perc = (stats.record_length - stat_proto.length.min)
+		/ (stat_proto.length.max - stat_proto.length.min)
+		* 100
+
+	local weight_col_index = math.min(5, math.max(math.floor(weight_perc / 20), 1))
+	local weight_col = stats.record_weight == stat_proto.weight.max and colours[6]
+		or mix_colours(
+			colours[weight_col_index + 1],
+			colours[math.max(weight_col_index, 1)],
+			(weight_perc - (weight_col_index * 20)) / 20
+		)
+
+	local length_col_index = math.min(5, math.max(math.floor(length_perc / 20), 1))
+	local length_col = stats.record_length == stat_proto.length.max and colours[6]
+		or mix_colours(
+			colours[length_col_index + 1],
+			colours[length_col_index],
+			(length_perc - (length_col_index * 20)) / 20
+		)
 
 	local right_render = {
 		n = G.UIT.C,
@@ -423,8 +462,16 @@ local function create_fish_stats_section(section, data, stats, profile_stats)
 		nodes = {
 			-- TODO: wait for new API
 			row(localize("gloss_fac_times_caught"), times_caught),
-			row(localize("gloss_fac_biggest_fish"), (stats.record_weight or "??") .. " kg"),
-			row(localize("gloss_fac_longest_fish"), (stats.record_length or "??") .. " m"),
+			row(
+				localize("gloss_fac_biggest_fish"),
+				FishAndChips.format_measurement(stats.record_weight, "weight"),
+				weight_col
+			),
+			row(
+				localize("gloss_fac_longest_fish"),
+				FishAndChips.format_measurement(stats.record_length, "length"),
+				length_col
+			),
 		},
 	}
 
@@ -443,29 +490,7 @@ local function create_fish_stats_section(section, data, stats, profile_stats)
 end
 local function create_bait_stats_section(section, data, stats, profile_stats)
 	if not stats then
-		return Glossary.UI.basic_section(section, data, {
-			n = G.UIT.R,
-			config = { align = "cm", minw = 7 },
-			nodes = {
-				{
-					n = G.UIT.R,
-					config = {
-						align = "cm",
-						padding = 0.1,
-					},
-					nodes = {
-						{
-							n = G.UIT.T,
-							config = {
-								text = localize("gloss_fac_not_used_yet"),
-								scale = 0.32,
-								colour = adjust_alpha(G.C.UI.TEXT_LIGHT, 0.6),
-							},
-						},
-					},
-				},
-			},
-		})
+		return create_empty_stats_section(section, data, localize("gloss_fac_not_used_yet"))
 	end
 	return Glossary.UI.basic_section(section, data, {
 		n = G.UIT.R,
@@ -475,29 +500,7 @@ local function create_bait_stats_section(section, data, stats, profile_stats)
 end
 local function create_rod_stats_section(section, data, stats, profile_stats)
 	if not stats then
-		return Glossary.UI.basic_section(section, data, {
-			n = G.UIT.R,
-			config = { align = "cm", minw = 7 },
-			nodes = {
-				{
-					n = G.UIT.R,
-					config = {
-						align = "cm",
-						padding = 0.1,
-					},
-					nodes = {
-						{
-							n = G.UIT.T,
-							config = {
-								text = localize("gloss_fac_not_used_yet"),
-								scale = 0.32,
-								colour = adjust_alpha(G.C.UI.TEXT_LIGHT, 0.6),
-							},
-						},
-					},
-				},
-			},
-		})
+		return create_empty_stats_section(section, data, localize("gloss_fac_not_used_yet"))
 	end
 	return Glossary.UI.basic_section(section, data, {
 		n = G.UIT.R,
