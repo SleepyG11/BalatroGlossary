@@ -1,0 +1,24 @@
+[manifest]
+version = "1.0.0"
+dump_lua = true
+priority = 10000000
+
+[[patches]]
+[patches.pattern]
+target = '''=[SMODS _ "src/utils/run_select.lua"]'''
+pattern = '''local total_tooltips = #info_queue'''
+position = "before"
+payload = '''
+if Glossary.processing.current_request and not Glossary.processing.current_request.started then
+    Glossary.processing.current_request.started = true
+    local context = Glossary.processing.current_request.context
+
+    context.AUT = { main = {}, info = {}, type = {}, name = "done", badges = {}, from_detailed_tooltip = true }
+    context.info_queue = info_queue
+
+    Glossary.processing.process_before_context(context)
+    Glossary.processing.process_individual_context(context)
+    Glossary.processing.process_after_context(context) -- TODO: move this one
+end
+'''
+match_indent = true

@@ -116,8 +116,8 @@ function Glossary.show_card_info(card, source_type, source)
 		info_queue = info_queue_render,
 	})
 end
--- TODO: use new run select API
-function Glossary.show_back_info(back, source_type, source)
+
+function Glossary.show_back_info_run_select(back, source_type, source)
 	Glossary.UI.prepare_overlay_menu()
 
 	local main_card_area = CardArea(0, 0, G.CARD_W, G.CARD_H, {
@@ -140,7 +140,107 @@ function Glossary.show_back_info(back, source_type, source)
 	local back_center = new_back.effect.center
 	local stake_sticker = get_deck_win_sticker(back_center)
 
-	for i = 1, 20 do
+	local new_card
+	for i = 1, 10 do
+		local deck_card = SMODS.create_card({
+			key = back.key,
+			front = false,
+			area = main_card_area,
+		})
+		deck_card.glossary_back = new_back
+		deck_card.facing = "back"
+		deck_card.sprite_facing = "back"
+		deck_card.no_ui = true
+		main_card_area:emplace(deck_card)
+		deck_card.glossary_ignore = true
+		if i == 10 then
+			deck_card.sticker = stake_sticker
+			new_card = deck_card
+		end
+	end
+
+	local context = Glossary.processing.new_context("back", back_center, source_type, source)
+	new_card.params = new_card.params or {}
+	new_card.params.run_select_selection_choice = true
+	new_card.no_ui = false
+
+	local old_desc_from_rows = desc_from_rows
+	function desc_from_rows(a, b, maxw, ...)
+		return old_desc_from_rows(a, b, 6, ...)
+	end
+
+	local old_hover = Node.hover
+	Node.hover = function() end
+	Glossary.processing.request(context)
+	new_card:hover()
+	Glossary.processing.clear_request()
+	Node.hover = old_hover
+
+	desc_from_rows = old_desc_from_rows
+	check_for_unlock = old_check_for_unlock
+	back.unlocked = old_unlocked
+	G.GAME.selected_back, G.GAME.viewed_back = old_back, old_v_back
+
+	local popup = new_card.config.h_popup
+	new_card.no_ui = true
+	new_card.params.run_select_selection_choice = nil
+
+	local main_render = {
+		n = G.UIT.R,
+		config = { r = 0.25, colour = { 0, 0, 0, 0.1 }, align = "cm" },
+		nodes = {
+			{
+				n = G.UIT.O,
+				config = { object = main_card_area },
+			},
+		},
+	}
+
+	local content = popup.nodes[1].nodes
+	popup.nodes[1].nodes = {}
+	local info_queue_render = popup.nodes[1].config.ref_table
+	popup.nodes[1].config.ref_table = nil
+	UIBox({
+		definition = popup,
+		config = {},
+	}):remove()
+
+	Glossary.show_info_ui({
+		context = context,
+		main = main_render,
+		description = content,
+		info_queue = info_queue_render,
+	})
+end
+
+-- TODO: use new run select API
+function Glossary.show_back_info(back, source_type, source)
+	if SMODS.RunSelect then
+		return Glossary.show_back_info_run_select(back, source_type, source)
+	end
+	Glossary.UI.prepare_overlay_menu()
+
+	local main_card_area = CardArea(0, 0, G.CARD_W, G.CARD_H, {
+		card_limit = 20,
+		type = "deck",
+		collection = true,
+	})
+
+	local old_check_for_unlock = check_for_unlock
+	check_for_unlock = function() end
+
+	local old_unlocked = back.unlocked
+	if Glossary.cc.bypass_lock then
+		back.unlocked = true
+	end
+
+	local new_back = Back(back)
+	local old_back, old_v_back = G.GAME.selected_back, G.GAME.viewed_back
+	G.GAME.selected_back, G.GAME.viewed_back = new_back, new_back
+	local back_center = new_back.effect.center
+	local stake_sticker = get_deck_win_sticker(back_center)
+
+	for i = 1, 10 do
 		local deck_card = SMODS.create_card({
 			key = "c_base",
 			front = false,
@@ -152,7 +252,7 @@ function Glossary.show_back_info(back, source_type, source)
 		deck_card.no_ui = true
 		main_card_area:emplace(deck_card)
 		deck_card.glossary_ignore = true
-		if i == 20 then
+		if i == 10 then
 			deck_card.sticker = stake_sticker
 		end
 	end
@@ -192,6 +292,12 @@ function Glossary.show_back_info(back, source_type, source)
 				},
 			},
 		}
+	end
+
+	local badges = { n = G.UIT.C, config = { colour = G.C.CLEAR, align = "cm" }, nodes = {} }
+	SMODS.create_mod_badges(back, badges.nodes)
+	if badges.nodes.mod_set then
+		badges.nodes.mod_set = nil
 	end
 
 	Glossary.processing.process_after_context(context)
@@ -254,6 +360,11 @@ function Glossary.show_back_info(back, source_type, source)
 							},
 						}),
 						desc_from_rows({ deck_ui.nodes }),
+						badges.nodes[1] and {
+							n = G.UIT.R,
+							config = { align = "cm", r = 0.1, minw = 3, maxw = 4, minh = 0.4 },
+							nodes = { badges },
+						},
 					},
 				},
 			},

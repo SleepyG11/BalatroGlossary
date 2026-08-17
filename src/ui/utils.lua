@@ -142,12 +142,22 @@ function Glossary.UI.clear_overlay_menu()
 	end
 end
 
-function Glossary.info_queue_from_loc(parsed)
+function Glossary.info_queue_from_loc(set, key)
+	if SMODS.RunSelect and SMODS.RunSelect.Functions and SMODS.RunSelect.Functions.grab_tooltips then
+		return SMODS.RunSelect.Functions.grab_tooltips(set, key)
+	end
 	local info_queue = {}
-	for _, lines in ipairs(parsed or {}) do
+	local loc_target = G.localization.descriptions[set][key]
+	for _, lines in ipairs(loc_target) do
 		for _, part in ipairs(lines) do
 			if part.control.T then
-				info_queue[#info_queue + 1] = G.P_CENTERS[part.control.T] or G.P_TAGS[part.control.T]
+				info_queue[#info_queue + 1] = G.P_CENTERS[part.control.T]
+					or G.P_TAGS[part.control.T]
+					or {
+						set = part.control.T_set or "Other",
+						key = part.control.T,
+						vars = part.control.T_vars and parse_tooltip_vars(part.control.T_vars) or {},
+					}
 			end
 		end
 	end
@@ -157,28 +167,30 @@ end
 -- Taken from Galdur by Eremel
 function Glossary.populate_info_queue(target_type, target)
 	if target_type == "back" then
-		local loc_args, loc_table, key_override
+		local loc_args
+		local set, key = target.set, target.key
+		local info_queue = {}
 		if not target.unlocked and not Glossary.cc.bypass_lock then
 			if target.locked_loc_vars and type(target.locked_loc_vars) == "function" then
-				local res = target:locked_loc_vars() or {}
+				local res = target:locked_loc_vars(info_queue, target) or {}
 				loc_args = res.vars or {}
-				key_override = res.key
+				key = res.key or key
+				set = res.set or set
 			end
-			loc_table = G.localization.descriptions.Back[key_override or target.key].unlock_parsed
 		else
 			if target.loc_vars and type(target.loc_vars) == "function" then
-				local res = target:loc_vars() or {}
+				local res = target:loc_vars(info_queue, target) or {}
 				loc_args = res.vars or {}
-				key_override = res.key
+				key = res.key or key
+				set = res.set or set
 			end
-			loc_table = G.localization.descriptions.Back[key_override or target.key].text_parsed
 		end
 
 		if loc_args then
 			Glossary.destroy_loc_vars_elements(loc_args.elements)
 		end
 
-		return Glossary.info_queue_from_loc(loc_table)
+		return Glossary.info_queue_from_loc(set, key)
 	end
 end
 
