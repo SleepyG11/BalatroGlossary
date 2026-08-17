@@ -25,14 +25,27 @@ Glossary.InfoQueueProcessor = SMODS.GameObject:extend({
 	conditions = { individual = true },
 })
 
-function Glossary.get_processors(context_type)
+function Glossary.get_processors(context_type, context)
 	if not context_type then
 		return SMODS.shallow_copy(Glossary.InfoQueueProcessorsPool)
 	end
 	local result = {}
 	for _, processor in ipairs(Glossary.InfoQueueProcessorsPool) do
-		if processor.conditions and processor.conditions[context_type] then
-			table.insert(result, processor)
+		if processor.conditions then
+			if not processor.conditions[context_type] then
+			elseif
+				processor.conditions.target_type
+				and context
+				and context.target_type ~= processor.conditions.target_type
+			then
+			elseif
+				processor.conditions.source_type
+				and context
+				and context.source_type ~= processor.conditions.source_type
+			then
+			else
+				table.insert(result, processor)
+			end
 		end
 	end
 	return result

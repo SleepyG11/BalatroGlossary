@@ -9,8 +9,8 @@ Glossary.InfoQueueProcessor({
 		key = false,
 	},
 	func = function(self, context)
-		local is_collection_card = Glossary.is_collection_card_junk(context)
 		if context.entry.set == "Curse" and Ortalab.Curses[context.entry.key] then
+			local is_collection_card = Glossary.is_collection_card_junk(context)
 			if is_collection_card and context.target.curse == context.entry.key then
 				Glossary.specify_mod(Ortalab.Curses[context.entry.key].mod)
 			else
@@ -41,9 +41,9 @@ Glossary.InfoQueueProcessor({
 		key = false,
 	},
 	func = function(self, context)
-		if context.target_type == "tag" and getmetatable(context.target) == Zodiac then
+		if getmetatable(context.target) == Zodiac then
 			Glossary.specify_mod(SMODS.Mods["ortalab"])
 		end
 	end,
-	conditions = { before = true },
+	conditions = { before = true, target_type = "tag" },
 })

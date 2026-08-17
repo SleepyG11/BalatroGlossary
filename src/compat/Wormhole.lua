@@ -105,7 +105,7 @@ Glossary.InfoQueueProcessor({
 		key = false,
 	},
 	func = function(self, context)
-		if context.source_type == "card" and context.source.tarts and #context.source.tarts > 0 then
+		if context.source.tarts and #context.source.tarts > 0 then
 			context.target.tarts = context.source.tarts
 			for _, v in ipairs(context.source.tarts) do
 				Glossary.insert("worm_spacetarts", function(area)
@@ -114,5 +114,5 @@ Glossary.InfoQueueProcessor({
 			end
 		end
 	end,
-	conditions = { before = true },
+	conditions = { before = true, source_type = "card", target_type = "card" },
 })

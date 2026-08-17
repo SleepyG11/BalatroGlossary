@@ -40,8 +40,7 @@ Glossary.InfoQueueProcessor({
 	},
 	func = function(self, context)
 		if
-			context.source_type == "card"
-			and context.source.config.center_key ~= "c_base"
+			context.source.config.center_key ~= "c_base"
 			and (
 				context.source.playing_card
 				or (
@@ -58,7 +57,7 @@ Glossary.InfoQueueProcessor({
 			end
 		end
 	end,
-	conditions = { before = true },
+	conditions = { before = true, source_type = "card" },
 })
 
 Glossary.InfoQueueProcessor({
@@ -68,8 +67,8 @@ Glossary.InfoQueueProcessor({
 		key = false,
 	},
 	func = function(self, context)
-		local is_collection_card = Glossary.is_collection_card_junk(context)
 		if context.entry.set == "Other" and SMODS.Stickers[context.entry.key] then
+			local is_collection_card = Glossary.is_collection_card_junk(context)
 			if is_collection_card and context.target.ability[context.entry.key] then
 				Glossary.specify_mod(SMODS.Stickers[context.entry.key].mod)
 				Glossary.process_meta("stickers", SMODS.Stickers[context.entry.key])
@@ -100,8 +99,8 @@ Glossary.InfoQueueProcessor({
 		key = false,
 	},
 	func = function(self, context)
-		local is_collection_card = Glossary.is_collection_card_junk(context)
 		if context.entry.set == "Other" then
+			local is_collection_card = Glossary.is_collection_card_junk(context)
 			local seal_key_match = context.entry.key:match("^(.*)_seal$")
 			if seal_key_match then
 				local seal = G.P_SEALS[seal_key_match] or G.P_SEALS[seal_key_match:gsub("^%l", string.upper)]
@@ -124,6 +123,7 @@ Glossary.InfoQueueProcessor({
 			end
 		end
 		if context.entry.set == "Seal" and G.P_SEALS[context.entry.key] then
+			local is_collection_card = Glossary.is_collection_card_junk(context)
 			if is_collection_card and context.target.seal == context.entry.key then
 				Glossary.specify_mod(G.P_SEALS[context.entry.key].mod)
 				Glossary.process_meta("seals", G.P_SEALS[context.entry.key])

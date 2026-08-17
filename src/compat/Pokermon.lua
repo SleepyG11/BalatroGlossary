@@ -262,18 +262,14 @@ Glossary.InfoQueueProcessor({
 		key = false,
 	},
 	func = function(self, context)
-		if
-			context.target_type == "card"
-			and context.target.facing ~= "back"
-			and pokermon_api.get_type(context.target)
-		then
+		if context.target.facing ~= "back" and pokermon_api.get_type(context.target) then
 			Glossary.insert("poke_energy", function()
 				return context.target
 			end)
 		end
 	end,
 
-	conditions = { before = true },
+	conditions = { before = true, target_type = "card" },
 })
 Glossary.InfoQueueProcessor({
 	key = "poke_evolutions",
@@ -283,8 +279,7 @@ Glossary.InfoQueueProcessor({
 	},
 	func = function(self, context)
 		if
-			context.target_type == "card"
-			and context.target.facing ~= "back"
+			context.target.facing ~= "back"
 			and not context.target.poke_change_sprite
 			and (context.target.config.center.stage or context.target.config.center.poke_multi_item)
 		then
@@ -349,7 +344,7 @@ Glossary.InfoQueueProcessor({
 		end
 	end,
 
-	conditions = { before = true },
+	conditions = { before = true, target_type = "card" },
 })
 Glossary.InfoQueueProcessor({
 	key = "poke_energy_info_queue",

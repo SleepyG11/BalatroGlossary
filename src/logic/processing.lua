@@ -47,7 +47,7 @@ function Glossary.processing.process_before_context(context)
 
 	context.before = true
 	context.stage = "before"
-	local processors = Glossary.get_processors("before")
+	local processors = Glossary.get_processors(context.stage, context)
 	for _, processor in ipairs(processors) do
 		processor:func(context)
 	end
@@ -57,7 +57,7 @@ end
 function Glossary.processing.process_individual_context(context)
 	context.individual = true
 	context.stage = "individual"
-	local processors = Glossary.get_processors("individual")
+	local processors = Glossary.get_processors(context.stage, context)
 	local i = 1
 	while i <= #context.info_queue do
 		local filtered = false
@@ -86,7 +86,7 @@ end
 function Glossary.processing.process_after_context(context)
 	context.after = true
 	context.stage = "after"
-	local processors = Glossary.get_processors("after")
+	local processors = Glossary.get_processors(context.stage, context)
 	for _, processor in ipairs(processors) do
 		processor:func(context)
 	end
