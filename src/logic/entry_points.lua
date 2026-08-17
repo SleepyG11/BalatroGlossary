@@ -50,7 +50,7 @@ end
 function Glossary.show_card_info(card, source_type, source)
 	local back = Glossary.get_card_back_center(card)
 	if back then
-		return Glossary.show_back_info(back, source_type, source)
+		return Glossary.show_info("back", back, source_type, source)
 	end
 	Glossary.UI.prepare_overlay_menu()
 

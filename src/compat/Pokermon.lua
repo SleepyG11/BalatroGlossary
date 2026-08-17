@@ -18,7 +18,7 @@ if not pokermon_api then
 end
 
 pokermon_api.open_pokedex = function(target)
-	return Glossary.show_card_info(target)
+	return Glossary.show_info("card", target, "card", target)
 end
 
 local poke_process_family_keys = function(keys)

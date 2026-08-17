@@ -216,10 +216,10 @@ G.FUNCS.glossary_open_vanilla_collection = function(e)
 	G.FUNCS.your_collection(e)
 end
 G.FUNCS.glossary_show_back_info = function(e)
-	Glossary.show_back_info(e.config.ref_table.back, "ui_button", e)
+	Glossary.show_info("back", e.config.ref_table.back, "ui_button", e)
 end
 G.FUNCS.glossary_show_stake_info = function(e)
-	Glossary.show_stake_info(e.config.ref_table.stake, "ui_button", e)
+	Glossary.show_info("stake", e.config.ref_table.stake, "ui_button", e)
 end
 
 G.FUNCS.glossary_open_glossary_mod_config = function(e)
