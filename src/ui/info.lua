@@ -103,44 +103,26 @@ function Glossary.show_info_ui(input)
 				n = G.UIT.R,
 				config = { align = "cm" },
 				nodes = {
-					{
-						n = G.UIT.R,
-						config = { align = "cm", colour = { 0, 0, 0, 0.1 }, r = 0.25, padding = 0.1 },
-						nodes = {
-							{
-								n = G.UIT.R,
-								config = { align = "cm", colour = { 0, 0, 0, 0.1 }, r = 0.25, minh = 0.5 },
-								nodes = {
-									{
-										n = G.UIT.T,
-										config = {
-											text = localize({
-												type = "name_text",
-												set = "Glossary_Other",
-												key = "info_queue",
-												vars = {},
-											}),
-											scale = 0.32,
-											shadow = true,
-											colour = G.C.UI.TEXT_LIGHT,
-										},
+					Glossary.UI.section(
+						localize({
+							type = "name_text",
+							set = "Glossary_Other",
+							key = "info_queue",
+							vars = {},
+						}),
+						{
+							n = G.UIT.R,
+							config = { align = "cm", padding = 0.1 },
+							nodes = {
+								{
+									n = G.UIT.O,
+									config = {
+										object = render,
 									},
 								},
 							},
-							{
-								n = G.UIT.R,
-								config = { align = "cm", padding = 0.1 },
-								nodes = {
-									{
-										n = G.UIT.O,
-										config = {
-											object = render,
-										},
-									},
-								},
-							},
-						},
-					},
+						}
+					),
 				},
 			})
 		end

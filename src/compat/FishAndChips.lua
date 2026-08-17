@@ -50,13 +50,35 @@ Glossary.InfoSection({
 
 		return Glossary.UI.basic_section(self, nodes, {
 			n = G.UIT.R,
-			config = { colour = { 0, 0, 0, 0.1 }, r = 0.25, padding = 0.1 },
+			config = { align = "cm" },
 			nodes = cardareas,
 		})
 	end,
 	insert = function(self, nodes, result)
 		nodes[#nodes + 1] = result
 	end,
+})
+Glossary.InfoQueueProcessor({
+	key = "fac_bait_affected_fish",
+	order = 0,
+	prefix_config = {
+		key = false,
+	},
+	func = function(self, context)
+		local center = context.target_center
+		if center and center.set == "fac_Bait" then
+			local attribute_boost = center.target
+			for _, _center in pairs(G.P_CENTER_POOLS.fac_Fish) do
+				if SMODS.has_attribute(_center, attribute_boost) then
+					Glossary.insert("fac_related_fish_centers", function()
+						return _center
+					end)
+				end
+			end
+		end
+	end,
+
+	conditions = { before = true },
 })
 
 -- Environments
