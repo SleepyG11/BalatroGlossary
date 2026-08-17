@@ -162,7 +162,9 @@ function Glossary.show_back_info(back, source_type, source)
 	-- Taken from Galdur by Eremel
 	context.AUT = { main = {}, info = {}, type = {}, name = "done", badges = {}, from_detailed_tooltip = true }
 	context.info_queue = Glossary.populate_info_queue("back", back_center)
-	table.insert(context.info_queue, { key = string.lower(stake_sticker) .. "_sticker", set = "Other" })
+	if stake_sticker then
+		table.insert(context.info_queue, { key = string.lower(stake_sticker) .. "_sticker", set = "Other" })
+	end
 
 	Glossary.processing.request(context, true)
 	Glossary.processing.process_before_context(context)
