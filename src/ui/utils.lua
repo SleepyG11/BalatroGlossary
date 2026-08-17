@@ -119,6 +119,7 @@ function Glossary.UI.draggable_scrollable_content(content, max_content_w, max_co
 				bg_colour = { 0, 0, 0, 0.15 },
 				knob_w = 0.25,
 				horizontal = true,
+				scroll_mult = 0,
 			}) or nil,
 		},
 	}
