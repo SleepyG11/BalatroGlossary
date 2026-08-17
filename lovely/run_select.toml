@@ -13,12 +13,25 @@ if Glossary.processing.current_request and not Glossary.processing.current_reque
     Glossary.processing.current_request.started = true
     local context = Glossary.processing.current_request.context
 
-    context.AUT = { main = {}, info = {}, type = {}, name = "done", badges = {}, from_detailed_tooltip = true }
+    context.AUT = context.AUT or { main = {}, info = {}, type = {}, name = "done", badges = {}, from_detailed_tooltip = true }
     context.info_queue = info_queue
 
     Glossary.processing.process_before_context(context)
     Glossary.processing.process_individual_context(context)
     Glossary.processing.process_after_context(context) -- TODO: move this one
+end
+'''
+match_indent = true
+
+[[patches]]
+[patches.pattern]
+target = '''back.lua'''
+pattern = '''if not back_config.unlocked then'''
+position = "before"
+payload = '''
+if Glossary.processing.current_request and AUT then
+    local context = Glossary.processing.current_request.context
+    context.AUT = AUT
 end
 '''
 match_indent = true

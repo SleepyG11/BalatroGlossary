@@ -138,7 +138,6 @@ function Glossary.show_back_info_run_select(back, source_type, source)
 	local old_back, old_v_back = G.GAME.selected_back, G.GAME.viewed_back
 	G.GAME.selected_back, G.GAME.viewed_back = new_back, new_back
 	local back_center = new_back.effect.center
-	local stake_sticker = get_deck_win_sticker(back_center)
 
 	local new_card
 	for i = 1, 10 do
@@ -154,7 +153,7 @@ function Glossary.show_back_info_run_select(back, source_type, source)
 		main_card_area:emplace(deck_card)
 		deck_card.glossary_ignore = true
 		if i == 10 then
-			deck_card.sticker = stake_sticker
+			deck_card.sticker = get_deck_win_sticker(back_center)
 			new_card = deck_card
 		end
 	end
@@ -162,12 +161,8 @@ function Glossary.show_back_info_run_select(back, source_type, source)
 	local context = Glossary.processing.new_context("back", back_center, source_type, source)
 	new_card.params = new_card.params or {}
 	new_card.params.run_select_selection_choice = true
+	new_card.params.run_select_description = true
 	new_card.no_ui = false
-
-	local old_desc_from_rows = desc_from_rows
-	function desc_from_rows(a, b, maxw, ...)
-		return old_desc_from_rows(a, b, 6, ...)
-	end
 
 	local old_hover = Node.hover
 	Node.hover = function() end
@@ -176,7 +171,6 @@ function Glossary.show_back_info_run_select(back, source_type, source)
 	Glossary.processing.clear_request()
 	Node.hover = old_hover
 
-	desc_from_rows = old_desc_from_rows
 	check_for_unlock = old_check_for_unlock
 	back.unlocked = old_unlocked
 	G.GAME.selected_back, G.GAME.viewed_back = old_back, old_v_back
@@ -184,6 +178,7 @@ function Glossary.show_back_info_run_select(back, source_type, source)
 	local popup = new_card.config.h_popup
 	new_card.no_ui = true
 	new_card.params.run_select_selection_choice = nil
+	new_card.params.run_select_description = nil
 
 	local main_render = {
 		n = G.UIT.R,
@@ -196,10 +191,14 @@ function Glossary.show_back_info_run_select(back, source_type, source)
 		},
 	}
 
-	local content = popup.nodes[1].nodes
-	popup.nodes[1].nodes = {}
-	local info_queue_render = popup.nodes[1].config.ref_table
-	popup.nodes[1].config.ref_table = nil
+	local content_index, info_queue_index = 1, 2
+	if new_card.T.x > G.ROOM.T.w * 0.4 then
+		content_index, info_queue_index = 1, 2
+	end
+	local content = popup.nodes[content_index].nodes
+	popup.nodes[content_index].nodes = {}
+	local info_queue_render = popup.nodes[info_queue_index].nodes
+	popup.nodes[info_queue_index].nodes = nil
 	UIBox({
 		definition = popup,
 		config = {},
@@ -238,7 +237,6 @@ function Glossary.show_back_info(back, source_type, source)
 	local old_back, old_v_back = G.GAME.selected_back, G.GAME.viewed_back
 	G.GAME.selected_back, G.GAME.viewed_back = new_back, new_back
 	local back_center = new_back.effect.center
-	local stake_sticker = get_deck_win_sticker(back_center)
 
 	for i = 1, 10 do
 		local deck_card = SMODS.create_card({
@@ -253,7 +251,7 @@ function Glossary.show_back_info(back, source_type, source)
 		main_card_area:emplace(deck_card)
 		deck_card.glossary_ignore = true
 		if i == 10 then
-			deck_card.sticker = stake_sticker
+			deck_card.sticker = get_deck_win_sticker(back_center)
 		end
 	end
 
@@ -262,9 +260,6 @@ function Glossary.show_back_info(back, source_type, source)
 	-- Taken from Galdur by Eremel
 	context.AUT = { main = {}, info = {}, type = {}, name = "done", badges = {}, from_detailed_tooltip = true }
 	context.info_queue = Glossary.populate_info_queue("back", back_center)
-	if stake_sticker then
-		table.insert(context.info_queue, { key = string.lower(stake_sticker) .. "_sticker", set = "Other" })
-	end
 
 	Glossary.processing.request(context, true)
 	Glossary.processing.process_before_context(context)

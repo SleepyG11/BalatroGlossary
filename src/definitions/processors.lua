@@ -33,6 +33,22 @@ Glossary.InfoQueueProcessor({
 })
 
 Glossary.InfoQueueProcessor({
+	key = "back_gold_stake_win",
+	order = -100,
+	prefix_config = {
+		key = false,
+	},
+	func = function(self, context)
+		local back_center = context.target_center
+		local stake_sticker = back_center and get_deck_win_sticker(back_center)
+		if stake_sticker then
+			table.insert(context.info_queue, { key = string.lower(stake_sticker) .. "_sticker", set = "Other" })
+		end
+	end,
+	conditions = { before = true, target_type = "back" },
+})
+
+Glossary.InfoQueueProcessor({
 	key = "playing_card_center",
 	order = -100,
 	prefix_config = {

@@ -99,6 +99,7 @@ function Glossary.show_info_ui(input)
 		if render.T.w <= 0.1 or render.T.h <= 0.1 then
 			render:remove()
 		else
+			render.states.collide.can = false
 			table.insert(rows, {
 				n = G.UIT.R,
 				config = { align = "cm" },
