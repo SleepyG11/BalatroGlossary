@@ -26,6 +26,7 @@ Glossary.InfoSection({
 				current_area = CardArea(0, 0, 7, G.CARD_H / 2.5, {
 					collection = true,
 					type = "title_2",
+					fac_compendium = true,
 				})
 				table.insert(cardareas, {
 					n = G.UIT.R,
