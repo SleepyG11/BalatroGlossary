@@ -179,6 +179,10 @@ function Glossary.show_ui(input)
 	local content = input.content
 
 	context.mod = context.mod or Glossary.get_target_mod(context.target_type, context.target)
+	if type(context.mod) == "string" then
+		context.mod = SMODS.Mods[context.mod]
+	end
+
 	local mod = Glossary.cc.use_mods_colours and context.mod or nil
 
 	G.FUNCS.glossary_overlay_menu({

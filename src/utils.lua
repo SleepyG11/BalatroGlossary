@@ -5,16 +5,6 @@ function Glossary.is_collection_card_junk(context)
 		and (context.target.area and context.target.area.config.collection)
 end
 
-function Glossary.get_target_mod(target_type, target)
-	if target_type == "back" or target_type == "blind" then
-		return target.mod
-	elseif target_type == "card" then
-		return target.config.center.mod
-	elseif target_type == "tag" then
-		return G.P_TAGS[target.key] and G.P_TAGS[target.key].mod
-	end
-	return nil
-end
 function Glossary.get_target_center(target_type, target)
 	if target_type == "card" then
 		return target.config.center
@@ -25,6 +15,10 @@ function Glossary.get_target_center(target_type, target)
 	else
 		return nil
 	end
+end
+function Glossary.get_target_mod(target_type, target)
+	local center = Glossary.get_target_center(target_type, target)
+	return center and center.mod or nil
 end
 
 function Glossary.get_card_back_center(card, forced)

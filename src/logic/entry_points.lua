@@ -151,6 +151,9 @@ function Glossary.show_back_info(back, source_type, source)
 		deck_card.no_ui = true
 		main_card_area:emplace(deck_card)
 		deck_card.glossary_ignore = true
+		if i == 20 then
+			deck_card.sticker = get_deck_win_sticker(back)
+		end
 	end
 
 	local context = Glossary.processing.new_context("back", back_center, source_type, source)
