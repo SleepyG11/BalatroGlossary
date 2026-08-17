@@ -492,20 +492,153 @@ local function create_bait_stats_section(section, data, stats, profile_stats)
 	if not stats then
 		return create_empty_stats_section(section, data, localize("gloss_fac_not_used_yet"))
 	end
+	local row = function(left, right, colour)
+		return {
+			n = G.UIT.R,
+			config = {},
+			nodes = {
+				{
+					n = G.UIT.C,
+					config = {
+						minw = 2.25,
+						maxw = 2.25,
+						align = "cl",
+					},
+					nodes = {
+						{
+							n = G.UIT.T,
+							config = {
+								text = left,
+								scale = 0.32,
+								colour = G.C.UI.TEXT_LIGHT,
+							},
+						},
+					},
+				},
+				{
+					n = G.UIT.C,
+					config = {
+						minw = 1,
+						maxw = 1,
+						align = "cr",
+					},
+					nodes = {
+						{
+							n = G.UIT.T,
+							config = {
+								text = right,
+								scale = 0.32,
+								colour = colour or G.C.ORANGE,
+							},
+						},
+					},
+				},
+			},
+		}
+	end
+
+	local left = {
+		n = G.UIT.C,
+		config = { padding = 0.1, r = 0.25, colour = { 0, 0, 0, 0.1 } },
+		nodes = {
+			row(localize("gloss_fac_fish_caught"), stats.fish_caught),
+			row(localize("gloss_fac_fish_lost"), stats.fish_lost),
+		},
+	}
+	local right = {
+		n = G.UIT.C,
+		config = { padding = 0.1, r = 0.25, colour = { 0, 0, 0, 0.1 } },
+		nodes = {
+			row(localize("gloss_fac_perfect_catches"), stats.perfect_catch),
+			row(localize("gloss_fac_treasures"), stats.treasure),
+		},
+	}
+
 	return Glossary.UI.basic_section(section, data, {
 		n = G.UIT.R,
 		config = { align = "cm" },
-		nodes = {},
+		nodes = {
+			left,
+			{ n = G.UIT.C, config = { minw = 0.1 } },
+			right,
+		},
 	})
 end
 local function create_rod_stats_section(section, data, stats, profile_stats)
 	if not stats then
 		return create_empty_stats_section(section, data, localize("gloss_fac_not_used_yet"))
 	end
+
+	local row = function(left, right, colour)
+		return {
+			n = G.UIT.R,
+			config = {},
+			nodes = {
+				{
+					n = G.UIT.C,
+					config = {
+						minw = 2.25,
+						maxw = 2.25,
+						align = "cl",
+					},
+					nodes = {
+						{
+							n = G.UIT.T,
+							config = {
+								text = left,
+								scale = 0.32,
+								colour = G.C.UI.TEXT_LIGHT,
+							},
+						},
+					},
+				},
+				{
+					n = G.UIT.C,
+					config = {
+						minw = 1,
+						maxw = 1,
+						align = "cr",
+					},
+					nodes = {
+						{
+							n = G.UIT.T,
+							config = {
+								text = right,
+								scale = 0.32,
+								colour = colour or G.C.ORANGE,
+							},
+						},
+					},
+				},
+			},
+		}
+	end
+
+	local left = {
+		n = G.UIT.C,
+		config = { padding = 0.1, r = 0.25, colour = { 0, 0, 0, 0.1 } },
+		nodes = {
+			row(localize("gloss_fac_fish_caught"), stats.fish_caught),
+			row(localize("gloss_fac_fish_lost"), stats.fish_lost),
+		},
+	}
+	local right = {
+		n = G.UIT.C,
+		config = { padding = 0.1, r = 0.25, colour = { 0, 0, 0, 0.1 } },
+		nodes = {
+			row(localize("gloss_fac_perfect_catches"), stats.perfect_catch),
+			row(localize("gloss_fac_treasures"), stats.treasure),
+		},
+	}
+
 	return Glossary.UI.basic_section(section, data, {
 		n = G.UIT.R,
 		config = { align = "cm" },
-		nodes = {},
+		nodes = {
+			left,
+			{ n = G.UIT.C, config = { minw = 0.1 } },
+			right,
+		},
 	})
 end
 

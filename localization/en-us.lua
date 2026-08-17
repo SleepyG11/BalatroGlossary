@@ -142,6 +142,10 @@ return {
 			gloss_fac_longest_fish = "Longest fish",
 			gloss_fac_not_caught_yet = "Not caught yet",
 			gloss_fac_not_used_yet = "Not used yet",
+			gloss_fac_fish_caught = "Fish caught",
+			gloss_fac_fish_lost = "Fish lost",
+			gloss_fac_perfect_catches = "Perfect catches",
+			gloss_fac_treasures = "Treasures",
 		},
 	},
 }
