@@ -138,6 +138,7 @@ function Glossary.show_back_info(back, source_type, source)
 	local old_back, old_v_back = G.GAME.selected_back, G.GAME.viewed_back
 	G.GAME.selected_back, G.GAME.viewed_back = new_back, new_back
 	local back_center = new_back.effect.center
+	local stake_sticker = get_deck_win_sticker(back_center)
 
 	for i = 1, 20 do
 		local deck_card = SMODS.create_card({
@@ -152,7 +153,7 @@ function Glossary.show_back_info(back, source_type, source)
 		main_card_area:emplace(deck_card)
 		deck_card.glossary_ignore = true
 		if i == 20 then
-			deck_card.sticker = get_deck_win_sticker(back)
+			deck_card.sticker = stake_sticker
 		end
 	end
 
@@ -161,6 +162,7 @@ function Glossary.show_back_info(back, source_type, source)
 	-- Taken from Galdur by Eremel
 	context.AUT = { main = {}, info = {}, type = {}, name = "done", badges = {}, from_detailed_tooltip = true }
 	context.info_queue = Glossary.populate_info_queue("back", back_center)
+	table.insert(context.info_queue, { key = string.lower(stake_sticker) .. "_sticker", set = "Other" })
 
 	Glossary.processing.request(context, true)
 	Glossary.processing.process_before_context(context)

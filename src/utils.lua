@@ -106,3 +106,19 @@ function Glossary.table_merge_with_arrays(target, source, ...)
 
 	return target
 end
+
+function Glossary.destroy_loc_vars_elements(elements)
+	if not elements then
+		return
+	end
+	for _, elem in pairs(elements) do
+		if elem and elem.is and elem:is(Node) then
+			elem:remove()
+		elseif type(elem) == "table" then
+			UIBox({
+				definition = elem,
+				config = {},
+			}):remove()
+		end
+	end
+end
